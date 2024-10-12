@@ -1,0 +1,1 @@
+/usr/bin/c++ -O3 -DNDEBUG -rdynamic CMakeFiles/TFsample.dir/TFsample.cpp.o -o ../TFsample  ../lib/libThermalFIST.a ../lib/libMinuit2.a 

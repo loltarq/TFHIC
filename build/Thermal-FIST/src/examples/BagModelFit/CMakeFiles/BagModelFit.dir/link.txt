@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic CMakeFiles/BagModelFit.dir/BagModelFit.cpp.o -o ../../../../bin/examples/BagModelFit  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 

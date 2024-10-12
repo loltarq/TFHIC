@@ -1,0 +1,1 @@
+/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic "CMakeFiles/PCE-Saha-LHC.dir/PCE-Saha-LHC.cpp.o" -o ../../../../bin/examples/PCE-Saha-LHC  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 
