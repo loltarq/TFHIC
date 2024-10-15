@@ -9,7 +9,7 @@ void HistoFromDat()
     std::vector<string> filenames;
     for (int i=0; i<4; i++)
     {
-        filenames.push_back("CEscan"+std::to_string(i)+".dat");
+        filenames.push_back("../out/CEscan"+std::to_string(i)+".dat");
     }
 
     TCanvas *c1 = new TCanvas("c1");
