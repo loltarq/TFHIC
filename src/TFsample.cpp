@@ -98,7 +98,7 @@ void ComputeCEyields(vector<int> pid, vector<string> pname, ThermalParticleSyste
     vector<double> Vscan;
     ComputeVscanRange(Vscan);
 
-    ofstream fout("out/CEscan" + to_string(flag) + ".dat", ofstream::out | ofstream::trunc);
+    ofstream fout("../out/CEscan" + to_string(flag) + ".dat", ofstream::out | ofstream::trunc);
 
     fout << setw(15) << "V[fm^3]";
     
