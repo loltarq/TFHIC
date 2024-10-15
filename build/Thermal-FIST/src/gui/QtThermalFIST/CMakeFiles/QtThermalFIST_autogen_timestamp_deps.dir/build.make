@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/repo
+CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/TFHIC
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/repo/build
+CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/TFHIC/build
 
 # Utility rule file for QtThermalFIST_autogen_timestamp_deps.
 
@@ -81,10 +81,10 @@ Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_de
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/build
 
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/clean:
-	cd /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST && $(CMAKE_COMMAND) -P CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/cmake_clean.cmake
+	cd /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST && $(CMAKE_COMMAND) -P CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/cmake_clean.cmake
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/clean
 
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/depend:
-	cd /home/lorenzo/MasterThesis/repo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lorenzo/MasterThesis/repo /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/repo/build /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lorenzo/MasterThesis/TFHIC /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/TFHIC/build /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/depend
 

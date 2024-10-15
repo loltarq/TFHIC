@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DUSE_MINUIT
 
-CXX_INCLUDES = -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/include -I/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/include -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/MersenneTwister -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include
+CXX_INCLUDES = -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include -I/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/include -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/MersenneTwister -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include
 
 CXX_FLAGS =  -std=c++11 -pedantic -O3 -DNDEBUG
 

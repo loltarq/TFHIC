@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/src
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -43,25 +43,25 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample")
+  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample"
+         FILE "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample"
          RPATH "")
   endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/lorenzo/MasterThesis/repo/build/bin/TFsample")
+   "/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/home/lorenzo/MasterThesis/repo/build/bin" TYPE EXECUTABLE FILES "/home/lorenzo/MasterThesis/repo/build/TFsample")
-  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample")
+  file(INSTALL DESTINATION "/home/lorenzo/MasterThesis/TFHIC/build/bin" TYPE EXECUTABLE FILES "/home/lorenzo/MasterThesis/TFHIC/build/TFsample")
+  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/bin/TFsample")
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/bin/TFsample")
     endif()
   endif()
 endif()

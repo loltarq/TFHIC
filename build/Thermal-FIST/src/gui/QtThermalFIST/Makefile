@@ -57,10 +57,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/repo
+CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/TFHIC
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/repo/build
+CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/TFHIC/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -132,14 +132,14 @@ install/strip/fast: preinstall/fast
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/lorenzo/MasterThesis/repo/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/lorenzo/MasterThesis/repo/build/CMakeFiles /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST//CMakeFiles/progress.marks
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/lorenzo/MasterThesis/repo/build/CMakeFiles 0
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/lorenzo/MasterThesis/TFHIC/build/CMakeFiles /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST//CMakeFiles/progress.marks
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/lorenzo/MasterThesis/TFHIC/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/clean
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/clean
 .PHONY : clean
 
 # The main clean target
@@ -148,22 +148,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/preinstall
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/preinstall
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/lorenzo/MasterThesis/repo/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/rule:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/rule
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/rule
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/rule
 
 # Convenience name for target.
@@ -172,12 +172,12 @@ QtThermalFIST: Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/r
 
 # fast build rule for target.
 QtThermalFIST/fast:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build
 .PHONY : QtThermalFIST/fast
 
 # Convenience name for target.
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/rule:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/rule
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/rule
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/rule
 
 # Convenience name for target.
@@ -186,12 +186,12 @@ QtThermalFIST_autogen_timestamp_deps: Thermal-FIST/src/gui/QtThermalFIST/CMakeFi
 
 # fast build rule for target.
 QtThermalFIST_autogen_timestamp_deps/fast:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/build
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen_timestamp_deps.dir/build
 .PHONY : QtThermalFIST_autogen_timestamp_deps/fast
 
 # Convenience name for target.
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/rule:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/rule
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/rule
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/rule
 
 # Convenience name for target.
@@ -200,7 +200,7 @@ QtThermalFIST_autogen: Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFI
 
 # fast build rule for target.
 QtThermalFIST_autogen/fast:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build
 .PHONY : QtThermalFIST_autogen/fast
 
 BaseStructures.o: BaseStructures.cpp.o
@@ -208,7 +208,7 @@ BaseStructures.o: BaseStructures.cpp.o
 
 # target to build an object file
 BaseStructures.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.o
 .PHONY : BaseStructures.cpp.o
 
 BaseStructures.i: BaseStructures.cpp.i
@@ -216,7 +216,7 @@ BaseStructures.i: BaseStructures.cpp.i
 
 # target to preprocess a source file
 BaseStructures.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.i
 .PHONY : BaseStructures.cpp.i
 
 BaseStructures.s: BaseStructures.cpp.s
@@ -224,7 +224,7 @@ BaseStructures.s: BaseStructures.cpp.s
 
 # target to generate assembly for a file
 BaseStructures.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/BaseStructures.cpp.s
 .PHONY : BaseStructures.cpp.s
 
 DebugText.o: DebugText.cpp.o
@@ -232,7 +232,7 @@ DebugText.o: DebugText.cpp.o
 
 # target to build an object file
 DebugText.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.o
 .PHONY : DebugText.cpp.o
 
 DebugText.i: DebugText.cpp.i
@@ -240,7 +240,7 @@ DebugText.i: DebugText.cpp.i
 
 # target to preprocess a source file
 DebugText.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.i
 .PHONY : DebugText.cpp.i
 
 DebugText.s: DebugText.cpp.s
@@ -248,7 +248,7 @@ DebugText.s: DebugText.cpp.s
 
 # target to generate assembly for a file
 DebugText.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/DebugText.cpp.s
 .PHONY : DebugText.cpp.s
 
 HelperRoutines.o: HelperRoutines.cpp.o
@@ -256,7 +256,7 @@ HelperRoutines.o: HelperRoutines.cpp.o
 
 # target to build an object file
 HelperRoutines.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.o
 .PHONY : HelperRoutines.cpp.o
 
 HelperRoutines.i: HelperRoutines.cpp.i
@@ -264,7 +264,7 @@ HelperRoutines.i: HelperRoutines.cpp.i
 
 # target to preprocess a source file
 HelperRoutines.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.i
 .PHONY : HelperRoutines.cpp.i
 
 HelperRoutines.s: HelperRoutines.cpp.s
@@ -272,7 +272,7 @@ HelperRoutines.s: HelperRoutines.cpp.s
 
 # target to generate assembly for a file
 HelperRoutines.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/HelperRoutines.cpp.s
 .PHONY : HelperRoutines.cpp.s
 
 NumberStatistics.o: NumberStatistics.cpp.o
@@ -280,7 +280,7 @@ NumberStatistics.o: NumberStatistics.cpp.o
 
 # target to build an object file
 NumberStatistics.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.o
 .PHONY : NumberStatistics.cpp.o
 
 NumberStatistics.i: NumberStatistics.cpp.i
@@ -288,7 +288,7 @@ NumberStatistics.i: NumberStatistics.cpp.i
 
 # target to preprocess a source file
 NumberStatistics.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.i
 .PHONY : NumberStatistics.cpp.i
 
 NumberStatistics.s: NumberStatistics.cpp.s
@@ -296,7 +296,7 @@ NumberStatistics.s: NumberStatistics.cpp.s
 
 # target to generate assembly for a file
 NumberStatistics.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/NumberStatistics.cpp.s
 .PHONY : NumberStatistics.cpp.s
 
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.o: QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.o
@@ -304,7 +304,7 @@ QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.o: QtThermalFIST_autogen/EWIEGA46WW
 
 # target to build an object file
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.o
 .PHONY : QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.o
 
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.i: QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.i
@@ -312,7 +312,7 @@ QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.i: QtThermalFIST_autogen/EWIEGA46WW
 
 # target to preprocess a source file
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.i
 .PHONY : QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.i
 
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.s: QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.s
@@ -320,7 +320,7 @@ QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.s: QtThermalFIST_autogen/EWIEGA46WW
 
 # target to generate assembly for a file
 QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.s
 .PHONY : QtThermalFIST_autogen/EWIEGA46WW/qrc_qttfres.cpp.s
 
 QtThermalFIST_autogen/mocs_compilation.o: QtThermalFIST_autogen/mocs_compilation.cpp.o
@@ -328,7 +328,7 @@ QtThermalFIST_autogen/mocs_compilation.o: QtThermalFIST_autogen/mocs_compilation
 
 # target to build an object file
 QtThermalFIST_autogen/mocs_compilation.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.o
 .PHONY : QtThermalFIST_autogen/mocs_compilation.cpp.o
 
 QtThermalFIST_autogen/mocs_compilation.i: QtThermalFIST_autogen/mocs_compilation.cpp.i
@@ -336,7 +336,7 @@ QtThermalFIST_autogen/mocs_compilation.i: QtThermalFIST_autogen/mocs_compilation
 
 # target to preprocess a source file
 QtThermalFIST_autogen/mocs_compilation.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.i
 .PHONY : QtThermalFIST_autogen/mocs_compilation.cpp.i
 
 QtThermalFIST_autogen/mocs_compilation.s: QtThermalFIST_autogen/mocs_compilation.cpp.s
@@ -344,7 +344,7 @@ QtThermalFIST_autogen/mocs_compilation.s: QtThermalFIST_autogen/mocs_compilation
 
 # target to generate assembly for a file
 QtThermalFIST_autogen/mocs_compilation.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/QtThermalFIST_autogen/mocs_compilation.cpp.s
 .PHONY : QtThermalFIST_autogen/mocs_compilation.cpp.s
 
 SpectralFunctionDialog.o: SpectralFunctionDialog.cpp.o
@@ -352,7 +352,7 @@ SpectralFunctionDialog.o: SpectralFunctionDialog.cpp.o
 
 # target to build an object file
 SpectralFunctionDialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.o
 .PHONY : SpectralFunctionDialog.cpp.o
 
 SpectralFunctionDialog.i: SpectralFunctionDialog.cpp.i
@@ -360,7 +360,7 @@ SpectralFunctionDialog.i: SpectralFunctionDialog.cpp.i
 
 # target to preprocess a source file
 SpectralFunctionDialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.i
 .PHONY : SpectralFunctionDialog.cpp.i
 
 SpectralFunctionDialog.s: SpectralFunctionDialog.cpp.s
@@ -368,7 +368,7 @@ SpectralFunctionDialog.s: SpectralFunctionDialog.cpp.s
 
 # target to generate assembly for a file
 SpectralFunctionDialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/SpectralFunctionDialog.cpp.s
 .PHONY : SpectralFunctionDialog.cpp.s
 
 __/__/__/thirdparty/QCustomPlot/qcustomplot.o: __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.o
@@ -376,7 +376,7 @@ __/__/__/thirdparty/QCustomPlot/qcustomplot.o: __/__/__/thirdparty/QCustomPlot/q
 
 # target to build an object file
 __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.o
 .PHONY : __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.o
 
 __/__/__/thirdparty/QCustomPlot/qcustomplot.i: __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.i
@@ -384,7 +384,7 @@ __/__/__/thirdparty/QCustomPlot/qcustomplot.i: __/__/__/thirdparty/QCustomPlot/q
 
 # target to preprocess a source file
 __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.i
 .PHONY : __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.i
 
 __/__/__/thirdparty/QCustomPlot/qcustomplot.s: __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.s
@@ -392,7 +392,7 @@ __/__/__/thirdparty/QCustomPlot/qcustomplot.s: __/__/__/thirdparty/QCustomPlot/q
 
 # target to generate assembly for a file
 __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/__/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.s
 .PHONY : __/__/__/thirdparty/QCustomPlot/qcustomplot.cpp.s
 
 aboutdialog.o: aboutdialog.cpp.o
@@ -400,7 +400,7 @@ aboutdialog.o: aboutdialog.cpp.o
 
 # target to build an object file
 aboutdialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.o
 .PHONY : aboutdialog.cpp.o
 
 aboutdialog.i: aboutdialog.cpp.i
@@ -408,7 +408,7 @@ aboutdialog.i: aboutdialog.cpp.i
 
 # target to preprocess a source file
 aboutdialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.i
 .PHONY : aboutdialog.cpp.i
 
 aboutdialog.s: aboutdialog.cpp.s
@@ -416,7 +416,7 @@ aboutdialog.s: aboutdialog.cpp.s
 
 # target to generate assembly for a file
 aboutdialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/aboutdialog.cpp.s
 .PHONY : aboutdialog.cpp.s
 
 chi2ProfileDialog.o: chi2ProfileDialog.cpp.o
@@ -424,7 +424,7 @@ chi2ProfileDialog.o: chi2ProfileDialog.cpp.o
 
 # target to build an object file
 chi2ProfileDialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.o
 .PHONY : chi2ProfileDialog.cpp.o
 
 chi2ProfileDialog.i: chi2ProfileDialog.cpp.i
@@ -432,7 +432,7 @@ chi2ProfileDialog.i: chi2ProfileDialog.cpp.i
 
 # target to preprocess a source file
 chi2ProfileDialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.i
 .PHONY : chi2ProfileDialog.cpp.i
 
 chi2ProfileDialog.s: chi2ProfileDialog.cpp.s
@@ -440,7 +440,7 @@ chi2ProfileDialog.s: chi2ProfileDialog.cpp.s
 
 # target to generate assembly for a file
 chi2ProfileDialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/chi2ProfileDialog.cpp.s
 .PHONY : chi2ProfileDialog.cpp.s
 
 configwidgets.o: configwidgets.cpp.o
@@ -448,7 +448,7 @@ configwidgets.o: configwidgets.cpp.o
 
 # target to build an object file
 configwidgets.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.o
 .PHONY : configwidgets.cpp.o
 
 configwidgets.i: configwidgets.cpp.i
@@ -456,7 +456,7 @@ configwidgets.i: configwidgets.cpp.i
 
 # target to preprocess a source file
 configwidgets.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.i
 .PHONY : configwidgets.cpp.i
 
 configwidgets.s: configwidgets.cpp.s
@@ -464,7 +464,7 @@ configwidgets.s: configwidgets.cpp.s
 
 # target to generate assembly for a file
 configwidgets.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/configwidgets.cpp.s
 .PHONY : configwidgets.cpp.s
 
 correlationsdialog.o: correlationsdialog.cpp.o
@@ -472,7 +472,7 @@ correlationsdialog.o: correlationsdialog.cpp.o
 
 # target to build an object file
 correlationsdialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.o
 .PHONY : correlationsdialog.cpp.o
 
 correlationsdialog.i: correlationsdialog.cpp.i
@@ -480,7 +480,7 @@ correlationsdialog.i: correlationsdialog.cpp.i
 
 # target to preprocess a source file
 correlationsdialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.i
 .PHONY : correlationsdialog.cpp.i
 
 correlationsdialog.s: correlationsdialog.cpp.s
@@ -488,7 +488,7 @@ correlationsdialog.s: correlationsdialog.cpp.s
 
 # target to generate assembly for a file
 correlationsdialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/correlationsdialog.cpp.s
 .PHONY : correlationsdialog.cpp.s
 
 decayseditor.o: decayseditor.cpp.o
@@ -496,7 +496,7 @@ decayseditor.o: decayseditor.cpp.o
 
 # target to build an object file
 decayseditor.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.o
 .PHONY : decayseditor.cpp.o
 
 decayseditor.i: decayseditor.cpp.i
@@ -504,7 +504,7 @@ decayseditor.i: decayseditor.cpp.i
 
 # target to preprocess a source file
 decayseditor.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.i
 .PHONY : decayseditor.cpp.i
 
 decayseditor.s: decayseditor.cpp.s
@@ -512,7 +512,7 @@ decayseditor.s: decayseditor.cpp.s
 
 # target to generate assembly for a file
 decayseditor.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decayseditor.cpp.s
 .PHONY : decayseditor.cpp.s
 
 decaytablemodel.o: decaytablemodel.cpp.o
@@ -520,7 +520,7 @@ decaytablemodel.o: decaytablemodel.cpp.o
 
 # target to build an object file
 decaytablemodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.o
 .PHONY : decaytablemodel.cpp.o
 
 decaytablemodel.i: decaytablemodel.cpp.i
@@ -528,7 +528,7 @@ decaytablemodel.i: decaytablemodel.cpp.i
 
 # target to preprocess a source file
 decaytablemodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.i
 .PHONY : decaytablemodel.cpp.i
 
 decaytablemodel.s: decaytablemodel.cpp.s
@@ -536,7 +536,7 @@ decaytablemodel.s: decaytablemodel.cpp.s
 
 # target to generate assembly for a file
 decaytablemodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/decaytablemodel.cpp.s
 .PHONY : decaytablemodel.cpp.s
 
 equationofstatetab.o: equationofstatetab.cpp.o
@@ -544,7 +544,7 @@ equationofstatetab.o: equationofstatetab.cpp.o
 
 # target to build an object file
 equationofstatetab.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.o
 .PHONY : equationofstatetab.cpp.o
 
 equationofstatetab.i: equationofstatetab.cpp.i
@@ -552,7 +552,7 @@ equationofstatetab.i: equationofstatetab.cpp.i
 
 # target to preprocess a source file
 equationofstatetab.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.i
 .PHONY : equationofstatetab.cpp.i
 
 equationofstatetab.s: equationofstatetab.cpp.s
@@ -560,7 +560,7 @@ equationofstatetab.s: equationofstatetab.cpp.s
 
 # target to generate assembly for a file
 equationofstatetab.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/equationofstatetab.cpp.s
 .PHONY : equationofstatetab.cpp.s
 
 eventgeneratortab.o: eventgeneratortab.cpp.o
@@ -568,7 +568,7 @@ eventgeneratortab.o: eventgeneratortab.cpp.o
 
 # target to build an object file
 eventgeneratortab.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.o
 .PHONY : eventgeneratortab.cpp.o
 
 eventgeneratortab.i: eventgeneratortab.cpp.i
@@ -576,7 +576,7 @@ eventgeneratortab.i: eventgeneratortab.cpp.i
 
 # target to preprocess a source file
 eventgeneratortab.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.i
 .PHONY : eventgeneratortab.cpp.i
 
 eventgeneratortab.s: eventgeneratortab.cpp.s
@@ -584,7 +584,7 @@ eventgeneratortab.s: eventgeneratortab.cpp.s
 
 # target to generate assembly for a file
 eventgeneratortab.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/eventgeneratortab.cpp.s
 .PHONY : eventgeneratortab.cpp.s
 
 fitparametersmodel.o: fitparametersmodel.cpp.o
@@ -592,7 +592,7 @@ fitparametersmodel.o: fitparametersmodel.cpp.o
 
 # target to build an object file
 fitparametersmodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.o
 .PHONY : fitparametersmodel.cpp.o
 
 fitparametersmodel.i: fitparametersmodel.cpp.i
@@ -600,7 +600,7 @@ fitparametersmodel.i: fitparametersmodel.cpp.i
 
 # target to preprocess a source file
 fitparametersmodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.i
 .PHONY : fitparametersmodel.cpp.i
 
 fitparametersmodel.s: fitparametersmodel.cpp.s
@@ -608,7 +608,7 @@ fitparametersmodel.s: fitparametersmodel.cpp.s
 
 # target to generate assembly for a file
 fitparametersmodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fitparametersmodel.cpp.s
 .PHONY : fitparametersmodel.cpp.s
 
 fittoexperimenttab.o: fittoexperimenttab.cpp.o
@@ -616,7 +616,7 @@ fittoexperimenttab.o: fittoexperimenttab.cpp.o
 
 # target to build an object file
 fittoexperimenttab.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.o
 .PHONY : fittoexperimenttab.cpp.o
 
 fittoexperimenttab.i: fittoexperimenttab.cpp.i
@@ -624,7 +624,7 @@ fittoexperimenttab.i: fittoexperimenttab.cpp.i
 
 # target to preprocess a source file
 fittoexperimenttab.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.i
 .PHONY : fittoexperimenttab.cpp.i
 
 fittoexperimenttab.s: fittoexperimenttab.cpp.s
@@ -632,7 +632,7 @@ fittoexperimenttab.s: fittoexperimenttab.cpp.s
 
 # target to generate assembly for a file
 fittoexperimenttab.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/fittoexperimenttab.cpp.s
 .PHONY : fittoexperimenttab.cpp.s
 
 listeditortab.o: listeditortab.cpp.o
@@ -640,7 +640,7 @@ listeditortab.o: listeditortab.cpp.o
 
 # target to build an object file
 listeditortab.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.o
 .PHONY : listeditortab.cpp.o
 
 listeditortab.i: listeditortab.cpp.i
@@ -648,7 +648,7 @@ listeditortab.i: listeditortab.cpp.i
 
 # target to preprocess a source file
 listeditortab.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.i
 .PHONY : listeditortab.cpp.i
 
 listeditortab.s: listeditortab.cpp.s
@@ -656,7 +656,7 @@ listeditortab.s: listeditortab.cpp.s
 
 # target to generate assembly for a file
 listeditortab.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listeditortab.cpp.s
 .PHONY : listeditortab.cpp.s
 
 listtablemodel.o: listtablemodel.cpp.o
@@ -664,7 +664,7 @@ listtablemodel.o: listtablemodel.cpp.o
 
 # target to build an object file
 listtablemodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.o
 .PHONY : listtablemodel.cpp.o
 
 listtablemodel.i: listtablemodel.cpp.i
@@ -672,7 +672,7 @@ listtablemodel.i: listtablemodel.cpp.i
 
 # target to preprocess a source file
 listtablemodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.i
 .PHONY : listtablemodel.cpp.i
 
 listtablemodel.s: listtablemodel.cpp.s
@@ -680,7 +680,7 @@ listtablemodel.s: listtablemodel.cpp.s
 
 # target to generate assembly for a file
 listtablemodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/listtablemodel.cpp.s
 .PHONY : listtablemodel.cpp.s
 
 main.o: main.cpp.o
@@ -688,7 +688,7 @@ main.o: main.cpp.o
 
 # target to build an object file
 main.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.o
 .PHONY : main.cpp.o
 
 main.i: main.cpp.i
@@ -696,7 +696,7 @@ main.i: main.cpp.i
 
 # target to preprocess a source file
 main.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.i
 .PHONY : main.cpp.i
 
 main.s: main.cpp.s
@@ -704,7 +704,7 @@ main.s: main.cpp.s
 
 # target to generate assembly for a file
 main.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/main.cpp.s
 .PHONY : main.cpp.s
 
 mainwindow.o: mainwindow.cpp.o
@@ -712,7 +712,7 @@ mainwindow.o: mainwindow.cpp.o
 
 # target to build an object file
 mainwindow.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.o
 .PHONY : mainwindow.cpp.o
 
 mainwindow.i: mainwindow.cpp.i
@@ -720,7 +720,7 @@ mainwindow.i: mainwindow.cpp.i
 
 # target to preprocess a source file
 mainwindow.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.i
 .PHONY : mainwindow.cpp.i
 
 mainwindow.s: mainwindow.cpp.s
@@ -728,7 +728,7 @@ mainwindow.s: mainwindow.cpp.s
 
 # target to generate assembly for a file
 mainwindow.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/mainwindow.cpp.s
 .PHONY : mainwindow.cpp.s
 
 modeltab.o: modeltab.cpp.o
@@ -736,7 +736,7 @@ modeltab.o: modeltab.cpp.o
 
 # target to build an object file
 modeltab.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.o
 .PHONY : modeltab.cpp.o
 
 modeltab.i: modeltab.cpp.i
@@ -744,7 +744,7 @@ modeltab.i: modeltab.cpp.i
 
 # target to preprocess a source file
 modeltab.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.i
 .PHONY : modeltab.cpp.i
 
 modeltab.s: modeltab.cpp.s
@@ -752,7 +752,7 @@ modeltab.s: modeltab.cpp.s
 
 # target to generate assembly for a file
 modeltab.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/modeltab.cpp.s
 .PHONY : modeltab.cpp.s
 
 particledialog.o: particledialog.cpp.o
@@ -760,7 +760,7 @@ particledialog.o: particledialog.cpp.o
 
 # target to build an object file
 particledialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.o
 .PHONY : particledialog.cpp.o
 
 particledialog.i: particledialog.cpp.i
@@ -768,7 +768,7 @@ particledialog.i: particledialog.cpp.i
 
 # target to preprocess a source file
 particledialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.i
 .PHONY : particledialog.cpp.i
 
 particledialog.s: particledialog.cpp.s
@@ -776,7 +776,7 @@ particledialog.s: particledialog.cpp.s
 
 # target to generate assembly for a file
 particledialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particledialog.cpp.s
 .PHONY : particledialog.cpp.s
 
 particlespectra.o: particlespectra.cpp.o
@@ -784,7 +784,7 @@ particlespectra.o: particlespectra.cpp.o
 
 # target to build an object file
 particlespectra.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.o
 .PHONY : particlespectra.cpp.o
 
 particlespectra.i: particlespectra.cpp.i
@@ -792,7 +792,7 @@ particlespectra.i: particlespectra.cpp.i
 
 # target to preprocess a source file
 particlespectra.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.i
 .PHONY : particlespectra.cpp.i
 
 particlespectra.s: particlespectra.cpp.s
@@ -800,7 +800,7 @@ particlespectra.s: particlespectra.cpp.s
 
 # target to generate assembly for a file
 particlespectra.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/particlespectra.cpp.s
 .PHONY : particlespectra.cpp.s
 
 quantitiesmodel.o: quantitiesmodel.cpp.o
@@ -808,7 +808,7 @@ quantitiesmodel.o: quantitiesmodel.cpp.o
 
 # target to build an object file
 quantitiesmodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.o
 .PHONY : quantitiesmodel.cpp.o
 
 quantitiesmodel.i: quantitiesmodel.cpp.i
@@ -816,7 +816,7 @@ quantitiesmodel.i: quantitiesmodel.cpp.i
 
 # target to preprocess a source file
 quantitiesmodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.i
 .PHONY : quantitiesmodel.cpp.i
 
 quantitiesmodel.s: quantitiesmodel.cpp.s
@@ -824,7 +824,7 @@ quantitiesmodel.s: quantitiesmodel.cpp.s
 
 # target to generate assembly for a file
 quantitiesmodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitiesmodel.cpp.s
 .PHONY : quantitiesmodel.cpp.s
 
 quantitydialog.o: quantitydialog.cpp.o
@@ -832,7 +832,7 @@ quantitydialog.o: quantitydialog.cpp.o
 
 # target to build an object file
 quantitydialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.o
 .PHONY : quantitydialog.cpp.o
 
 quantitydialog.i: quantitydialog.cpp.i
@@ -840,7 +840,7 @@ quantitydialog.i: quantitydialog.cpp.i
 
 # target to preprocess a source file
 quantitydialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.i
 .PHONY : quantitydialog.cpp.i
 
 quantitydialog.s: quantitydialog.cpp.s
@@ -848,7 +848,7 @@ quantitydialog.s: quantitydialog.cpp.s
 
 # target to generate assembly for a file
 quantitydialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/quantitydialog.cpp.s
 .PHONY : quantitydialog.cpp.s
 
 resultdialog.o: resultdialog.cpp.o
@@ -856,7 +856,7 @@ resultdialog.o: resultdialog.cpp.o
 
 # target to build an object file
 resultdialog.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.o
 .PHONY : resultdialog.cpp.o
 
 resultdialog.i: resultdialog.cpp.i
@@ -864,7 +864,7 @@ resultdialog.i: resultdialog.cpp.i
 
 # target to preprocess a source file
 resultdialog.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.i
 .PHONY : resultdialog.cpp.i
 
 resultdialog.s: resultdialog.cpp.s
@@ -872,7 +872,7 @@ resultdialog.s: resultdialog.cpp.s
 
 # target to generate assembly for a file
 resultdialog.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/resultdialog.cpp.s
 .PHONY : resultdialog.cpp.s
 
 spectramodel.o: spectramodel.cpp.o
@@ -880,7 +880,7 @@ spectramodel.o: spectramodel.cpp.o
 
 # target to build an object file
 spectramodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.o
 .PHONY : spectramodel.cpp.o
 
 spectramodel.i: spectramodel.cpp.i
@@ -888,7 +888,7 @@ spectramodel.i: spectramodel.cpp.i
 
 # target to preprocess a source file
 spectramodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.i
 .PHONY : spectramodel.cpp.i
 
 spectramodel.s: spectramodel.cpp.s
@@ -896,7 +896,7 @@ spectramodel.s: spectramodel.cpp.s
 
 # target to generate assembly for a file
 spectramodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/spectramodel.cpp.s
 .PHONY : spectramodel.cpp.s
 
 tablemodel.o: tablemodel.cpp.o
@@ -904,7 +904,7 @@ tablemodel.o: tablemodel.cpp.o
 
 # target to build an object file
 tablemodel.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.o
 .PHONY : tablemodel.cpp.o
 
 tablemodel.i: tablemodel.cpp.i
@@ -912,7 +912,7 @@ tablemodel.i: tablemodel.cpp.i
 
 # target to preprocess a source file
 tablemodel.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.i
 .PHONY : tablemodel.cpp.i
 
 tablemodel.s: tablemodel.cpp.s
@@ -920,7 +920,7 @@ tablemodel.s: tablemodel.cpp.s
 
 # target to generate assembly for a file
 tablemodel.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/tablemodel.cpp.s
 .PHONY : tablemodel.cpp.s
 
 thermalfitplots.o: thermalfitplots.cpp.o
@@ -928,7 +928,7 @@ thermalfitplots.o: thermalfitplots.cpp.o
 
 # target to build an object file
 thermalfitplots.cpp.o:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.o
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.o
 .PHONY : thermalfitplots.cpp.o
 
 thermalfitplots.i: thermalfitplots.cpp.i
@@ -936,7 +936,7 @@ thermalfitplots.i: thermalfitplots.cpp.i
 
 # target to preprocess a source file
 thermalfitplots.cpp.i:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.i
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.i
 .PHONY : thermalfitplots.cpp.i
 
 thermalfitplots.s: thermalfitplots.cpp.s
@@ -944,7 +944,7 @@ thermalfitplots.s: thermalfitplots.cpp.s
 
 # target to generate assembly for a file
 thermalfitplots.cpp.s:
-	cd /home/lorenzo/MasterThesis/repo/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.s
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(MAKE) $(MAKESILENT) -f Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/build.make Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST.dir/thermalfitplots.cpp.s
 .PHONY : thermalfitplots.cpp.s
 
 # Help Target
@@ -1066,6 +1066,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/lorenzo/MasterThesis/repo/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/repo
+CMAKE_SOURCE_DIR = /home/lorenzo/MasterThesis/TFHIC
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/repo/build
+CMAKE_BINARY_DIR = /home/lorenzo/MasterThesis/TFHIC/build
 
 # Utility rule file for QtThermalFIST_autogen.
 
@@ -70,9 +70,9 @@ Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen: Thermal-FIS
 
 Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/timestamp: /usr/lib/qt5/bin/moc
 Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/timestamp: Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lorenzo/MasterThesis/repo/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target QtThermalFIST"
-	cd /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST && /usr/bin/cmake -E cmake_autogen /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/AutogenInfo.json Release
-	cd /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST && /usr/bin/cmake -E touch /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/timestamp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/lorenzo/MasterThesis/TFHIC/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Automatic MOC for target QtThermalFIST"
+	cd /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST && /usr/bin/cmake -E cmake_autogen /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/AutogenInfo.json Release
+	cd /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST && /usr/bin/cmake -E touch /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/timestamp
 
 QtThermalFIST_autogen: Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen
 QtThermalFIST_autogen: Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/timestamp
@@ -84,10 +84,10 @@ Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build: Q
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/build
 
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/clean:
-	cd /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST && $(CMAKE_COMMAND) -P CMakeFiles/QtThermalFIST_autogen.dir/cmake_clean.cmake
+	cd /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST && $(CMAKE_COMMAND) -P CMakeFiles/QtThermalFIST_autogen.dir/cmake_clean.cmake
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/clean
 
 Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/depend:
-	cd /home/lorenzo/MasterThesis/repo/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lorenzo/MasterThesis/repo /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/repo/build /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/lorenzo/MasterThesis/TFHIC/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/lorenzo/MasterThesis/TFHIC /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/TFHIC/build /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST /home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/depend
 

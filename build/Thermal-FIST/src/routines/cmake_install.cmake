@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/routines
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/routines
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,7 +44,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/routines/EVTablesGenerator/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/routines/EVTablesGenerator/cmake_install.cmake")
 
 endif()
 

@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/lorenzo/MasterThesis/repo/include -I/home/lorenzo/MasterThesis/repo/build/include -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/include -I/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/include -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/MersenneTwister -I/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include
+CXX_INCLUDES = -I/home/lorenzo/MasterThesis/TFHIC/include -I/home/lorenzo/MasterThesis/TFHIC/build/include -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include -I/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/include -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/MersenneTwister -I/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include
 
 CXX_FLAGS = -O3 -DNDEBUG
 

@@ -1,7 +1,7 @@
 Thermal-FIST/thirdparty/Minuit2/CMakeFiles/Minuit2.dir/Minuit/src/mnxerbla.cxx.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/src/mnxerbla.cxx \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/src/mnxerbla.cxx \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnConfig.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnConfig.h \
  /usr/include/c++/13/iostream /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

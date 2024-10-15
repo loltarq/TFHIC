@@ -1,8 +1,8 @@
 Thermal-FIST/thirdparty/Minuit2/CMakeFiles/Minuit2.dir/Minuit/src/MnPlot.cxx.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/src/MnPlot.cxx \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/src/MnPlot.cxx \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnPlot.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnConfig.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnPlot.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include/Minuit2/MnConfig.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

@@ -1,7 +1,7 @@
 Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGEventGenerator/Acceptance.cpp.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/library/HRGEventGenerator/Acceptance.cpp \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/library/HRGEventGenerator/Acceptance.cpp \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGEventGenerator/Acceptance.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGEventGenerator/Acceptance.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -122,8 +122,8 @@ Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGEventGenerator/Acceptance
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
  /usr/include/c++/13/bits/charconv.h \
  /usr/include/c++/13/bits/basic_string.tcc \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/BilinearSplineFunction.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/SplineFunction.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/BilinearSplineFunction.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/SplineFunction.h \
  /usr/include/c++/13/algorithm /usr/include/c++/13/bits/stl_algo.h \
  /usr/include/c++/13/bits/algorithmfwd.h \
  /usr/include/c++/13/bits/stl_heap.h \

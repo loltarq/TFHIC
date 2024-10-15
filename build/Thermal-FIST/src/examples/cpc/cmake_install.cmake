@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/examples/cpc
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/examples/cpc
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

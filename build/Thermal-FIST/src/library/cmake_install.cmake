@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/library
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/library
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

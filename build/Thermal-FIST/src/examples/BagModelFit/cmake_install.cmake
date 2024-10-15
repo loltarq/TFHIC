@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/examples/BagModelFit
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/examples/BagModelFit
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -43,25 +43,25 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit")
+  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit")
     file(RPATH_CHECK
-         FILE "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit"
+         FILE "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit"
          RPATH "")
   endif()
   list(APPEND CMAKE_ABSOLUTE_DESTINATION_FILES
-   "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit")
+   "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit")
   if(CMAKE_WARN_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(WARNING "ABSOLUTE path INSTALL DESTINATION : ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
   if(CMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION)
     message(FATAL_ERROR "ABSOLUTE path INSTALL DESTINATION forbidden (by caller): ${CMAKE_ABSOLUTE_DESTINATION_FILES}")
   endif()
-  file(INSTALL DESTINATION "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples" TYPE EXECUTABLE FILES "/home/lorenzo/MasterThesis/repo/build/bin/examples/BagModelFit")
-  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit" AND
-     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit")
+  file(INSTALL DESTINATION "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples" TYPE EXECUTABLE FILES "/home/lorenzo/MasterThesis/TFHIC/build/bin/examples/BagModelFit")
+  if(EXISTS "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit" AND
+     NOT IS_SYMLINK "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit")
     if(CMAKE_INSTALL_DO_STRIP)
-      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/bin/examples/BagModelFit")
+      execute_process(COMMAND "/usr/bin/strip" "$ENV{DESTDIR}/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/bin/examples/BagModelFit")
     endif()
   endif()
 endif()

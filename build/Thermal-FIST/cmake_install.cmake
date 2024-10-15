@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,11 +44,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/thirdparty/Minuit2/cmake_install.cmake")
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/library/cmake_install.cmake")
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/cmake_install.cmake")
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/routines/cmake_install.cmake")
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/examples/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/thirdparty/Minuit2/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/library/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/routines/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/examples/cmake_install.cmake")
 
 endif()
 

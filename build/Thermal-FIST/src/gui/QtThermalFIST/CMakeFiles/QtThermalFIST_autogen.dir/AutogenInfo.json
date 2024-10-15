@@ -1,12 +1,12 @@
 {
-	"BUILD_DIR" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen",
-	"CMAKE_BINARY_DIR" : "/home/lorenzo/MasterThesis/repo/build",
-	"CMAKE_CURRENT_BINARY_DIR" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST",
-	"CMAKE_CURRENT_SOURCE_DIR" : "/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST",
+	"BUILD_DIR" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen",
+	"CMAKE_BINARY_DIR" : "/home/lorenzo/MasterThesis/TFHIC/build",
+	"CMAKE_CURRENT_BINARY_DIR" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST",
+	"CMAKE_CURRENT_SOURCE_DIR" : "/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST",
 	"CMAKE_EXECUTABLE" : "/usr/bin/cmake",
 	"CMAKE_LIST_FILES" : 
 	[
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/CMakeLists.txt",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/CMakeLists.txt",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake",
@@ -48,191 +48,191 @@
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5PrintSupport/Qt5PrintSupportConfigVersion.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5PrintSupport/Qt5PrintSupportConfig.cmake",
 		"/usr/lib/x86_64-linux-gnu/cmake/Qt5PrintSupport/Qt5PrintSupport_QCupsPrinterSupportPlugin.cmake",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/qttfres.qrc"
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/qttfres.qrc"
 	],
-	"CMAKE_SOURCE_DIR" : "/home/lorenzo/MasterThesis/repo",
-	"DEP_FILE" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/deps",
+	"CMAKE_SOURCE_DIR" : "/home/lorenzo/MasterThesis/TFHIC",
+	"DEP_FILE" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/deps",
 	"DEP_FILE_RULE_NAME" : "QtThermalFIST_autogen/timestamp",
 	"HEADERS" : 
 	[
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/BaseStructures.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/BaseStructures.h",
 			"Mu",
 			"EWIEGA46WW/moc_BaseStructures.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/DebugText.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/DebugText.h",
 			"Mu",
 			"EWIEGA46WW/moc_DebugText.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/HelperRoutines.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/HelperRoutines.h",
 			"Mu",
 			"EWIEGA46WW/moc_HelperRoutines.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/ItemDelegateCustom.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/ItemDelegateCustom.h",
 			"Mu",
 			"EWIEGA46WW/moc_ItemDelegateCustom.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/NumberStatistics.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/NumberStatistics.h",
 			"Mu",
 			"EWIEGA46WW/moc_NumberStatistics.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/SpectralFunctionDialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/SpectralFunctionDialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_SpectralFunctionDialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/aboutdialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/aboutdialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_aboutdialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/chi2ProfileDialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/chi2ProfileDialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_chi2ProfileDialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/configwidgets.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/configwidgets.h",
 			"Mu",
 			"EWIEGA46WW/moc_configwidgets.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/correlationsdialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/correlationsdialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_correlationsdialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/decayseditor.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/decayseditor.h",
 			"Mu",
 			"EWIEGA46WW/moc_decayseditor.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/decaytablemodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/decaytablemodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_decaytablemodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/equationofstatetab.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/equationofstatetab.h",
 			"Mu",
 			"EWIEGA46WW/moc_equationofstatetab.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/eventgeneratortab.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/eventgeneratortab.h",
 			"Mu",
 			"EWIEGA46WW/moc_eventgeneratortab.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/fitparametersmodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/fitparametersmodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_fitparametersmodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/fittoexperimenttab.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/fittoexperimenttab.h",
 			"Mu",
 			"EWIEGA46WW/moc_fittoexperimenttab.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/listeditortab.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/listeditortab.h",
 			"Mu",
 			"EWIEGA46WW/moc_listeditortab.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/listtablemodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/listtablemodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_listtablemodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/mainwindow.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/mainwindow.h",
 			"Mu",
 			"EWIEGA46WW/moc_mainwindow.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/modeltab.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/modeltab.h",
 			"Mu",
 			"EWIEGA46WW/moc_modeltab.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/particledialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/particledialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_particledialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/particlespectra.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/particlespectra.h",
 			"Mu",
 			"EWIEGA46WW/moc_particlespectra.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/quantitiesmodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/quantitiesmodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_quantitiesmodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/quantitydialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/quantitydialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_quantitydialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/resultdialog.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/resultdialog.h",
 			"Mu",
 			"EWIEGA46WW/moc_resultdialog.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/spectramodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/spectramodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_spectramodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/tablemodel.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/tablemodel.h",
 			"Mu",
 			"EWIEGA46WW/moc_tablemodel.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/thermalfitplots.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/thermalfitplots.h",
 			"Mu",
 			"EWIEGA46WW/moc_thermalfitplots.cpp",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/QCustomPlot/qcustomplot.h",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/QCustomPlot/qcustomplot.h",
 			"Mu",
 			"JAKDZQVFXZ/moc_qcustomplot.cpp",
 			null
 		]
 	],
 	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
-	"INCLUDE_DIR" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/include",
-	"MOC_COMPILATION_FILE" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/mocs_compilation.cpp",
+	"INCLUDE_DIR" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/include",
+	"MOC_COMPILATION_FILE" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/mocs_compilation.cpp",
 	"MOC_DEFINITIONS" : 
 	[
 		"QT_CORE_LIB",
@@ -251,13 +251,13 @@
 	],
 	"MOC_INCLUDES" : 
 	[
-		"/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/QCustomPlot",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/include",
-		"/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/include",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/MersenneTwister",
-		"/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2/Minuit/include",
+		"/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/QCustomPlot",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include",
+		"/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/include",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/MersenneTwister",
+		"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2/Minuit/include",
 		"/usr/include/x86_64-linux-gnu/qt5",
 		"/usr/include/x86_64-linux-gnu/qt5/QtCore",
 		"/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++",
@@ -283,161 +283,161 @@
 		"-c",
 		"/usr/share/cmake-3.28/Modules/CMakeCXXCompilerABI.cpp"
 	],
-	"MOC_PREDEFS_FILE" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/moc_predefs.h",
+	"MOC_PREDEFS_FILE" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/QtThermalFIST_autogen/moc_predefs.h",
 	"MOC_RELAXED_MODE" : false,
 	"MOC_SKIP" : [],
 	"MULTI_CONFIG" : false,
-	"PARALLEL" : 4,
-	"PARSE_CACHE_FILE" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/ParseCache.txt",
+	"PARALLEL" : 6,
+	"PARSE_CACHE_FILE" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/ParseCache.txt",
 	"QT_MOC_EXECUTABLE" : "/usr/lib/qt5/bin/moc",
 	"QT_UIC_EXECUTABLE" : "",
 	"QT_VERSION_MAJOR" : 5,
 	"QT_VERSION_MINOR" : 15,
-	"SETTINGS_FILE" : "/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/AutogenUsed.txt",
+	"SETTINGS_FILE" : "/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/src/gui/QtThermalFIST/CMakeFiles/QtThermalFIST_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/BaseStructures.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/BaseStructures.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/DebugText.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/DebugText.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/HelperRoutines.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/HelperRoutines.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/NumberStatistics.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/NumberStatistics.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/SpectralFunctionDialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/SpectralFunctionDialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/aboutdialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/aboutdialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/chi2ProfileDialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/chi2ProfileDialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/configwidgets.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/configwidgets.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/correlationsdialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/correlationsdialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/decayseditor.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/decayseditor.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/decaytablemodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/decaytablemodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/equationofstatetab.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/equationofstatetab.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/eventgeneratortab.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/eventgeneratortab.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/fitparametersmodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/fitparametersmodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/fittoexperimenttab.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/fittoexperimenttab.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/listeditortab.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/listeditortab.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/listtablemodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/listtablemodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/main.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/main.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/mainwindow.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/mainwindow.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/modeltab.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/modeltab.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/particledialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/particledialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/particlespectra.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/particlespectra.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/quantitiesmodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/quantitiesmodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/quantitydialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/quantitydialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/resultdialog.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/resultdialog.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/spectramodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/spectramodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/tablemodel.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/tablemodel.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/src/gui/QtThermalFIST/thermalfitplots.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/gui/QtThermalFIST/thermalfitplots.cpp",
 			"Mu",
 			null
 		],
 		[
-			"/home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/QCustomPlot/qcustomplot.cpp",
+			"/home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/QCustomPlot/qcustomplot.cpp",
 			"Mu",
 			null
 		]

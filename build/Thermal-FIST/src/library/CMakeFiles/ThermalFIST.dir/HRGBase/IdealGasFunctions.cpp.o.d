@@ -1,7 +1,7 @@
 Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGBase/IdealGasFunctions.cpp.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/library/HRGBase/IdealGasFunctions.cpp \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/library/HRGBase/IdealGasFunctions.cpp \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/IdealGasFunctions.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/IdealGasFunctions.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -172,5 +172,5 @@ Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGBase/IdealGasFunctions.cp
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
  /usr/include/c++/13/bits/vector.tcc \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/xMath.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/NumericalIntegration.h
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/xMath.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/NumericalIntegration.h

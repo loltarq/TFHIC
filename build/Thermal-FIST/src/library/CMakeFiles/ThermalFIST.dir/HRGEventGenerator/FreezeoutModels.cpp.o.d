@@ -1,7 +1,7 @@
 Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGEventGenerator/FreezeoutModels.cpp.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/library/HRGEventGenerator/FreezeoutModels.cpp \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/library/HRGEventGenerator/FreezeoutModels.cpp \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGEventGenerator/FreezeoutModels.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGEventGenerator/FreezeoutModels.h \
  /usr/include/c++/13/cmath /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \

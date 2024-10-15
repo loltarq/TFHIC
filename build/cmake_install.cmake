@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -44,8 +44,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/home/lorenzo/MasterThesis/repo/build/Thermal-FIST/cmake_install.cmake")
-  include("/home/lorenzo/MasterThesis/repo/build/src/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/Thermal-FIST/cmake_install.cmake")
+  include("/home/lorenzo/MasterThesis/TFHIC/build/src/cmake_install.cmake")
 
 endif()
 
@@ -57,5 +57,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/lorenzo/MasterThesis/repo/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/lorenzo/MasterThesis/TFHIC/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

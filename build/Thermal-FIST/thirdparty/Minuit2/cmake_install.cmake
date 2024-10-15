@@ -1,4 +1,4 @@
-# Install script for directory: /home/lorenzo/MasterThesis/repo/Thermal-FIST/thirdparty/Minuit2
+# Install script for directory: /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/thirdparty/Minuit2
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

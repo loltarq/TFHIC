@@ -1,7 +1,7 @@
 Thermal-FIST/src/library/CMakeFiles/ThermalFIST.dir/HRGBase/NumericalIntegration.cpp.o: \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/src/library/HRGBase/NumericalIntegration.cpp \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/src/library/HRGBase/NumericalIntegration.cpp \
  /usr/include/stdc-predef.h \
- /home/lorenzo/MasterThesis/repo/Thermal-FIST/include/HRGBase/NumericalIntegration.h \
+ /home/lorenzo/MasterThesis/TFHIC/Thermal-FIST/include/HRGBase/NumericalIntegration.h \
  /usr/include/c++/13/vector /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
