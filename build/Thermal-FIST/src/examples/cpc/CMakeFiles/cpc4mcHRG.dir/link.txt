@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic "CMakeFiles/cpc4mcHRG.dir/cpc4-mcHRG.cpp.o" -o ../../../../bin/examples/cpc4mcHRG  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 

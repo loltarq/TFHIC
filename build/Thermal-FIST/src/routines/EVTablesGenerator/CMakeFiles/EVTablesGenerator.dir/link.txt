@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic CMakeFiles/EVTablesGenerator.dir/EVTablesGenerator.cpp.o -o ../../../../bin/routines/EVTablesGenerator  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 

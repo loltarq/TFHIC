@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic "CMakeFiles/cpc2chi2.dir/cpc2-chi2-vs-T.cpp.o" -o ../../../../bin/examples/cpc2chi2  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 

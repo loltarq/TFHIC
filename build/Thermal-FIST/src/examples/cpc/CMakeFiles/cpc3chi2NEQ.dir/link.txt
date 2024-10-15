@@ -1,1 +1,0 @@
-/usr/bin/c++  -std=c++11 -pedantic -O3 -DNDEBUG -rdynamic "CMakeFiles/cpc3chi2NEQ.dir/cpc3-chi2NEQ.cpp.o" -o ../../../../bin/examples/cpc3chi2NEQ  ../../../../lib/libThermalFIST.a ../../../../lib/libMinuit2.a 
