@@ -4,10 +4,10 @@ clone repository along with ThermalFIST submodule, i.e.
 
 after git clone, in project root folder run bash command:
 
-  mkdir build
-  cd build
-  cmake ../
-  make
+    mkdir build
+    cd build
+    cmake ../
+    make
   
 this will build ThermalFIST along with the code in scr.
 When modifying/adding source code files in scr, it is necessary to update the CMakeLists.txt in the scr folder as well.
