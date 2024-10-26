@@ -39,7 +39,7 @@ double dVdyVsNch(double dNchdy)
 
 //unified template for statistical model set-up
 //here we set all parameters not affected by gammaS fits, if any
-void SetModel(ThermalModelBase * &model, ThermalParticleSystem *parts, const string& ensemble, const string& width_scheme)
+void PrepareModel(ThermalModelBase * &model, ThermalParticleSystem *parts, const string& ensemble, const string& width_scheme)
 {
     if (ensemble == "GCE")
         model = new ThermalModelIdeal(parts);
@@ -97,99 +97,112 @@ void SetModel(ThermalModelBase * &model, ThermalParticleSystem *parts, const str
 }
 
 //note: relation between Canonical Volume and multiplicity is linear in gammaS according to 1906.03145
-void ComputeNchScanRange(vector<double>& NchScan, double NchMin=3., double NchMax=2000., int iter=100)
+void MultiplicityScanFill(vector<double>& NchScan, double NchMin=3., double NchMax=2000., int iter=100)
 {
-    double logNchMinK = log10(NchMinK), logNchMaxK = log10(NchMaxK);
-    double dlogNch = (logNchMaxK - logNchMinK)/(iter-1);
+    double logNchMin = log10(NchMin), logNchMax = log10(NchMax);
+    double dlogNch = (logNchMax - logNchMin)/(iter-1);
 
-    for (double logNch = logNchMinK; logNch <= logNchMaxK + 1.e-3; Nch+=dlogNch)
+    for (double logNch = logNchMin; logNch <= logNchMax + 1.e-3; logNch+=dlogNch)
     {
         NchScan.push_back(logNch);
     }
 }
 
-void ComputeRatios(vector<int> pid, vector<string> pname, ThermalParticleSystem& TPS, vector<double>& GCEratios, vector<double> k)
+void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase * model, vector<double> k, bool GsFlag)
 {
-    ThermalModelCanonical CEmodel(&TPS);
-    CEmodel.SetTemperature(0.155);
-    CEmodel.SetBaryonChemicalPotential(0.);
-    CEmodel.SetElectricChemicalPotential(0.);
-    CEmodel.SetStrangenessChemicalPotential(0.);
-    CEmodel.SetCharmChemicalPotential(0.);
-    CEmodel.SetBaryonCharge(0);
-    CEmodel.SetElectricCharge(0);
-    CEmodel.SetStrangeness(0);
-
-    //for Strangeness Canonical Ensemble treat B and Q grand-canonically
-    CEmodel.ConserveBaryonCharge(false);
-    CEmodel.ConserveElectricCharge(false);
-    CEmodel.ConserveStrangeness(true);
-
-    if(useWidth)
-        CEmodel.SetUseWidth(ThermalParticle::eBW);
-    else
-        CEmodel.SetUseWidth(ThermalParticle::ZeroWidth);
-
-    CEmodel.SetStatistics(useQStats);
-    if(useQStats)//set use of quantum statistics only for mesons!
-    {
-        for(int i=0; i<CEmodel.TPS()->Particles().size(); i++)
-        {
-            ThermalParticle &part = CEmodel.TPS()->Particle(i);
-            if (part.BaryonCharge()!=0)
-                part.UseStatistics(false);
-        }
-    }
-
-    CEmodel.FillChemicalPotentials();
-
     for (int j=0; j<k.size(); j++)
     {
-        vector<double> Vscan;
-        ComputeVscanRangeK(Vscan, k[j]);
+        vector<double> MultiplicityScan;
+        MultiplicityScanFill(MultiplicityScan);
 
-        ofstream fout("../out/piRatios_CEscan" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
-
-        fout << setw(15) << "dNpi/dy";
-        fout << setw(15) << "V[fm^3]";
-
-        for (int i=0; i<pname.size(); i++)
+        if (!GsFlag)//no gammaS
         {
-            fout << setw(15) << pname[i];
-        }
-
-        fout << endl;
-
-        for (int i=0; i<Vscan.size(); i++)
-        {
-            double V = pow(10., Vscan[i]);
-            //cout << V << endl;
-            CEmodel.SetVolume(V);
-            CEmodel.SetCanonicalVolume(V);
-            CEmodel.CalculateDensities();
-
-            fout << setw(15) << 2. * CEmodel.GetDensity(211, 1) * V / k[j]; //charged pions dN/dy, thus multiply by 2 to include pi- and rescale k. WEIRD
-            fout << setw(15) << V;
+            ofstream fout("../out/piRatios_" + string(model->Ensemble() == 0 ? "G" : "") + "CEscan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
+            fout << setw(15) << "dNpi/dy";
+            fout << setw(15) << "Vc[fm^3]";
 
             for (int i=0; i<pname.size(); i++)
             {
-                fout << setw(15) << CEmodel.GetDensity(pid[i], 1) / GCEratios[i] / CEmodel.GetDensity(211, 1);
+                fout << setw(15) << (pname[i] + "/pi");
             }
 
             fout << endl;
+            
+            for (int i=0; i<MultiplicityScan.size(); i++) //here multiplicityscan is volume scan
+            {
+                double V = pow(10., MultiplicityScan[i]);
+
+                model->SetVolume(V);
+                model->SetCanonicalVolume(V);
+                model->CalculateDensities();
+
+                fout << setw(15) << 2. * model->GetDensity(211, 1) * V / k[j]; //charged pions dN/dy, thus multiply by 2 to include pi- and rescale k.
+                fout << setw(15) << V;
+
+                for (int i=0; i<pname.size(); i++)
+                { 
+                    fout << setw(15) << model->GetDensity(pid[i], 1) / model->GetDensity(211, 1);
+                }
+
+                fout << endl;
+            }
+
+            fout.close();
         }
+        else//gammaS
+        {
+            ofstream fout("../out/piRatios_gs" + string(model->Ensemble() == 0 ? "G" : "") + "CEscan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
+            fout << setw(15) << "dNpi/dy";
+            fout << setw(15) << "Tch[MeV]";
+            fout << setw(15) << "dVdy[fm^3]";
+            fout << setw(15) << "Vc[fm^3]";
+            fout << setw(15) << "gammaS";
 
-        fout.close();   
+            for (int i=0; i<pname.size(); i++)
+            {
+                fout << setw(15) << pname[i] + "/pi";
+            }
 
-    }
-    
+            fout << endl;
+
+            for (int i=0; i<MultiplicityScan.size(); i++) //here multiplicityscan is on Nch, volume is determined by fitted parameters
+            {
+                double Nch = pow(10., MultiplicityScan[i]);
+
+                double Tch = TchVsNch(Nch);
+                double gammaS = GsVsNch(Nch);
+                double dVdy = dVdyVsNch(Nch);
+                double Vc = k[j] * dVdy;
+
+                model->SetTemperature(Tch);
+                model->SetGammaS(gammaS);
+                model->SetVolume(dVdy);
+                model->SetCanonicalVolume(Vc);
+                model->CalculateDensities();
+
+                fout << setw(15) << Nch;
+                fout << setw(15) << Tch;
+                fout << setw(15) << dVdy;
+                fout << setw(15) << Vc;
+                fout << setw(15) << gammaS;
+
+                for (int i=0; i<pname.size(); i++)
+                { 
+                    fout << setw(15) << model->GetDensity(pid[i], 1) / model->GetDensity(211, 1);
+                }
+
+                fout << endl;
+            }
+
+            fout.close();
+        }       
+    }   
 }
 
 int main(int argc, char *argv[])
 {
     ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list.dat");
 
-    
 //Considering specific hadrons
     vector<int> pdgsCE;
     vector<string> namesCE;
@@ -215,13 +228,26 @@ int main(int argc, char *argv[])
     pdgsCE.push_back(3122);
     namesCE.push_back("Lambda");
 
-    //Compute GCE ratios first
-    vector<double> GCEratios;
-    ComputeGCEratios(GCEratios, pdgsCE, namesCE, particles);
 
-    //initialize k vector for V scan
-    vector<double> k = {1., 3., 6.};
-    //Compute CE ratios wrt to pi and GCE using k values
-    ComputeCEratios(pdgsCE, namesCE, particles, GCEratios, k);
+    //initialize k vector for Volume scan
+    vector<double> k = {1., 3.};
+
+    ThermalModelBase * model;
+
+    cout << "computing yields for GCE, no gammaS.." << endl;
+    PrepareModel(model, &particles, "GCE", "eBW");
+    ComputeYieldRatios(pdgsCE, namesCE, model, k, false);
+
+    cout << "computing yields for GCE, gammaS.." << endl;
+    PrepareModel(model, &particles, "GCE", "eBW");
+    ComputeYieldRatios(pdgsCE, namesCE, model, k, true);
+
+    cout << "computing yields for SCE, no gammaS.." << endl;
+    PrepareModel(model, &particles, "SCE", "eBW");
+    ComputeYieldRatios(pdgsCE, namesCE, model, k, false);
+
+    cout << "computing yields for SCE, gammaS.." << endl;
+    PrepareModel(model, &particles, "SCE", "eBW");
+    ComputeYieldRatios(pdgsCE, namesCE, model, k, true);
       
 }
