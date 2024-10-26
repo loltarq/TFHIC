@@ -49,6 +49,7 @@ void PrepareModel(ThermalModelBase * &model, ThermalParticleSystem *parts, const
 
         if (ensemble == "SCE")//Strangeness-canonical. Need cast to canonical daughter, base has no method to set exact conservation
         {
+
             static_cast<ThermalModelCanonical*>(model)->ConserveBaryonCharge(false);
             static_cast<ThermalModelCanonical*>(model)->ConserveElectricCharge(false);
         }
@@ -108,16 +109,29 @@ void MultiplicityScanFill(vector<double>& NchScan, double NchMin=3., double NchM
     }
 }
 
-void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase * model, vector<double> k, bool GsFlag)
+void VScanFill(vector<double>& VScan, double k, double VMin=1., double VMax=15000., int iter=30)
+{
+    double VminK = VMin * k;
+    double VmaxK = VMax * k;
+    double logVminK = log10(VminK), logVmaxK = log10(VmaxK);
+    double dlogV = (logVmaxK - logVminK)/(iter-1);
+
+    for (double V = logVminK; V <= logVmaxK + 1.e-3; V+=dlogV)
+    {
+        VScan.push_back(V);
+    }
+}
+
+void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase * model, vector<double> k, const string& ensemble, bool GsFlag)
 {
     for (int j=0; j<k.size(); j++)
     {
-        vector<double> MultiplicityScan;
-        MultiplicityScanFill(MultiplicityScan);
-
         if (!GsFlag)//no gammaS
         {
-            ofstream fout("../out/piRatios_" + string(model->Ensemble() == 0 ? "G" : "") + "CEscan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
+            vector<double> VScan;
+            VScanFill(VScan, k[j]);
+
+            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Vc[fm^3]";
 
@@ -128,9 +142,9 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
 
             fout << endl;
             
-            for (int i=0; i<MultiplicityScan.size(); i++) //here multiplicityscan is volume scan
+            for (int i=0; i<VScan.size(); i++) //here multiplicityscan is volume scan
             {
-                double V = pow(10., MultiplicityScan[i]);
+                double V = pow(10., VScan[i]);
 
                 model->SetVolume(V);
                 model->SetCanonicalVolume(V);
@@ -151,7 +165,10 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
         }
         else//gammaS
         {
-            ofstream fout("../out/piRatios_gs" + string(model->Ensemble() == 0 ? "G" : "") + "CEscan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
+            vector<double> MultiplicityScan;
+            MultiplicityScanFill(MultiplicityScan);
+
+            ofstream fout("../out/piRatios_gs_" + ensemble + "_scan_k" + to_string(static_cast<int>(k[j])) + ".dat", ofstream::out | ofstream::trunc);
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Tch[MeV]";
             fout << setw(15) << "dVdy[fm^3]";
@@ -201,53 +218,59 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
 
 int main(int argc, char *argv[])
 {
-    ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list.dat");
+    if (argc<=2)
+    {
+                cout << "Not enough arguments provided" << endl;
+                cout << "Required arguments, in order: Ensemble [GCE,CE,SCE],  GammaS model flag [0,1]" << endl;
+    }
 
-//Considering specific hadrons
-    vector<int> pdgsCE;
-    vector<string> namesCE;
+    if (argc>2)
+    {
 
-//    pdgsCE.push_back(211);
-//    namesCE.push_back("pi+");
+        ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list.dat");
 
-    pdgsCE.push_back(321);
-    namesCE.push_back("K+");
+        //Considering specific hadrons
+        vector<int> pdgsCE;
+        vector<string> namesCE;
 
-    pdgsCE.push_back(3312);
-    namesCE.push_back("Xi");
+        //    pdgsCE.push_back(211);
+        //    namesCE.push_back("pi+");
 
-    pdgsCE.push_back(333);
-    namesCE.push_back("phi");
+        pdgsCE.push_back(321);
+        namesCE.push_back("K+");
 
-    pdgsCE.push_back(2212);
-    namesCE.push_back("p");
+        pdgsCE.push_back(3312);
+        namesCE.push_back("Xi");
 
-    pdgsCE.push_back(3334);
-    namesCE.push_back("Omega");
+        pdgsCE.push_back(333);
+        namesCE.push_back("phi");
 
-    pdgsCE.push_back(3122);
-    namesCE.push_back("Lambda");
+        pdgsCE.push_back(2212);
+        namesCE.push_back("p");
+
+        pdgsCE.push_back(3334);
+        namesCE.push_back("Omega");
+
+        pdgsCE.push_back(3122);
+        namesCE.push_back("Lambda");
 
 
-    //initialize k vector for Volume scan
-    vector<double> k = {1., 3.};
+        //initialize k vector for Volume scan
+        vector<double> k = {3.};
 
-    ThermalModelBase * model;
+        for (int i = 1; i<argc; i+=2)
+        {
+            ThermalModelBase * model;
+            double gsflag = atoi(argv[i+1]);
 
-    cout << "computing yields for GCE, no gammaS.." << endl;
-    PrepareModel(model, &particles, "GCE", "eBW");
-    ComputeYieldRatios(pdgsCE, namesCE, model, k, false);
+            cout << "Computing ratios in " << argv[i] << " formulation, " << (gsflag == 0 ? "vanilla" : "gammaS") << endl;
 
-    cout << "computing yields for GCE, gammaS.." << endl;
-    PrepareModel(model, &particles, "GCE", "eBW");
-    ComputeYieldRatios(pdgsCE, namesCE, model, k, true);
+            PrepareModel(model, &particles, argv[i], "eBW");
+            ComputeYieldRatios(pdgsCE, namesCE, model, k, string(argv[i]), gsflag);
 
-    cout << "computing yields for SCE, no gammaS.." << endl;
-    PrepareModel(model, &particles, "SCE", "eBW");
-    ComputeYieldRatios(pdgsCE, namesCE, model, k, false);
+            cout << endl;
+        }
 
-    cout << "computing yields for SCE, gammaS.." << endl;
-    PrepareModel(model, &particles, "SCE", "eBW");
-    ComputeYieldRatios(pdgsCE, namesCE, model, k, true);
+    }
       
 }
