@@ -20,7 +20,14 @@ using namespace thermalfist;
 bool useWidth  = true;
 bool useQStats = true;
 
-//parameters dependence on multiplicity from 1906.03145
+string dtos(double d) {
+    std::stringstream ss;
+    ss << d;
+
+    return ss.str();
+}
+
+//parameters dependence on multiplicity in gammaS variant from 1906.03145
 //temperature of chemical freeze out
 double TchVsNch(double dNchdy)
 {
@@ -97,6 +104,7 @@ void PrepareModel(ThermalModelBase * &model, ThermalParticleSystem *particles, c
     model->FillChemicalPotentials();
 }
 
+//multiplicity scan for gammaS variant
 //note: relation between Canonical Volume and multiplicity is linear in gammaS according to 1906.03145
 void MultiplicityScanFill(vector<double>& NchScan, double NchMin=3., double NchMax=2000., int iter=100)
 {
@@ -109,6 +117,7 @@ void MultiplicityScanFill(vector<double>& NchScan, double NchMin=3., double NchM
     }
 }
 
+//volume scan for vanilla variant
 void VScanFill(vector<double>& VScan, double k, double VMin=1., double VMax=15000., int iter=30)
 {
     double VminK = VMin * k;
@@ -122,14 +131,14 @@ void VScanFill(vector<double>& VScan, double k, double VMin=1., double VMax=1500
     }
 }
 
-void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, bool toGCEflag)
+void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname1, vector<string> pname2, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, bool toGCEflag)
 {
     ThermalModelBase * modelGCE;
-    if (toGCEflag)
+    if (toGCEflag)//prepare GCE model to compute ratios to GCE
     {
         PrepareModel(modelGCE, &particles, "GCE", "eBW");
         if (!GsFlag)
-            modelGCE->CalculateDensities();
+            modelGCE->CalculateDensities();//if vanilla, no need to cycle over the volume scan when computing densities
     }
 
     for (int j=0; j<k.size(); j++)
@@ -139,13 +148,13 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
             vector<double> VScan;
             VScanFill(VScan, k[j]);
 
-            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + to_string(static_cast<int>(k[j])) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + tdtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Vc[fm^3]";
 
-            for (int i=0; i<pname.size(); i++)
+            for (int i=0; i<pname1.size(); i++)
             {
-                fout << setw(15) << (pname[i] + string(toGCEflag ? "/pi_toGCE" : "/pi"));
+                fout << setw(15) << (pname1[i] + "/" + pname2[i] + string(toGCEflag ? "_toGCE" : ""));
             }
 
             fout << endl;
@@ -161,9 +170,9 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
                 fout << setw(15) << 2. * model->GetDensity(211, 1) * V / k[j]; //charged pions dN/dy, thus multiply by 2 to include pi- and rescale k.
                 fout << setw(15) << V;
 
-                for (int i=0; i<pname.size(); i++)
+                for (int i=0; i<pname1.size(); i++)
                 { 
-                    fout << setw(15) << model->GetDensity(pid[i], 1) / model->GetDensity(211, 1) / (toGCEflag ? (modelGCE->GetDensity(pid[i], 1) / modelGCE->GetDensity(211 ,1)) : 1);
+                    fout << setw(15) << model->GetDensity(pid1[i], 1) / model->GetDensity(pid2[i], 1) / (toGCEflag ? (modelGCE->GetDensity(pid1[i], 1) / modelGCE->GetDensity(pid2[i] ,1)) : 1);
                 }
 
                 fout << endl;
@@ -176,16 +185,16 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
             vector<double> MultiplicityScan;
             MultiplicityScanFill(MultiplicityScan);
 
-            ofstream fout("../out/piRatios_gs_" + ensemble + "_scan_k" + to_string(static_cast<int>(k[j]))+ string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            ofstream fout("../out/piRatios_gs_" + ensemble + "_scan_k" + dtos(k[j])+ string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Tch[MeV]";
             fout << setw(15) << "dVdy[fm^3]";
             fout << setw(15) << "Vc[fm^3]";
             fout << setw(15) << "gammaS";
 
-            for (int i=0; i<pname.size(); i++)
+            for (int i=0; i<pname1.size(); i++)
             {
-                fout << setw(15) << pname[i] + string(toGCEflag ? "/pi_toGCE" : "/pi");
+                fout << setw(15) << pname1[i] + "/" + pname2[i] + string(toGCEflag ? "_toGCE" : "");
             }
 
             fout << endl;
@@ -220,9 +229,9 @@ void ComputeYieldRatios(vector<int> pid, vector<string> pname, ThermalModelBase 
                 fout << setw(15) << Vc;
                 fout << setw(15) << gammaS;
 
-                for (int i=0; i<pname.size(); i++)
+                for (int i=0; i<pname1.size(); i++)
                 { 
-                    fout << setw(15) << model->GetDensity(pid[i], 1) / model->GetDensity(211, 1) / (toGCEflag ? (modelGCE->GetDensity(pid[i], 1) / modelGCE->GetDensity(211 ,1)) : 1);
+                    fout << setw(15) << model->GetDensity(pid1[i], 1) / model->GetDensity(pid2[i], 1) / (toGCEflag ? (modelGCE->GetDensity(pid1[i], 1) / modelGCE->GetDensity(pid2[i], 1)) : 1);
                 }
 
                 fout << endl;
@@ -242,39 +251,49 @@ int main(int argc, char *argv[])
     {
                 cout << "Not enough arguments provided" << endl;
                 cout << "Required arguments, in order: toGCE flag [0,1], Ensemble [GCE,CE,SCE],  GammaS model flag [0,1], Ensemble, GammaS model flag ..." << endl;
+                cout << "E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, run the script as follows:" << endl << endl;
+                cout << "./TF_CSM-vs-dNpidy 1 SCE 0 CE 1" << endl << endl;
                 return 0;
     }
 
     if (argc>3)
     {
         //Considering specific hadrons
-        vector<int> pdgsCE;
-        vector<string> namesCE;
+        vector<int> pdgs1, pdgs2;
+        vector<string> names1, names2;
 
-        //    pdgsCE.push_back(211);
-        //    namesCE.push_back("pi+");
+        names1.push_back("K");
+        names2.push_back("pi");
+        pdgs1.push_back(321);
+        pdgs2.push_back(211);
 
-        pdgsCE.push_back(321);
-        namesCE.push_back("K+");
+        names1.push_back("Xi");
+        names2.push_back("pi");
+        pdgs1.push_back(3312);
+        pdgs2.push_back(211);
 
-        pdgsCE.push_back(3312);
-        namesCE.push_back("Xi");
+        names1.push_back("phi");
+        names2.push_back("pi");
+        pdgs1.push_back(333);
+        pdgs2.push_back(211);
 
-        pdgsCE.push_back(333);
-        namesCE.push_back("phi");
+        names1.push_back("p");
+        names2.push_back("pi");
+        pdgs1.push_back(2212);
+        pdgs2.push_back(211);
 
-        pdgsCE.push_back(2212);
-        namesCE.push_back("p");
+        names1.push_back("Omega");
+        names2.push_back("pi");
+        pdgs1.push_back(3334);
+        pdgs2.push_back(211);
 
-        pdgsCE.push_back(3334);
-        namesCE.push_back("Omega");
-
-        pdgsCE.push_back(3122);
-        namesCE.push_back("Lambda");
-
+        names1.push_back("La");
+        names2.push_back("pi");
+        pdgs1.push_back(3122);
+        pdgs2.push_back(211);
 
         //initialize k vector for Volume scan
-        vector<double> k = {3.};
+        vector<double> k = {1.};
 
         double toGCEflag = atoi(argv[1]);
 
@@ -286,7 +305,7 @@ int main(int argc, char *argv[])
             cout << "Computing ratios " << (toGCEflag ? "to GCE " : "") << "in " << argv[i] << " formulation, " << (!gsflag ? "vanilla" : "gammaS") << endl;
 
             PrepareModel(model, &particles, argv[i], "eBW");
-            ComputeYieldRatios(pdgsCE, namesCE, model, particles, k, string(argv[i]), gsflag, toGCEflag);
+            ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k, string(argv[i]), gsflag, toGCEflag);
 
             cout << endl;
         }
