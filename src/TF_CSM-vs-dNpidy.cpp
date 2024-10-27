@@ -148,7 +148,7 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             vector<double> VScan;
             VScanFill(VScan, k[j]);
 
-            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + tdtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Vc[fm^3]";
 
@@ -293,7 +293,7 @@ int main(int argc, char *argv[])
         pdgs2.push_back(211);
 
         //initialize k vector for Volume scan
-        vector<double> k = {1.};
+        vector<double> k = {1.6, 3.};
 
         double toGCEflag = atoi(argv[1]);
 
