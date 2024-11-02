@@ -131,7 +131,7 @@ void VScanFill(vector<double>& VScan, double k, double VMin=1., double VMax=1500
     }
 }
 
-void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname1, vector<string> pname2, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, bool toGCEflag)
+void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname1, vector<string> pname2, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, bool toGCEflag, string output="")
 {
     ThermalModelBase * modelGCE;
     if (toGCEflag)//prepare GCE model to compute ratios to GCE
@@ -148,7 +148,13 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             vector<double> VScan;
             VScanFill(VScan, k[j]);
 
-            ofstream fout("../out/piRatios_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            ofstream fout;
+
+            if (output == "")
+                fout.open("../out/piRatios_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            else
+                fout.open("../out/" + output + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
+
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Vc[fm^3]";
 
@@ -185,7 +191,13 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             vector<double> MultiplicityScan;
             MultiplicityScanFill(MultiplicityScan);
 
-            ofstream fout("../out/piRatios_gs_" + ensemble + "_scan_k" + dtos(k[j])+ string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            ofstream fout;
+
+            if (output == "")
+                fout.open("../out/piRatios_gs_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+            else
+                fout.open("../out/" + output + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
+
             fout << setw(15) << "dNpi/dy";
             fout << setw(15) << "Tch[MeV]";
             fout << setw(15) << "dVdy[fm^3]";
@@ -247,20 +259,21 @@ int main(int argc, char *argv[])
 {
     ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list.dat");
 
-    if (argc<=3)
+    if (argc<=4)
     {
                 cout << "Not enough arguments provided" << endl;
-                cout << "Required arguments, in order: toGCE flag [0,1], Ensemble [GCE,CE,SCE],  GammaS model flag [0,1], Ensemble, GammaS model flag ..." << endl;
-                cout << "E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, run the script as follows:" << endl << endl;
-                cout << "./TF_CSM-vs-dNpidy 1 SCE 0 CE 1" << endl << endl;
+                cout << "Required arguments, in order: custom output file flag [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE],  GammaS model flag [0,1], Ensemble, GammaS model flag ..." << endl;
+                cout << "E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, with default output file, run the script as follows:" << endl << endl;
+                cout << "./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1" << endl << endl;
                 return 0;
     }
 
-    if (argc>3)
+    if (argc>4)
     {
         //Considering specific hadrons
         vector<int> pdgs1, pdgs2;
         vector<string> names1, names2;
+
 
         names1.push_back("K");
         names2.push_back("pi");
@@ -293,11 +306,12 @@ int main(int argc, char *argv[])
         pdgs2.push_back(211);
 
         //initialize k vector for Volume scan
-        vector<double> k = {1.6, 3.};
+        vector<double> k = {1., 1.6, 3.};
 
-        double toGCEflag = atoi(argv[1]);
+        double toGCEflag = atoi(argv[2]);
+        double outputFlag = atoi(argv[1]);
 
-        for (int i = 2; i<argc; i+=2)
+        for (int i = 3; i<argc; i+=2)
         {
             ThermalModelBase * model;
             double gsflag = atoi(argv[i+1]);
@@ -305,7 +319,16 @@ int main(int argc, char *argv[])
             cout << "Computing ratios " << (toGCEflag ? "to GCE " : "") << "in " << argv[i] << " formulation, " << (!gsflag ? "vanilla" : "gammaS") << endl;
 
             PrepareModel(model, &particles, argv[i], "eBW");
-            ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k, string(argv[i]), gsflag, toGCEflag);
+            model->TPS()->ParticleByPDG(9010221).SetAbsoluteStrangeness(2.0);
+            if(outputFlag)
+            {
+                string outputString;
+                cout << "Insert output file name: ";
+                cin >> outputString;
+                ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k, string(argv[i]), gsflag, toGCEflag, outputString);
+            }
+            else
+                ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k, string(argv[i]), gsflag, toGCEflag);
 
             cout << endl;
         }
