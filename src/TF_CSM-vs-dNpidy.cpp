@@ -151,7 +151,7 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             ofstream fout;
 
             if (output == "")
-                fout.open("../out/piRatios_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+                fout.open("../out/ratios_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
             else
                 fout.open("../out/" + output + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
 
@@ -194,7 +194,7 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             ofstream fout;
 
             if (output == "")
-                fout.open("../out/piRatios_gs_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
+                fout.open("../out/ratios_gs_" + ensemble + "_scan_k" + dtos(k[j]) + string(toGCEflag ? "_toGCE.dat" : ".dat"), ofstream::out | ofstream::trunc);
             else
                 fout.open("../out/" + output + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
 
@@ -254,10 +254,45 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
     }   
 }
 
+void LoadParticleRef(vector<int>& pdg1, vector<int>& pdg2, vector<string>& name1, vector<string>& name2, string input="", string path = "../conf/")
+{
+    ifstream inf((path + input).c_str());
+    string line;
+
+    if(inf.is_open())
+    {
+        while(getline(inf, line))
+        {
+                if(line.size() == 0)
+                    break;
+
+                istringstream iss(line);
+                string substring;
+                vector<string> substrings;
+                while(getline(iss,substring,','))
+                {
+
+                    substrings.push_back(substring);
+                }
+
+                name1.push_back(substrings[0]);
+                pdg1.push_back(stoi(substrings[1]));              
+                name2.push_back(substrings[2]);            
+                pdg2.push_back(stoi(substrings[3]));
+        }
+        inf.close();
+    }
+    else
+        cout << "can't open or find input conf file" << endl << endl;
+
+}
+
 
 int main(int argc, char *argv[])
 {
-    ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list.dat");
+
+    ThermalParticleSystem particles(string(ThermalFIST_INPUT_FOLDER)+"/list/PDG2014/list-withnuclei.dat");
+
 
     if (argc<=4)
     {
@@ -270,12 +305,14 @@ int main(int argc, char *argv[])
 
     if (argc>4)
     {
+
         //Considering specific hadrons
-        vector<int> pdgs1, pdgs2;
-        vector<string> names1, names2;
+        vector<int> pdgs1;
+        vector<int> pdgs2;
+        vector<string> names1;
+        vector<string> names2;
 
-
-        names1.push_back("K");
+ /*       names1.push_back("K");
         names2.push_back("pi");
         pdgs1.push_back(321);
         pdgs2.push_back(211);
@@ -303,7 +340,10 @@ int main(int argc, char *argv[])
         names1.push_back("La");
         names2.push_back("pi");
         pdgs1.push_back(3122);
-        pdgs2.push_back(211);
+        pdgs2.push_back(211);   */
+
+        LoadParticleRef(pdgs1,pdgs2,names1,names2,"All_to_Pion.txt");
+
 
         //initialize k vector for Volume scan
         vector<double> k = {1., 1.6, 3.};
