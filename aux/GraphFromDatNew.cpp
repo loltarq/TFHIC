@@ -176,9 +176,9 @@ void GraphFromDatNew()
 
     int graphNum = k_scan_values.size();
 
-    canvas -> Divide(1,1);
+    canvas -> Divide(3,3);
 
-    for (int j=0; j<1; j++)
+    for (int j=0; j<9; j++)
     {
         canvas -> cd(j+1);
         auto legend = new TLegend(0.55, 0.2, 0.9, 0.4);
@@ -201,9 +201,12 @@ void GraphFromDatNew()
             mg -> Add(g[k]);
         }
         mg->Draw("AC");
-        TLine *l = new TLine(0,1,2000,1);
-        l->SetLineStyle(10);
-        l->Draw();
+        if (toGCE)
+        {
+            TLine *l = new TLine(0,1,2000,1);
+            l->SetLineStyle(10);
+            l->Draw();
+        }
         mg->SetTitle((names1[j] + "/" + names2[j] + (toGCE ? " to GCE" : "")).c_str());
         mg->GetXaxis()->SetTitle("dNch/deta");
         if (toGCE)
