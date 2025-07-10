@@ -99,9 +99,9 @@ std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::
 
         std::vector<HadronIntegrationInfo> hif = 
         {
-            {pion, yields[0][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2]},
-            {kaon, yields[1][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2]},
-            {proton, yields[2][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2]}
+            {pion, yields[0][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2], centrality_class},
+            {kaon, yields[1][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2], centrality_class},
+            {proton, yields[2][i], beta_t[0], Tkin[0], n_profile[0], beta_t[1], beta_t[2], Tkin[1], Tkin[2], n_profile[1], n_profile[2], centrality_class}
         };
 
         allHadrons.push_back(hif);

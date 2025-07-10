@@ -27,6 +27,8 @@ struct HadronIntegrationInfo
     double beta_t_unc1, beta_t_unc2;
     double Tkin_t_unc1, Tkin_t_unc2;
     double n_profile_unc1, n_profile_unc2;
+
+    int centrality_class;
 };
 
 // List of hadrons: pion, kaon, proton

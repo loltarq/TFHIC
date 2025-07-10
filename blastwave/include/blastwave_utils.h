@@ -12,7 +12,7 @@ double blastwave_integrand(double* x, double* par);
 // -------------------------
 // Compute pT spectrum prototype
 // -------------------------
-TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin = 0., double pTmax = 5.0, int nBins = 200, int intPoints = 1000);
+TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin = 0., double pTmax = 5.0, int nBins = 200, int intPoints = 1000, double R_epsF = 1e-2);
 
 #endif // BLASTWAVE_UTILS_H
 

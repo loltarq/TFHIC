@@ -26,10 +26,12 @@ double blastwave_integrand(double* x, double* par)
     return result;
 }
 
-TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin, double pTmax, int nBins, int intPoints)
+TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin, double pTmax, int nBins, int intPoints, double R_epsF)
 {
+    std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
+
     // Create histogram
-    TH1D* hPt = new TH1D("hPt", "Blast-wave p_{T} spectrum",
+    TH1D* hPt = new TH1D("hPt", htitle.c_str(),
                          nBins, pTmin, pTmax);
 
     // Make reusable TF1
@@ -37,14 +39,19 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin, doub
         1.0, //R_max, to be updated
         6);
     
-    f->SetNpx(intPoints); // more integration points for better accuracy
+    f->SetNpx(intPoints); 
 
     // Set params
-    f->SetParameter(1, info.hadron.mass);
+    f->SetParameter(1, info.hadron.mass); //GeV
     f->SetParameter(2, info.beta_t);
-    f->SetParameter(3, info.Tkin);
+    f->SetParameter(3, info.Tkin); //GeV
     f->SetParameter(4, info.n_profile);
     f->SetParameter(5, R);
+
+    std::cout << "\nDetermining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
+    std::cout << "beta_t: " << f->GetParameter(2) << "\n";
+    std::cout << "Tkin: " << f->GetParameter(3) << "\n";
+    std::cout << "n_profile: " << f->GetParameter(4) << "\n";
 
     // check on Beta_s -> constrain integration region if Beta_s >= 1
 
@@ -53,6 +60,8 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin, doub
     if (beta_s >= 1.)
     {
         R_max = R * TMath::Power(1/beta_s, 1/info.n_profile);
+        double eps = R_max * R_epsF;
+        R_max -= eps;
         std::cout << "WARNING: Unphysical beta_s = " << beta_s << " ≥ 1. Constraining integration region for r.\n";
         std::cout << "WARNING: R_max constrained from " << R << " to " << R_max;
     }
@@ -61,9 +70,9 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double R, double pTmin, doub
         double pT = hPt->GetBinCenter(i);
 
         f->SetParameter(0, pT); // update pT
-
         // Integrate over r = [0, R_max]
         double integral = f->Integral(0.0, R_max, 1e-8);
+        //std::cout << "\npT = " << pT << ", Integral = " << integral << std::endl;
 
         hPt->SetBinContent(i, integral);
     }
