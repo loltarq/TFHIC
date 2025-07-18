@@ -1,0 +1,5 @@
+auxiliary/
+blastwave/*.so
+blastwave/src/*.o
+thermal_yields/build/
+out/
