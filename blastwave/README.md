@@ -1,11 +1,18 @@
-in blastwave subfolder, run make to build the libTFHIC.so library
-then, from blastwave subfolder, run root and load libTFHIC.so along with any dependend root macro, e.g.:
+to build the libTFHIC.so library run
 
-  .L libTFHIC.so
-  .L test.cpp
-  test()
+`make`
 
-if modifying blastwave core scrs, to rebuild run from blastwave subfolder:
+then run root and load libTFHIC.so along with any dependend root macro, e.g.:
 
-  make clean
-  make
+```
+.L libTFHIC.so
+.L test.cpp
+test()
+```
+
+if modifying blastwave core scrs, to rebuild run from blastwave folder:
+
+```
+make clean
+make
+```
