@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 #include <TH1F.h>
+#include <fstream>
 
 std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::string& filename1, const std::string& filename2, const std::string& path)
 {
@@ -111,4 +112,88 @@ std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::
     file2->Close();
 
     return allHadrons;
+}
+
+void get_correlation_volume_info(const std::string& code,
+                 double k_value,
+                 std::vector<double>& col1,
+                 std::vector<double>& col2,
+                 const std::string& base_path) 
+{
+    // Format k_value nicely, e.g., 1.6 instead of 1.600000
+    std::ostringstream k_str;
+
+    if (std::floor(k_value) == k_value)
+    {
+    // It’s an integer → no decimals
+    k_str << static_cast<int>(k_value);
+    }
+    else
+    {
+    // Not an integer → keep 1 decimal digit
+    k_str << std::fixed << std::setprecision(1) << k_value;
+    }
+
+    std::string k_label = k_str.str();
+
+    // Build full filename
+    std::ostringstream filename_stream;
+    filename_stream << base_path
+                    << "ratios_" << code << "_scan_k" << k_str.str() << ".dat";
+
+    std::string filename = filename_stream.str();
+
+    std::ifstream infile(filename);
+    if (!infile.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return;
+    }
+
+    std::string line;
+
+    // Skip header
+    std::getline(infile, line);
+
+    while (std::getline(infile, line)) {
+        std::istringstream iss(line);
+        double val1, val2;
+        if (!(iss >> val1 >> val2)) {
+            continue;
+        }
+        col1.push_back(val1); //pion yield
+        col2.push_back(val2); //Vc
+    }
+
+    infile.close();
+}
+
+double extract_correlation_volume(const std::vector<double>& Vc,
+                const std::vector<double>& thermal_yields,
+                const double& target_yield)
+{
+    int inx = -1;
+    double diff = 9999999.;
+
+    //find closest match between target yield and thermal yields
+    for (const auto& yields : thermal_yields)
+    {
+        double temp = TMath::Abs(yields - target_yield);
+
+        if (temp < diff)
+        {
+            inx++;
+            diff = temp;
+            continue;
+        }
+        else
+            break;
+    }
+
+    if (inx == -1)
+    {
+        std::cout << "\nERROR: correlation volume not found\n";
+        return -1;
+    }
+
+    return Vc[inx];
 }
