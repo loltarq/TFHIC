@@ -2,7 +2,7 @@ clone repository along with ThermalFIST submodule, i.e.
 
   git clone --recursive-submodules https://github.com/loltarq/TFHIC.git
 
-after git clone, in project root folder run bash command:
+after git clone, to build ThermalFIST, in thermal_yields subfolder run bash command:
 
     mkdir build
     cd build
