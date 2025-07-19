@@ -6,6 +6,8 @@
 //\bibliography{bibliografia.bib}
 
 //note: get_integration_info returns a vector of size 10, 1 index for each centrality class. 
+//computePtSpectrum_tgraphs(info,pTmin = 0.,pTmax = 5.0,timesPt = false,clampR = false, rmax=0, graphpoints = 1000)
+//computePtSpectrum_tgraphs(info,pTmin = 0.,pTmax = 5.0,timesPt = false,clampR = false, rmax=0, nbins = 200)
 
 
 void histo()
@@ -47,7 +49,7 @@ void histo()
         int j = 0;
         for (auto item : integration_infos[centrality])
         {
-          auto hPt = computePtSpectrum(item, 0., 10., false, true);
+          auto hPt = computePtSpectrum(item, 0.001, 150., true, false, 0, 10000);
 
           //std::string hname = item.hadron.name + std::to_string(centrality);
           hPt->SetName(Form("%s_%s", item.hadron.name.c_str(), std::to_string(centrality).c_str()));
@@ -164,7 +166,7 @@ void compareHepData()
           {
             double pT = hClone->GetBinCenter(b);
             double content = hClone->GetBinContent(b);
-            hClone->SetBinContent(b, content / (2 * TMath::Pi()));
+            hClone->SetBinContent(b, content / (2 * TMath::Pi() * pT));
           }
 
           hClone->SetLineColor(kMagenta);
@@ -182,13 +184,109 @@ void compareHepData()
           legend->AddEntry(gr, "HEPData", "p");
           legend->Draw();
 
-        cComp->Write();
-        delete cComp;
+          cComp->Write();
+          delete cComp;
         }
       }
 
       modelFile->Close();
       delete modelFile;
+
+      outFile->Close();
+      delete outFile;
+    }
+  }
+
+  hepFile->Close();
+  delete hepFile;
+}
+
+void compareHepData_asTGraphs()
+{
+  std::vector<std::string> particles = {"pi", "K", "p"};
+  std::vector<int> graph_offsets = {0, 10, 20}; // TGraph indices in HEP file
+  std::vector<std::string> ensembles = {"GCE", "CE", "SCE"};
+  std::vector<double> k_factors = {1, 1.6, 3};
+
+  //std::vector<double> k_factors = {1.6};
+  //std::vector<std::string> ensembles = {"CE"};
+
+  TFile *hepFile = new TFile("data/HEPData-ins1222333-v1-root.root");
+  auto integration_infos = get_integration_info();
+
+  for (const auto& ensemble : ensembles)
+  {
+    for (const auto& k_factor : k_factors)
+    {
+      std::ostringstream k_str;
+      k_str << std::fixed << std::setprecision(1) << k_factor;
+
+      std::string out_filename = Form("out/compare_%s_k%s_graph.root", ensemble.c_str(), k_str.str().c_str());
+      TFile *outFile = new TFile(out_filename.c_str(), "RECREATE");
+
+      for (int cent = 0; cent < 10; cent++)
+      {
+        for (int i = 0; i < 3; ++i) // for pi, K, p
+        {
+
+          std::string pname = particles[i];
+
+          int graph_idx = graph_offsets[i] + cent;
+          std::string tableName = Form("Table %d", graph_idx + 1); // Tables start from 1
+
+          TDirectory* dir = (TDirectory*) hepFile->Get(tableName.c_str());
+          if (!dir)
+          {
+            cout << "\nERROR: dir not found\n";
+            return;
+          }
+
+          TGraphAsymmErrors* gr = (TGraphAsymmErrors*)dir->Get("Graph1D_y1");
+          if (!gr) 
+          {
+            cout << "\nERROR: graph not found\n";
+            return;
+          }
+
+          TGraph* grModel = computePtSpectrum_tGraph(integration_infos[cent][i], 0.001, 150., true, false, 0., 10000); 
+          //true->computing pt*dn/dpt !!! necessary for correct normalization to exp yield!
+
+          for (int i = 0; i < grModel->GetN(); i++)
+          {
+            double pT = grModel->GetX()[i];
+            double y = grModel->GetY()[i];
+
+            grModel->SetPoint(i, pT, y/(2*TMath::Pi()*pT)); //rescale model by 1/2pipt
+          }
+
+          //rescale model by 1/2pi
+          //grModel->Scale(1./(TMath::Pi()*2.));
+
+          // Create new canvas for comparison
+          std::string compName = Form("Comparison_%s_k%s_cent%d_%s", 
+                                     ensemble.c_str(), k_str.str().c_str(), cent, pname.c_str());
+          TCanvas* cComp = new TCanvas(compName.c_str(), compName.c_str(), 600, 500);
+
+          gr->SetMarkerStyle(20);
+          gr->SetMarkerColor(kRed);
+          gr->SetLineColor(kRed);
+
+          grModel->SetLineColor(kBlue);
+          grModel->SetLineWidth(2);
+
+          gr->Draw("AP");
+
+          grModel->Draw("L SAME");
+
+          auto leg = new TLegend(0.55, 0.75, 0.88, 0.88);
+          leg->AddEntry(gr, "Experiment", "p");
+          leg->AddEntry(grModel, "Model", "l");
+          leg->Draw();
+        
+          cComp->Write();
+          delete cComp;
+        }
+      }
 
       outFile->Close();
       delete outFile;

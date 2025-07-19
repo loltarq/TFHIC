@@ -11,14 +11,14 @@ Double_t blastwave_integrand(double* x, double* par)
     double beta_T = par[2];
     double Tkin = par[3];
     double n_profile = par[4];
-    bool clampR = par[5];
+    int clampR_flag = static_cast<int>(par[5]);
 
-    double beta_s = (n_profile + 1) * beta_T;           // compute beta_s from beta_t
+    double beta_s = (n_profile + 2.0)/2. * beta_T;           // compute beta_s from beta_t
 
     double mT = TMath::Sqrt(pT * pT + mass * mass);     // transverse mass
     long double beta = beta_s * TMath::Power(r, n_profile);
 
-    if (!clampR)
+    if (!clampR_flag)
         if (beta > 0.9999999999999999) beta = 0.9999999999999999;
 
     double rho = TMath::ATanH(beta);
@@ -41,22 +41,19 @@ Double_t dNdpT_pT(const double* x, const double* p)
   double temp    = p[2];
   double n       = p[3];
   double norm    = p[4];
-  bool clampR = p[5];
+  int clampR_flag = static_cast<int> (p[5]);
   double rmax = p[6];
 
   // r/rmax from 0 to 1
   double r_rmax = 1;
 
-  static TF1 * fIntBG = 0;
+  TF1* fIntBG = new TF1 ("integrand", blastwave_integrand, 0., 1., 6);
 
-  if(!fIntBG)
-    fIntBG = new TF1 ("integrand", blastwave_integrand, 0., 1., 6);
+  fIntBG->SetParameters(mass, pT, beta, temp, n, clampR_flag);
 
-  fIntBG->SetParameters(mass, pT, beta, temp, n, clampR);
-
-  if (clampR)
+  if (clampR_flag)
   {
-    double beta_s = beta * (n + 1.);
+    double beta_s = beta * (n + 2.)/2.;
     if (beta_s > 0.9999999999999999)
     {
         r_rmax = TMath::Power(1./beta_s, 1./n);
@@ -82,7 +79,7 @@ Double_t dNdpT(const double* x, const double* p)
     return pT*dNdpT_pT(x, p);
 }
 
-TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int nBins, int intPoints, double R_epsF)
+TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int nBins)
 {
     std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
 
@@ -111,15 +108,15 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     // ignore: just warning print to terminal if clamp on r is used
     if (clampR)
     {
-        double rmax = 1;
-        double beta_s = info.beta_t * (info.n_profile + 1.);
+        double rmax = 1.0;
+        double beta_s = info.beta_t * (info.n_profile + 2.)/2.;
         if (beta_s > 0.9999999999999999)
         {
         rmax = TMath::Power(1./beta_s, 1./info.n_profile);
         rmax *= 0.9999999999999999;
         }
 
-        if (rmax < 1.)
+        if (rmax < 1.0)
             std::cout << "WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
     }
 
@@ -127,7 +124,7 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     double scaleFactor = info.yield / rawIntegral;
 
     f->SetParameter(4, scaleFactor);
-    TH1D* hPtNorm = new TH1D("hPt", htitle.c_str(), nBins, pTmin, pTmax);
+    TH1D* hPtNorm = new TH1D("hPt", htitle.c_str(), nBins, 0., 5.);
 
     for (int i = 1; i <= hPtNorm->GetNbinsX(); ++i)
     {
@@ -143,5 +140,73 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     std::cout << "Normalized spectrum integral: " << check << std::endl;
 
     return hPtNorm;
+
+}
+
+TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int intPoints)
+{
+    std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
+
+    // Make reusable TF1
+    TF1* f = new TF1("bw_integral", (timesPt ? dNdpT : dNdpT_pT), pTmin, pTmax, 7);
+    
+    //f->SetNpx(intPoints); 
+
+    // Set params
+    f->SetParameter(0, info.hadron.mass); //GeV
+    f->SetParameter(1, info.beta_t);
+    f->SetParameter(2, info.Tkin); //GeV
+    f->SetParameter(3, info.n_profile);
+    f->SetParameter(4, 1.); // set norm factor to 1. Will be updated later to account for yield
+    f->SetParameter(5, clampR); // boolean to choose if clamping r or beta for numerical stability
+
+    // fireball physical radius. if 0, then it's not used. defaulted to 0.
+    // must be set to a value different than 0 only when not renormalizing to known yields
+    f->SetParameter(6, rmax); 
+
+    std::cout << "\nDetermining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
+    std::cout << "beta_t: " << f->GetParameter(1) << "\n";
+    std::cout << "Tkin: " << f->GetParameter(2) << "\n";
+    std::cout << "n_profile: " << f->GetParameter(3) << "\n";
+
+    // ignore: just warning print to terminal if clamp on r is used
+    if (clampR)
+    {
+        double rmax = 1;
+        double beta_s = info.beta_t * (info.n_profile + 1.);
+        if (beta_s > 0.9999999999999999)
+        {
+          rmax = TMath::Power(1./beta_s, 1./info.n_profile);
+          rmax *= 0.9999999999999999;
+        }
+
+        if (rmax < 1.)
+            std::cout << "WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
+    }
+
+    double rawIntegral = f->Integral(pTmin, pTmax);
+    double scaleFactor = info.yield / rawIntegral;
+
+    f->SetParameter(4, scaleFactor);
+
+    TGraph* grModel = new TGraph(intPoints);
+
+    double xMin = f->GetXmin();
+    double xMax = f->GetXmax();
+    double step = (xMax - xMin) / (intPoints - 1);
+
+    for (int i = 0; i < intPoints; ++i)
+    {
+        double x = xMin + i * step;
+        double y = f->Eval(x);
+        grModel->SetPoint(i, x, y);
+    }
+
+    
+    //std::cout << "Blast-wave raw integral: " << rawIntegral << ", target yield: " << info.yield << ", scale factor: " << scaleFactor << std::endl;
+    //double check = hPtNorm->Integral("width");
+    //std::cout << "Normalized spectrum integral: " << check << std::endl;
+
+    return grModel;
 
 }
