@@ -36,7 +36,6 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 
 
 ## Repository Structure
-**auxiliary/** - Utilities: numerics, constants, I/O helpers  
 **blastwave/** - Blast-wave model components / spectra kernels  
 **thermal_yields/** - Thermal/statistical hadronization routines  
 
