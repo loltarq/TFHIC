@@ -103,3 +103,40 @@ make
 ```
 
 ---
+
+## Run
+
+### A) `thermal_yields/` examples
+**Run from the build directory** so outputs land in `thermal_yields/out/` (the code writes to `../out/`):
+
+```bash
+cd thermal_yields/build
+```
+
+- CSM vs. dN/dy (**requires args**; the program prints guidance on missing args). Example:
+```bash
+./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
+# meaning:
+#   custom output flag (0/1), {GammaS flag (0/1), Ensemble [GCE|CE|SCE], GammaS flag, Ensemble..}
+#   outputs -> ../out/
+```
+
+### B) `blastwave/` from ROOT
+```bash
+cd blastwave
+root -l
+```
+In the ROOT prompt:
+```
+root [0] .L libTFHIC.so
+root [1] .L test.cpp++
+root [2] histo()                    // generates spectra; writes ROOT files under out/
+root [3] compareHepData()           // optional comparison macro
+root [4] compareHepData_asTGraphs() // optional TGraph comparison
+```
+
+### Notes
+- for reference on the thermal routines args see docs/physics.md
+  
+---
+
