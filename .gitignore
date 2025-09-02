@@ -1,4 +1,9 @@
 auxiliary/
-blastwave/*.so
-blastwave/src/*.o
 thermal_yields/build/
+
+# Objects / shared libs
+*.o
+*.so
+*.so.*
+*.root
+*.png
