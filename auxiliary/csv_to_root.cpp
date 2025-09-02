@@ -1,6 +1,6 @@
 void readCSV() {
     // Open the CSV file
-    std::ifstream file("data_TableIV.csv");
+    std::ifstream file("./../blastwave/data/data_TableIV.csv");
     if (!file.is_open()) {
         std::cerr << "Error opening file!" << std::endl;
         return;

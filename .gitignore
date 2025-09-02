@@ -1,4 +1,3 @@
-auxiliary/
 thermal_yields/build/
 
 # Objects / shared libs
@@ -7,3 +6,5 @@ thermal_yields/build/
 *.so.*
 *.root
 *.png
+
+!blastwave/data/*.root
