@@ -61,7 +61,6 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 
 ### Notes
 - `thermal_yields/src/CMakeLists.txt` sets `CMAKE_CXX_STANDARD 17`; the Thermal-FIST subproject enforces C++11 internally. Any modern compiler that supports C++17 will handle both.
-- The `auxiliary/` folder is currently unused and can be removed without affecting the build process.
 
 ## Build
 
