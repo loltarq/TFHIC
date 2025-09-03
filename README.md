@@ -190,6 +190,10 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
 ## License
 MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
 
+> **Note on third-party code:** This repository vendors/depends on Thermal-FIST (GPL-3.0) and uses CERN ROOT.
+> Third-party components retain their original licenses. When distributing binaries linked with Thermal-FIST,
+> ensure compliance with **GPL-3.0**; your own original code in this repo is under **MIT**.
+
 
 ## References
 [1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
