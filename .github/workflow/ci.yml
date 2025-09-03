@@ -1,11 +1,10 @@
+name: Build (thermal_yields)
+
 on:
   push:
   pull_request:
   workflow_dispatch:
 
-
-name: Build (thermal_yields)
-on: [push, pull_request]
 jobs:
   build-thermal:
     runs-on: ubuntu-latest
@@ -13,14 +12,27 @@ jobs:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+
       - name: Install deps
         run: sudo apt-get update && sudo apt-get install -y cmake g++ make
+
       - name: Configure
         run: |
           cd thermal_yields
           mkdir -p build && cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
+
       - name: Build
         run: |
           cd thermal_yields/build
           cmake --build . -j
+          
+      - name: Smoke run
+        run: |
+          cd thermal_yields/build
+          ./TF_CSM-vs-dNpidy || true
+
+      - name: Test
+        run: |
+          cd thermal_yields/build
+          ctest --output-on-failure
