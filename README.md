@@ -31,13 +31,15 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 - Kinematic range: pₜ < 5 GeV/c; acceptance: |η| < 0.5.  
 - Centrality classes: I to X.  
 - Model parameters: T, μ_B, ⟨β_T⟩, T_kin (documented in `Configuration`).
+- More details in *docs/physics.md*.
 
 **Status.** Core spectrum/yield components implemented; the MC efficiency module is under development and scheduled next.
 
 
 ## Repository Structure
-**blastwave/** - Blast-wave model components / spectra kernels  
+**blastwave/** - Blast-wave model components, spectra kernels  
 **thermal_yields/** - Thermal/statistical hadronization routines  
+**auxiliary/** - Helper macros, I/O utilities; not critical for build  
 
 ## Requirements
 
