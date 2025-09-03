@@ -54,7 +54,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 
 - **Bundled/Third-party (no system install needed):**
   - **Eigen3** — vendored under `thermal_yields/Thermal-FIST/thirdparty/Eigen3`
-  - **Minuit2** — vendored under `thermal_yields/Thermal-FIST/thirdparty/Minuit2; uses module from ROOT installation if available`
+  - **Minuit2** — vendored under `thermal_yields/Thermal-FIST/thirdparty/Minuit2`; uses module from ROOT installation if available
   *(CMake includes these from the source tree; there’s no `find_package` for them.)*
 
 ### Notes
