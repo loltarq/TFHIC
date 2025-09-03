@@ -8,3 +8,4 @@ thermal_yields/build/
 *.png
 
 !blastwave/data/*.root
+!docs/plots/*.png
