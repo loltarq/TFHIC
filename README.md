@@ -13,7 +13,6 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 - [Config & Run](#config--run)
 - [Validation](#validation)
 - [License](#license)
-- [Citation](#citation)
 - [References](#references)
 
 
