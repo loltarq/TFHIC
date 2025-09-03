@@ -10,7 +10,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 - [Repository Structure](#repository-structure)
 - [Requirements](#requirements)
 - [Build](#build)
-- [Run / Usage](#run--usage)
+- [Config & Run](#config--run)
 - [Configuration](#configuration)
 - [Testing](#testing)
 - [Results & Validation](#results--validation)
@@ -31,7 +31,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 - Kinematic range: pₜ < 5 GeV/c; acceptance: |η| < 0.5.  
 - Centrality classes: I to X.  
 - Model parameters: T, μ_B, ⟨β_T⟩, T_kin (documented in `Configuration`).
-- More details in *docs/physics.md*.
+- More details in `docs/physics.md`.
 
 **Status.** Core spectrum/yield components implemented; the MC efficiency module is under development and scheduled next.
 
@@ -104,10 +104,17 @@ make
 
 ---
 
-## Run
+## Config & Run
 
 ### A) `thermal_yields/` examples
-**Run from the build directory** so outputs land in `thermal_yields/out/` (the code writes to `../out/`):
+**Set thermal model analysis configuration** in `thermal_yields/conf/_AnalysisConfig.config`:
+- line 1: output file relative path; only used if runtime arg custom output is set to 1.
+- line 2: relative path to particle injection list for thermal model.
+- line 3: list of particles to analyze; txt file stored in same folder as config file.
+- line 4: resonance width scheme to use in thermal model.
+- line 5: correlation volume factors for scan.
+
+**Run from the build directory** so outputs land in `thermal_yields/out/`:
 
 ```bash
 cd thermal_yields/build
@@ -115,11 +122,14 @@ cd thermal_yields/build
 
 - CSM vs. dN/dy (**requires args**; the program prints guidance on missing args). Example:
 ```bash
-./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
-# meaning:
-#   custom output flag (0/1), {GammaS flag (0/1), Ensemble [GCE|CE|SCE], GammaS flag, Ensemble..}
-#   outputs -> ../out/
+./TF_CSM-vs-dNpidy
+# Not enough arguments provided
+# Required arguments, in order: custom output file flag [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE], GammaS model flag [0,1], Ensemble, GammaS model flag ...
+# E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, with default output file, run the script as follows:
+# ./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
 ```
+
+Thermal yield results are stored under the `thermal_yields/out/` folder in .dat files. These files serve as input for the blastwave flow parametrization, and need to be moved under the `blastwave/data` folder for this purpose.
 
 ### B) `blastwave/` from ROOT
 ```bash
@@ -136,7 +146,7 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
 ```
 
 ### Notes
-- for reference on the thermal routines args see docs/physics.md
+- For reference on the thermal routines args and blastwave flow calculations see `docs/physics.md`.
   
 ---
 
