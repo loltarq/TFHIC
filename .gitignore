@@ -6,6 +6,8 @@ thermal_yields/build/
 *.so.*
 *.root
 *.png
+*.dat
 
 !blastwave/data/*.root
 !docs/plots/*.png
+!blastwave/data/*.dat
