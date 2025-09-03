@@ -1,3 +1,9 @@
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+
 name: Build (thermal_yields)
 on: [push, pull_request]
 jobs:
