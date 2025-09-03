@@ -128,6 +128,8 @@ cd thermal_yields/build
 #   outputs -> ../out/
 ```
 
+Thermal yield results are stored under the `thermal_yields/out/` folder in .dat files. These files serve as input for the blastwave flow parametrization, and need to be moved under the `blastwave/data` folder for this purpose.
+
 ### B) `blastwave/` from ROOT
 ```bash
 cd blastwave
