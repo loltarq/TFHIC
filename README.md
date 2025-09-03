@@ -104,10 +104,17 @@ make
 
 ---
 
-## Run
+## Config & Run
 
 ### A) `thermal_yields/` examples
-**Run from the build directory** so outputs land in `thermal_yields/out/` (the code writes to `../out/`):
+**Set analysis configuration** in `thermal_yields/conf/_AnalysisConfig.config`:
+- line 1: output file relative path; only used if runtime arg custom output is set to 1.
+- line 2: relative path to particle injection list for thermal model.
+- line 3: list of particles to analyze; txt file stored in same folder as config file.
+- line 4: resonance width scheme to use in thermal model.
+- line 5: correlation volume factors for scan.
+
+**Run from the build directory** so outputs land in `thermal_yields/out/`:
 
 ```bash
 cd thermal_yields/build
@@ -136,7 +143,7 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
 ```
 
 ### Notes
-- for reference on the thermal routines args see docs/physics.md
+- For reference on the thermal routines args and blastwave flow calculations see docs/physics.md
   
 ---
 
