@@ -1,0 +1,20 @@
+name: Build (thermal_yields)
+on: [push, pull_request]
+jobs:
+  build-thermal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install deps
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ make
+      - name: Configure
+        run: |
+          cd thermal_yields
+          mkdir -p build && cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: |
+          cd thermal_yields/build
+          cmake --build . -j
