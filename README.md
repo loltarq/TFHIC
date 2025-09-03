@@ -1,6 +1,6 @@
 # TFHIC
 
-Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake build).  
+Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make build).  
 *Thesis project for master's degree in Nuclear & Subnuclear Physics.*
 
 ---
@@ -11,8 +11,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 - [Requirements](#requirements)
 - [Build](#build)
 - [Config & Run](#config--run)
-- [Testing](#testing)
-- [Results & Validation](#results--validation)
+- [Validation](#validation)
 - [License](#license)
 - [Citation](#citation)
 - [References](#references)
@@ -148,6 +147,50 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
 - For reference on the thermal routines args and blastwave flow calculations see `docs/physics.md`.
   
 ---
+
+## Validation
+
+**Thermal sanity checks.** Canonical suppression increases with |S| and decreases with larger correlation volume V_c; proton/kaon/pion ordering behaves as expected.
+
+**Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
+
+**Reproduce the spectra plots:**
+1. Run thermal yields with default config:
+   ```bash
+   cd thermal_yields/build
+   ./TF_CSM-vs-dNpidy 0 0 GCE 0
+   ```
+2. Move results to blastwave data folder:
+   ```bash
+   mv ../out/*.dat ../../blastwave/data/
+   ```
+3. Run blastwave flow propagation and compare with HEP data:
+   ```bash
+   root -l
+   .L libTFHIC.so
+   .L test.cpp++
+   histo()
+   compareHepData_asTGraphs()
+   ```
+4. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
+   ```bash
+   # in ROOT
+   TBrowser* t = new TBrowser()
+   # use UI to open and explore .root files
+   ```
+
+## Limitations
+- Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
+- Systematics (model parameter uncertainties) not propagated to final spectra.
+
+## Roadmap
+- [ ] Implement MC efficiency module.
+- [ ] Unify configuration via CLI flags or a single YAML file.
+- [ ] Include systematics propragation.
+
+## License
+MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
+
 
 ## References
 [1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
