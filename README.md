@@ -11,13 +11,12 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 - [Requirements](#requirements)
 - [Build](#build)
 - [Config & Run](#config--run)
-- [Configuration](#configuration)
 - [Testing](#testing)
 - [Results & Validation](#results--validation)
-- [Architecture](#architecture)
-- [Roadmap](#roadmap)
 - [License](#license)
 - [Citation](#citation)
+- [References](#references)
+
 
 ## Overview
 **Problem.** Determine particle-species detection efficiencies for heavy-ion collisions, resolving their dependence on pₜ and centrality.
@@ -150,3 +149,5 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
   
 ---
 
+## References
+[1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
