@@ -117,7 +117,7 @@ cd thermal_yields/build
 ```bash
 ./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
 # meaning:
-#   custom output flag (0/1), {GammaS flag (0/1), Ensemble [GCE|CE|SCE], GammaS flag, Ensemble..}
+#   custom output flag (0/1), to GCE ratio flag (0/1), {GammaS flag (0/1), Ensemble [GCE|CE|SCE], GammaS flag, Ensemble..}
 #   outputs -> ../out/
 ```
 
