@@ -10,4 +10,5 @@ thermal_yields/build/
 
 !blastwave/data/*.root
 !docs/plots/*.png
+!docs/plots/*.root
 !blastwave/data/*.dat
