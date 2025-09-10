@@ -10,7 +10,7 @@ CXX           := g++
 
 
 # Sources & output library name
-SRCS          := src/hadron_list.cpp src/io_utils.cpp src/blastwave_utils.cpp
+SRCS          := src/hadron_list.cpp src/io_utils.cpp src/blastwave_utils.cpp src/io_thermal.cpp
 OBJS          := $(SRCS:.cpp=.o)
 
 LIBNAME       := libTFHIC.so

@@ -7,8 +7,10 @@ thermal_yields/build/
 *.root
 *.png
 *.dat
+*.json
 
 !blastwave/data/*.root
 !docs/plots/*.png
 !docs/plots/*.root
 !blastwave/data/*.dat
+!blastwave/data/*.json

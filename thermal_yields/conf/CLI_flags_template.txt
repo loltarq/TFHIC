@@ -1,0 +1,2 @@
+./export_dndy_json --out "/home/lorenzo/MasterThesis/TFHIC/thermal_yields/out/yields_k1.6_k3_k6_CE_gs" --k "1.6,3.0,6.0" --mode "gs" --nch-file "/home/lorenzo/MasterThesis/TFHIC/thermal_yields/conf/Nch_PbPb_1303.0737_ALICE_template.txt"
+

@@ -1,5 +1,6 @@
 #include "include/io_utils.h"
 #include "include/blastwave_utils.h"
+#include "include/io_thermal.h"
 
 //\usepackage[numbers]{natbib}
 //\bibliographystyle{plain}
@@ -16,6 +17,12 @@ void histo()
   std::vector<double> k_factors = {1, 1.6, 3};
 
   auto integration_infos = get_integration_info();
+  // NEW: override yields with thermal-model dN/dy if JSON provided
+  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
+  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
+    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
+  }
+
 
   //compute with all thermal model scans, on all centralities
   for (const auto& ensemble : ensembles)
@@ -92,6 +99,12 @@ void compareHepData()
 
   TFile *hepFile = new TFile("data/HEPData-ins1222333-v1-root.root");
   auto integration_infos = get_integration_info();
+  // NEW: override yields with thermal-model dN/dy if JSON provided
+  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
+  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
+    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
+  }
+
 
   for (const auto& ensemble : ensembles)
   {
@@ -213,6 +226,12 @@ void compareHepData_asTGraphs()
 
   TFile *hepFile = new TFile("data/HEPData-ins1222333-v1-root.root");
   auto integration_infos = get_integration_info();
+  // NEW: override yields with thermal-model dN/dy if JSON provided
+  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
+  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
+    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
+  }
+
 
   for (const auto& ensemble : ensembles)
   {
