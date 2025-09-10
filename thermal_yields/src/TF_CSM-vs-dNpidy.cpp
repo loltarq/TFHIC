@@ -188,6 +188,120 @@ void VScanFill(vector<double>& VScan, double k, double VMin=1., double VMax=1500
     }
 }
 
+void ComputeYields(vector<int> pid1, vector<string> pname1, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, string output="")
+{
+    if (ensemble == "GCE")
+    {
+        //if ensemble is GCE, correlation volume has no meaning
+        //use a single placeholder value for k
+        k.clear();
+        k.push_back(1.);
+    }
+    
+    for (int j=0; j<k.size(); j++)
+    {
+        if (!GsFlag)//Vanilla
+        {
+            vector<double> VScan;
+            VScanFill(VScan, k[j]);
+
+            ofstream fout;
+
+            if (output == "")
+                fout.open(ConfigParameters[0] + "yields_" + ensemble + "_scan_k" + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
+            else
+                fout.open(ConfigParameters[0] + output + dtos(k[j]) + (output.find(".dat") != string::npos ? "" : ".dat"), ofstream::out | ofstream::trunc);
+
+            fout << setw(15) << "dNpipm/dy";
+            fout << setw(15) << "Vc[fm^3]";
+
+            for (int i=0; i<pname1.size(); i++)
+            {
+                fout << setw(15) << pname1[i];
+            }
+
+            fout << endl;
+            
+            for (int i=0; i<VScan.size(); i++) //here multiplicityscan is volume scan
+            {
+                double V = pow(10., VScan[i]);
+
+                model->SetVolume(V);
+                model->SetCanonicalVolume(V);
+                model->CalculateDensities();
+
+                fout << setw(15) << 2. * model->GetDensity(211, 1) * V / k[j]; //charged pions dN/dy, thus multiply by 2 to include pi- and rescale k.
+                fout << setw(15) << V;
+
+                for (int i=0; i<pname1.size(); i++)
+                { 
+                    fout << setw(15) << model->GetDensity(pid1[i], 1) * V;
+                }
+
+                fout << endl;
+            }
+
+            fout.close();
+        }
+        else//GammaS
+        {
+            vector<double> MultiplicityScan;
+            MultiplicityScanFill(MultiplicityScan);
+
+            ofstream fout;
+
+            if (output == "")
+                fout.open(ConfigParameters[0] + "yields_gs_" + ensemble + "_scan_k" + dtos(k[j]) + ".dat", ofstream::out | ofstream::trunc);
+            else
+                fout.open(ConfigParameters[0] + output + dtos(k[j]) + (output.find(".dat") != string::npos ? "" : ".dat"), ofstream::out | ofstream::trunc);
+
+            fout << setw(15) << "dNch/deta";
+            fout << setw(15) << "Tch[MeV]";
+            fout << setw(15) << "dVdy[fm^3]";
+            fout << setw(15) << "Vc[fm^3]";
+            fout << setw(15) << "gammaS";
+
+            for (int i=0; i<pname1.size(); i++)
+            {
+                fout << setw(15) << pname1[i];
+            }
+
+            fout << endl;
+
+            for (int i=0; i<MultiplicityScan.size(); i++) //here multiplicityscan is on Nch, volume is determined by fitted parameters
+            {
+                double Nch = pow(10., MultiplicityScan[i]);
+
+                double Tch = TchVsNch(Nch);
+                double gammaS = GsVsNch(Nch);
+                double dVdy = dVdyVsNch(Nch);
+                double Vc = k[j] * dVdy;
+
+                model->SetTemperature(Tch);
+                model->SetGammaS(gammaS);
+                model->SetVolume(dVdy);
+                model->SetCanonicalVolume(Vc);
+                model->CalculateDensities();
+
+                fout << setw(15) << Nch;
+                fout << setw(15) << Tch;
+                fout << setw(15) << dVdy;
+                fout << setw(15) << Vc;
+                fout << setw(15) << gammaS;
+
+                for (int i=0; i<pname1.size(); i++)
+                { 
+                    fout << setw(15) << model->GetDensity(pid1[i], 1) * dVdy;
+                }
+
+                fout << endl;
+            }
+
+            fout.close();
+        }       
+    }   
+}
+
 void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname1, vector<string> pname2, ThermalModelBase * &model, ThermalParticleSystem particles, vector<double> k, const string& ensemble, bool GsFlag, bool toGCEflag, string output="")
 {
     ThermalModelBase * modelGCE;
@@ -212,7 +326,7 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             else
                 fout.open(ConfigParameters[0] + output + dtos(k[j]) + (output.find(".dat") != string::npos ? "" : ".dat"), ofstream::out | ofstream::trunc);
 
-            fout << setw(15) << "dNpi/dy";
+            fout << setw(15) << "dNpipm/dy";
             fout << setw(15) << "Vc[fm^3]";
 
             for (int i=0; i<pname1.size(); i++)
@@ -255,7 +369,7 @@ void ComputeYieldRatios(vector<int> pid1, vector<int> pid2, vector<string> pname
             else
                 fout.open(ConfigParameters[0] + output + dtos(k[j]) + (output.find(".dat") != string::npos ? "" : ".dat"), ofstream::out | ofstream::trunc);
 
-            fout << setw(15) << "dNpi/dy";
+            fout << setw(15) << "dNch/deta";
             fout << setw(15) << "Tch[MeV]";
             fout << setw(15) << "dVdy[fm^3]";
             fout << setw(15) << "Vc[fm^3]";
@@ -347,17 +461,17 @@ void LoadParticleRef(vector<int>& pdg1, vector<int>& pdg2, vector<string>& name1
 int main(int argc, char *argv[])
 {
 
-    if (argc<=4)
+    if (argc<=5)
     {
                 cout << "Not enough arguments provided" << endl;
-                cout << "Required arguments, in order: custom output file flag [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE], GammaS model flag [0,1], Ensemble, GammaS model flag ..." << endl;
+                cout << "Required arguments, in order: custom output file flag [0,1], yields as ratio [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE], GammaS model flag [0,1], Ensemble, GammaS model flag ..." << endl;
                 cout << "E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, with default output file, run the script as follows:" << endl << endl;
-                cout << "./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1" << endl << endl;
+                cout << "./TF_CSM-vs-dNpidy 0 1 1 SCE 0 CE 1" << endl << endl;
 
                 return 0;
     }
 
-    if (argc>4)
+    if (argc>5)
     {
 
         string ConfigFile = "../conf/_AnalysisConfig.config";
@@ -403,15 +517,16 @@ int main(int argc, char *argv[])
 
         LoadParticleRef(pdgs1,pdgs2,names1,names2,ConfigParameters[2]);
 
-        double toGCEflag = atoi(argv[2]);
+        double toGCEflag = atoi(argv[3]);
+        double as_ratios = atoi(argv[2]);
         double outputFlag = atoi(argv[1]);
 
-        for (int i = 3; i<argc; i+=2)
+        for (int i = 4; i<argc; i+=2)
         {
             ThermalModelBase * model;
             double gsflag = atoi(argv[i+1]);
 
-            cout << "Computing ratios " << (toGCEflag ? "to GCE " : "") << "in " << argv[i] << " formulation, " << (!gsflag ? "vanilla" : "gammaS") << endl;
+            cout << "Computing " << (as_ratios ? "ratios " : "yields ") << (toGCEflag ? "to GCE " : "") << "in " << argv[i] << " formulation, " << (!gsflag ? "vanilla" : "gammaS") << endl;
 
             PrepareModel(model, &particles, argv[i], ConfigParameters[3]);
             //model->TPS()->ParticleByPDG(9010221).SetAbsoluteStrangeness(2.0);
@@ -420,10 +535,18 @@ int main(int argc, char *argv[])
                 string outputString;
                 cout << "Insert output file name: ";
                 cin >> outputString;
-                ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k_scan_values, string(argv[i]), gsflag, toGCEflag, outputString);
+                if (as_ratios)
+                    ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k_scan_values, string(argv[i]), gsflag, toGCEflag, outputString);
+                else
+                    ComputeYields(pdgs1, names1, model, particles, k_scan_values, string(argv[i]), gsflag, outputString);
             }
             else
-                ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k_scan_values, string(argv[i]), gsflag, toGCEflag);
+            {
+                if (as_ratios)
+                    ComputeYieldRatios(pdgs1, pdgs2, names1, names2, model, particles, k_scan_values, string(argv[i]), gsflag, toGCEflag);
+                else
+                    ComputeYields(pdgs1, names1, model, particles, k_scan_values, string(argv[i]), gsflag);
+            }
 
             cout << endl;
         }
