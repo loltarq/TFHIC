@@ -1,4 +1,5 @@
 thermal_yields/build/
+blastwave/bin/
 
 # Objects / shared libs
 *.o
