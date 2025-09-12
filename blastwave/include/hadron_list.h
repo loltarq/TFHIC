@@ -30,7 +30,7 @@ struct HadronIntegrationInfo
     double n_profile;   // flow profile exponent n
 
     // Normalization target (dN/dy). This is what computePtSpectrum* will scale to.
-    // Historically this came from experimental yields; we now allow replacing it with thermal-model yields.
+    // Historically this came from experimental yields; now allow replacing it with thermal-model yields.
     double yield;
 
     // Optional uncertainties for scanning/tuning (unused by core computation, kept for compatibility)

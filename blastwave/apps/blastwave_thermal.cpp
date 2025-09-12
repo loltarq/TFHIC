@@ -224,6 +224,11 @@ static TH1D* make_spectrum(const HadronIntegrationInfo& info, double ptmin, doub
 }
 static TGraph* make_spectrum_tGraph(const HadronIntegrationInfo& info, double ptmin, double ptmax, int nbins, bool timesPt, bool verbose, bool clampR){
   HadronIntegrationInfo tmp = info;
+
+  // tgraph evaluates point per point, need some margin from 0
+  if (ptmin == 0)
+    ptmin = 0.00001;
+
   return computePtSpectrum_tGraph(tmp, ptmin, ptmax, /*timesPt=*/timesPt, /*clampR=*/clampR, /*rmax=*/0.0, /*nBins=*/nbins, verbose);
 }
 
@@ -276,7 +281,6 @@ int main(int argc, char** argv){
   // must have at least one yield source
   if (thermal_json.empty() && yields_csv.empty()){
     std::cerr << "[blastwave_thermal] ERROR: provide either --thermal-json or --yields-csv\n\n";
-    print_help(argv[0], bw_csv, bw_path);
     return 2;
   }
 

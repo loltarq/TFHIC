@@ -84,7 +84,8 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
 
     // Make reusable TF1
-    TF1* f = new TF1("bw_integral", (timesPt ? dNdpT : dNdpT_pT), 0, 1, 7);
+    // note: use dNdpT instead of dNdpT_pT for correct normalization; rescale only after
+    TF1* f = new TF1("bw_integral", dNdpT, 0, 1, 7);
     
     //f->SetNpx(intPoints); 
 
@@ -132,7 +133,15 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     for (int i = 1; i <= hPtNorm->GetNbinsX(); ++i)
     {
         double pT = hPtNorm->GetBinCenter(i);
+        
+        // normalize via parameter 4 of f
         double val = f->Eval(pT);
+
+        // if user wants (1/pT)dN/dpT, now it is the time
+        if (!timesPt)
+        {
+            val /= pT;
+        }
         
         hPtNorm->SetBinContent(i, val);
     }
@@ -153,7 +162,8 @@ TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, doubl
     std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
 
     // Make reusable TF1
-    TF1* f = new TF1("bw_integral", (timesPt ? dNdpT : dNdpT_pT), pTmin, pTmax, 7);
+    // note: use dNdpT instead of dNdpT_pT for correct normalization; rescale only after
+    TF1* f = new TF1("bw_integral", dNdpT, pTmin, pTmax, 7);
     
     //f->SetNpx(intPoints); 
 
@@ -205,9 +215,18 @@ TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, doubl
 
     for (int i = 0; i < intPoints; ++i)
     {
-        double x = xMin + i * step;
-        double y = f->Eval(x);
-        grModel->SetPoint(i, x, y);
+        double pT = xMin + i * step;
+
+        // normalize via parameter 4 of f
+        double y = f->Eval(pT);
+
+        // if user wants (1/pT)dN/dpT, now it is the time
+        if (!timesPt)
+        {
+            y /= pT;
+        }
+
+        grModel->SetPoint(i, pT, y);
     }
 
     

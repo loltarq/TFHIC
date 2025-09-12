@@ -102,7 +102,7 @@ struct BWParams {
 // For each centrality, keep:
 // - params for ALL
 // - params per token (PI, K, P, ...)
-// Later, per PDG, we prefer the token-specific one, else ALL, else error.
+// Later, per PDG, prefer the token-specific one, else ALL, else error.
 struct PerCentrality {
   int centrality_class = -1; // as in CSV
   bool has_all = false;
@@ -110,7 +110,7 @@ struct PerCentrality {
   std::map<std::string, BWParams> per_token; // token -> params
 };
 
-// naive CSV reader; expects comma-separated, with the header as in your file.
+// naive CSV reader; expects comma-separated, with the header
 static bool read_bw_csv(const std::string& path, std::vector<std::map<std::string,std::string>>& rows){
   std::ifstream in(path);
   if(!in) return false;
@@ -341,9 +341,9 @@ std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::
 
         std::vector<HadronIntegrationInfo> hif = 
         {
-            {pion, yields[0][i], beta_t[0], Tkin_col[0], n_col[0], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class},
-            {kaon, yields[1][i], beta_t[0], Tkin_col[0], n_col[0], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class},
-            {proton, yields[2][i], beta_t[0], Tkin_col[0], n_col[0], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class}
+            {pion, beta_t[0], Tkin_col[0], n_col[0], yields[0][i], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class},
+            {kaon, beta_t[0], Tkin_col[0], n_col[0], yields[1][i], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class},
+            {proton, beta_t[0], Tkin_col[0], n_col[0], yields[2][i], beta_t[1], beta_t[2], Tkin_col[1], Tkin_col[2], n_col[1], n_col[2], centrality_class}
         };
 
         allHadrons.push_back(hif);
