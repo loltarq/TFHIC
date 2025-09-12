@@ -17,12 +17,6 @@ void histo()
   std::vector<double> k_factors = {1, 1.6, 3};
 
   auto integration_infos = get_integration_info();
-  // NEW: override yields with thermal-model dN/dy if JSON provided
-  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
-  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
-    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
-  }
-
 
   //compute with all thermal model scans, on all centralities
   for (const auto& ensemble : ensembles)
@@ -37,7 +31,7 @@ void histo()
       std::ostringstream k_str;
       k_str << std::fixed << std::setprecision(1) << k_factor;
 
-      // 📌 Write these canvas to its own ROOT file
+      // Write these canvas to its own ROOT file
       std::ostringstream fname;
       fname << "out/" << ensemble << "_k" << k_str.str() << ".root";
 
@@ -56,7 +50,7 @@ void histo()
         int j = 0;
         for (auto item : integration_infos[centrality])
         {
-          auto hPt = computePtSpectrum(item, 0.001, 150., true, false, 0, 10000);
+          auto hPt = computePtSpectrum(item, 0.001, 150., true, false, 0, 10000, true);
 
           //std::string hname = item.hadron.name + std::to_string(centrality);
           hPt->SetName(Form("%s_%s", item.hadron.name.c_str(), std::to_string(centrality).c_str()));
@@ -99,11 +93,6 @@ void compareHepData()
 
   TFile *hepFile = new TFile("data/HEPData-ins1222333-v1-root.root");
   auto integration_infos = get_integration_info();
-  // NEW: override yields with thermal-model dN/dy if JSON provided
-  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
-  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
-    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
-  }
 
 
   for (const auto& ensemble : ensembles)
@@ -226,12 +215,6 @@ void compareHepData_asTGraphs()
 
   TFile *hepFile = new TFile("data/HEPData-ins1222333-v1-root.root");
   auto integration_infos = get_integration_info();
-  // NEW: override yields with thermal-model dN/dy if JSON provided
-  const char* THERMAL_JSON = std::getenv("THERMAL_YIELDS_JSON");
-  if (THERMAL_JSON && std::string(THERMAL_JSON).size()>0) {
-    apply_thermal_yields_from_json(integration_infos, THERMAL_JSON, /*use_total=*/false);
-  }
-
 
   for (const auto& ensemble : ensembles)
   {
@@ -267,7 +250,7 @@ void compareHepData_asTGraphs()
             return;
           }
 
-          TGraph* grModel = computePtSpectrum_tGraph(integration_infos[cent][i], 0.001, 150., true, false, 0., 10000); 
+          TGraph* grModel = computePtSpectrum_tGraph(integration_infos[cent][i], 0.001, 150., true, false, 0., 10000, true); 
           //true->computing pt*dn/dpt !!! necessary for correct normalization to exp yield!
 
           for (int i = 0; i < grModel->GetN(); i++)

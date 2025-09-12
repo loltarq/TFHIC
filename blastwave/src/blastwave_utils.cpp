@@ -79,7 +79,7 @@ Double_t dNdpT(const double* x, const double* p)
     return pT*dNdpT_pT(x, p);
 }
 
-TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int nBins)
+TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int nBins, bool verbose)
 {
     std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
 
@@ -100,10 +100,13 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     // must be set to a value different than 0 only when not renormalizing to known yields
     f->SetParameter(6, rmax); 
 
-    std::cout << "\nDetermining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
-    std::cout << "beta_t: " << f->GetParameter(1) << "\n";
-    std::cout << "Tkin: " << f->GetParameter(2) << "\n";
-    std::cout << "n_profile: " << f->GetParameter(3) << "\n";
+    if (verbose)
+    {
+        std::cerr << "[blastwave_utils] determining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
+        std::cerr << "[blastwave_utils] beta_t: " << f->GetParameter(1) << "\n";
+        std::cerr << "[blastwave_utils] Tkin: " << f->GetParameter(2) << "\n";
+        std::cerr << "[blastwave_utils] n_profile: " << f->GetParameter(3) << "\n";
+    }
 
     // ignore: just warning print to terminal if clamp on r is used
     if (clampR)
@@ -116,8 +119,8 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
         rmax *= 0.9999999999999999;
         }
 
-        if (rmax < 1.0)
-            std::cout << "WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
+        if (verbose && rmax < 1.0)
+                std::cerr << "[blastwave_utils] WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
     }
 
     double rawIntegral = f->Integral(pTmin, pTmax);
@@ -134,16 +137,18 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
         hPtNorm->SetBinContent(i, val);
     }
 
-
-    std::cout << "Blast-wave raw integral: " << rawIntegral << ", target yield: " << info.yield << ", scale factor: " << scaleFactor << std::endl;
-    double check = hPtNorm->Integral("width");
-    std::cout << "Normalized spectrum integral: " << check << std::endl;
+    if (verbose)
+    {
+        std::cerr << "[blastwave_utils] blast-wave raw integral: " << rawIntegral << ", target yield: " << info.yield << ", scale factor: " << scaleFactor << std::endl;
+        double check = hPtNorm->Integral("width");
+        std::cerr << "[blastwave_utils] normalized spectrum integral: " << check << std::endl;
+    }
 
     return hPtNorm;
 
 }
 
-TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int intPoints)
+TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, double pTmax, bool timesPt, bool clampR, double rmax, int intPoints, bool verbose)
 {
     std::string htitle = info.hadron.name + " Blast-wave p_{T} spectrum, Centrality: " + std::to_string(info.centrality_class - 1);
 
@@ -164,10 +169,13 @@ TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, doubl
     // must be set to a value different than 0 only when not renormalizing to known yields
     f->SetParameter(6, rmax); 
 
-    std::cout << "\nDetermining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
-    std::cout << "beta_t: " << f->GetParameter(1) << "\n";
-    std::cout << "Tkin: " << f->GetParameter(2) << "\n";
-    std::cout << "n_profile: " << f->GetParameter(3) << "\n";
+    if (verbose)
+    {
+        std::cerr << "[blastwave_utils] determining spectrum for hadron " << info.hadron.name << " in centrality class " << info.centrality_class << std::endl;
+        std::cerr << "[blastwave_utils] beta_t: " << f->GetParameter(1) << "\n";
+        std::cerr << "[blastwave_utils] Tkin: " << f->GetParameter(2) << "\n";
+        std::cerr << "[blastwave_utils] n_profile: " << f->GetParameter(3) << "\n";
+    }
 
     // ignore: just warning print to terminal if clamp on r is used
     if (clampR)
@@ -180,8 +188,8 @@ TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, doubl
           rmax *= 0.9999999999999999;
         }
 
-        if (rmax < 1.)
-            std::cout << "WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
+        if (verbose && rmax < 1.0)
+                std::cerr << "[blastwave_utils] WARNING: unphysical beta_s; integration region in r constrained from 1 to " << rmax << "\n";
     }
 
     double rawIntegral = f->Integral(pTmin, pTmax);
@@ -203,9 +211,10 @@ TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin, doubl
     }
 
     
-    //std::cout << "Blast-wave raw integral: " << rawIntegral << ", target yield: " << info.yield << ", scale factor: " << scaleFactor << std::endl;
-    //double check = hPtNorm->Integral("width");
-    //std::cout << "Normalized spectrum integral: " << check << std::endl;
+    if (verbose)
+    {
+        std::cerr << "[blastwave_utils] blast-wave raw integral: " << rawIntegral << ", target yield: " << info.yield << ", scale factor: " << scaleFactor << std::endl;
+    }
 
     return grModel;
 

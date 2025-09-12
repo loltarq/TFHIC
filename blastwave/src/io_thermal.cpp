@@ -133,11 +133,6 @@ bool load_yields_from_json(const ThermalSelection& sel,
 }
 
 // ---- CLI parsing for blastwave driver ----
-
-static bool has_flag(int argc, char** argv, const char* name){
-  for(int i=1;i<argc;i++) if(std::string(argv[i])==name) return true;
-  return false;
-}
 static const char* take_next_or_die(int& i, int argc, char** argv, const char* flag){
   if(i+1>=argc){ std::cerr << "Missing value after " << flag << "\n"; std::exit(2); }
   return argv[++i];

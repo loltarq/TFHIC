@@ -27,7 +27,7 @@ Double_t dNdpT(const double* x, const double* par);
 // clampR: method of numerical stability. if true, the integration region in r is constrained so that beta cannot reach 1; else, beta is forced to < 1 if higher.
 // rmax: if set to different than 0, this represents the PHYSICAL radius of the fireball. Useful only if determining spectrum from first principles (i.e. no yield to normalize to)
 // -------------------------
-TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin = 0., double pTmax = 5.0, bool timesPt = false, bool clampR = false, double rmax = 0, int nBins = 200);
+TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin = 0., double pTmax = 5.0, bool timesPt = false, bool clampR = false, double rmax = 0, int nBins = 200, bool verbose = false);
 
 // -------------------------
 // Compute pT spectrum method - returns a TGraph
@@ -36,7 +36,7 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin = 0., double pT
 // rmax: if set to different than 0, this represents the PHYSICAL radius of the fireball. Useful only if determining spectrum from first principles (i.e. no yield to normalize to)
 // gr: TGraph from experimental data, with possibly asymm bin widths
 // -------------------------
-TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin = 0., double pTmax = 5.0, bool timesPt = false, bool clampR = false, double rmax = 0, int intPoints = 1000);
+TGraph* computePtSpectrum_tGraph(HadronIntegrationInfo info, double pTmin = 0., double pTmax = 5.0, bool timesPt = false, bool clampR = false, double rmax = 0, int intPoints = 1000, bool verbose = false);
 
 #endif // BLASTWAVE_UTILS_H
 
