@@ -11,6 +11,9 @@ blastwave/bin/
 *.json
 
 !blastwave/data/*.root
-!docs/plots/
+!docs/plots/blastwave_exp/*.root
+!docs/plots/blastwave_exp/*.png
+!docs/plots/thermal_yields_ratios/*.root
+!docs/plots/thermal_yields_ratios/*.png
 !blastwave/data/*.dat
 !blastwave/data/*.json
