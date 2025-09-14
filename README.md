@@ -48,7 +48,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 
 ### Libraries
 - **CERN ROOT 6.x** — **required only for `blastwave/`**  
-  Used to build and load `libTFHIC.so` (`root-config` is invoked by the Makefile; typical workflow is loading the `.so` in ROOT/Cling and running macros).
+  Used to build and load `blastwave/libTFHIC.so` and `blastwave/bin/blastwave_thermal` (`root-config` is invoked by the Makefile; typical workflow is loading the `.so` in ROOT/Cling and running macros).
   - Installation instructions available @ https://root.cern/install
   - Verify version: `which root-config` and `root-config --version`
 
@@ -77,8 +77,9 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j
 ```
-This produces the executable in `thermal_yields/build/`:
-- `TF_CSM-vs-dNpidy`
+This produces the following executables:
+- `thermal_yields/build/TF_CSM-vs-dNpidy`
+- `thermal_yields/build/export_dndy_json`
 
 > Notes  
 > • The project sets **C++17**.  
@@ -91,7 +92,9 @@ This produces the executable in `thermal_yields/build/`:
 cd blastwave
 make        # uses root-config to find headers/libs
 ```
-This builds `blastwave/libTFHIC.so`.
+This builds the following:
+- `blastwave/libTFHIC.so`
+- `blastwave/bin/blastwave_thermal`
 
 Rebuild after changes to core src:
 ```bash
@@ -103,7 +106,25 @@ make
 
 ## Config & Run
 
-### A) `thermal_yields/` examples
+### A) `thermal_yields/build/`
+
+#### 1) export_dndny_json
+Main one-liner executable: allows to compute absolute thermal yields of 1 or more hadrons specifying all configuration parameters via CLI flags.  
+Yields and metadata output is stored in .json file for later use (e.g. blastwave pT spectrum normalization).    
+
+**Run from the build directory** so outputs land in `thermal_yields/out/` by default;    
+
+**Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
+```bash
+./export_dndny_json
+[...]
+```
+
+
+#### 2) TF_CSM-vs-dNpidy (legacy)
+Legacy program: allows to compute yields ratios w.r.t. specific hadrons given a statistical ensemble and model variant.  
+Output stored in column-based .dat file.  
+
 **Set thermal model analysis configuration** in `thermal_yields/conf/_AnalysisConfig.config`:
 - line 1: output file relative path; only used if runtime arg custom output is set to 1.
 - line 2: relative path to particle injection list for thermal model.
@@ -111,14 +132,11 @@ make
 - line 4: resonance width scheme to use in thermal model.
 - line 5: correlation volume factors for scan.
 
-**Run from the build directory** so outputs land in `thermal_yields/out/`:
+**Run from the build directory** so outputs land in `thermal_yields/out/` by default;  
 
+**Requires args**; the program prints guidance on missing args. Example:
 ```bash
 cd thermal_yields/build
-```
-
-- CSM vs. dN/dy (**requires args**; the program prints guidance on missing args). Example:
-```bash
 ./TF_CSM-vs-dNpidy
 # Not enough arguments provided
 # Required arguments, in order: custom output file flag [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE], GammaS model flag [0,1], Ensemble, GammaS model flag ...
@@ -126,9 +144,27 @@ cd thermal_yields/build
 # ./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
 ```
 
-Thermal yield results are stored under the `thermal_yields/out/` folder in .dat files. These files serve as input for the blastwave flow parametrization, and need to be moved under the `blastwave/data` folder for this purpose.
+Thermal yield results are stored under the `thermal_yields/out/` folder in .dat files.
 
 ### B) `blastwave/` from ROOT
+
+#### 1) bin/blastwave_thermal
+Main one-liner executable: allows for the computation of the pT spectrum configuring all relevant parameters via CLI flags.  
+Currently reads blastwave parameter values from suitable .csv files, yields from either thermal .json(s) or custom .csv files.  
+
+**Run from the build directory** so outputs land in `thermal_yields/out/` by default;    
+
+**Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
+```bash
+cd blastwave/bin
+./blastwave_thermal
+[...]
+```
+
+#### 2) libTFHIC.so (legacy)
+Legacy shared library that allows to use the blastwave calculation routines to compute the pT spectrum of a hadron given the blastwave parameters and (optionally) a target yield for normalization.  
+The blastwave routines store data in TGraph or TH1D objects; these can be analyzed with ROOT helper macros.
+
 ```bash
 cd blastwave
 root -l
@@ -136,10 +172,10 @@ root -l
 In the ROOT prompt:
 ```
 root [0] .L libTFHIC.so
-root [1] .L test.cpp++
-root [2] histo()                    // generates spectra; writes ROOT files under out/
-root [3] compareHepData()           // optional comparison macro
-root [4] compareHepData_asTGraphs() // optional TGraph comparison
+root [1] .L libTFHIC_test.cpp++     # ROOT wrapper macro
+root [2] histo()                    # from test wrapper: generates spectra; writes ROOT files under out/
+root [3] compareHepData()           # from test wrapper: optional comparison macro
+root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph comparison
 ```
 
 ### Notes
@@ -180,11 +216,13 @@ root [4] compareHepData_asTGraphs() // optional TGraph comparison
 
 ## Limitations
 - Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
+> Solved in 0.1.1. Both thermal and blastwave module now feature CLI flag-based one-liner executables.
+
 - Systematics (model parameter uncertainties) not propagated to final spectra.
 
 ## Roadmap
 - [ ] Implement MC efficiency module.
-- [ ] Unify configuration via CLI flags or a single YAML file.
+- [x] Unify configuration via CLI flags or a single YAML file.
 - [ ] Include systematics propragation.
 
 ## License
