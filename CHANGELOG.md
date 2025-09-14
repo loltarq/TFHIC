@@ -23,3 +23,4 @@ All notable changes to this project will be documented here.
 ### Updating
 - Root README
 - Physics documentation (`docs/physics.md`)
+- fix to blastwave computePtSpectrum method in `blastwave/src/blastwave_utils.cpp` to perform normalization strictly on dN/dpT
