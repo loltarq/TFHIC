@@ -78,8 +78,8 @@ cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j
 ```
 This produces the following executables:
-- `thermal_yields/build/TF_CSM-vs-dNpidy`
-- `thermal_yields/build/export_dndy_json`
+- `thermal_yields/build/bin/export_dndy_json`
+- `thermal_yields/build/bin/TF_CSM-vs-dNpidy`
 
 > Notes  
 > • The project sets **C++17**.  
@@ -106,7 +106,7 @@ make
 
 ## Config & Run
 
-### A) `thermal_yields/build/`
+### A) `thermal_yields/build/bin/`
 
 #### 1) export_dndny_json
 Main one-liner executable: allows to compute absolute thermal yields of 1 or more hadrons specifying all configuration parameters via CLI flags.  
@@ -117,7 +117,42 @@ Yields and metadata output is stored in .json file for later use (e.g. blastwave
 **Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
 ```bash
 ./export_dndny_json
-[...]
+Usage:
+  ./export_dndy_json --out PATH --list PATH/particles.dat [--decays PATH/decays.dat]
+         --ensemble GCE|SCE|CE --width eBW|ZeroWidth|BWTwoGamma
+         --species "211,-211,321,-321,2212,-2212" --k "1.0,1.6,3.0"
+         [--QStats 1|0] [--feeddown primordial|weak|strong|em|stabilityflag]
+         [--toGCE 0|1] --mode vanilla|gs  [flags per mode below]
+
+Required:
+  --out PATH_OR_NAME             (no default; if only a name is given, outputs to ../out/)
+
+Model & I/O (defaults shown):
+  --list PATH/particles.dat      		(default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
+  --decays PATH/decays.dat       (default: <dir_of_list>/decays.dat)
+  --ensemble                     			(default: CE)
+  --width                        			(default: eBW)
+  --species                      			(default: 211,-211,321,-321,2212,-2212)
+  --k                            				(default: 3)
+  --toGCE 0|1                    			(default: 0)
+  --QStats 0|1                   			(default: 1)
+  --feeddown                     			(default: stabilityflag)
+  --mode vanilla|gs              		(default: vanilla)
+
+Vanilla mode (no gammaS, defaults shown):
+  --Tch                          			(default: 0.155 GeV)
+  --v-min                        			(default: 10)
+  --v-max                        			(default: 15000)
+  --v-n                          				(default: 30)
+
+ gammaS mode (defaults shown):
+  --nch-min                      			(default: 3)
+  --nch-max                      			(default: 2000)
+  --nch-n                        			(default: 100)
+  --nch-file PATH_OR_NAME      (default: <unset>; if only a name is given, reads from ../conf/)
+  --tch-a, --tch-b               			(defaults: 0.176, 0.0026)
+  --gs-a, --gs-b, --gs-c         		(defaults: 1, 0.25, 59)
+  --vol-a                        				(default: 2.4)
 ```
 
 
@@ -158,7 +193,25 @@ Currently reads blastwave parameter values from suitable .csv files, yields from
 ```bash
 cd blastwave/bin
 ./blastwave_thermal
-[...]
+Usage:  ./blastwave_thermal
+  --thermal-json FILE          	path or bare filename; if no path, looks in ../data/
+  OR
+  --yields-csv FILE            		use experimental yields from CSV (instead of thermal JSON)
+Options:
+  --primordial                 			(thermal) use JSON primordial yields (default: total)
+  --mode gammaS|vanilla        (thermal) select JSON bins by mode (default: gammaS)
+  --k k1[,k2,...]              			(thermal) restrict to these k values (default: all in JSON)
+  --cent N                     			take first N centralities per k (default: auto)
+  --species PDG[,PDG,...]      	restrict to these PDGs (default: all common)
+  --pt min,max,nbins           	pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
+  --out FILE.root              		path or bare filename; if no path, outputs in ../out/
+  --bw-csv FILE.csv            	BW params csv file (default: bw_data_1303.0737.csv)
+  --bw-path  DIR               		base path for the BW csv file (default: ../data)
+  --timesPt                    			returns spectra as dN/dPt instead of (1/Pt)dN/dPt
+  --clampR                     		num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine
+  --tgraph                     			store spectra as TGraph(s) instead of THist(s)
+  --help                       			show this help
+  --verbose                    		run with verbose output
 ```
 
 #### 2) libTFHIC.so (legacy)
@@ -185,25 +238,29 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
 
 ## Validation
 
-**Thermal sanity checks.** Canonical suppression increases with |S| and decreases with larger correlation volume V_c; proton/kaon/pion ordering behaves as expected.
+**Thermal sanity checks.** Canonical suppression increases with |S| and decreases with larger correlation volume Vc; proton/kaon/pion ordering behaves as expected.
 
 **Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
 
 **Reproduce the spectra plots:**
+1. 
+
+
+**Legacy:**
 1. Run thermal yields with default config:
    ```bash
-   cd thermal_yields/build
+   cd thermal_yields/build/bin
    ./TF_CSM-vs-dNpidy 0 0 GCE 0
    ```
 2. Move results to blastwave data folder:
    ```bash
-   mv ../out/*.dat ../../blastwave/data/
+   mv ../../out/*.dat ../../../blastwave/data/
    ```
 3. Run blastwave flow propagation and compare with HEP data:
    ```bash
    root -l
    .L libTFHIC.so
-   .L test.cpp++
+   .L libTFHIC_test.cpp++
    histo()
    compareHepData_asTGraphs()
    ```
