@@ -27,8 +27,8 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 - Hadron species: π±, K±, p/ p̄ (extendable).  
 - Kinematic range: pₜ < 5 GeV/c; acceptance: |η| < 0.5.  
 - Centrality classes: I to X.  
-- Model parameters: T, μ_B, ⟨β_T⟩, T_kin (documented in `Configuration`).
-- More details in `docs/physics.md`.
+- Model parameters: T, μ_B, ⟨β_T⟩, T_kin.
+> More details in `docs/physics.md`.
 
 **Status.** Core spectrum/yield components implemented; the MC efficiency module is under development and scheduled next.
 
@@ -216,9 +216,9 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
 
 ## Limitations
 - Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
-> Solved in 0.1.1. Both thermal and blastwave module now feature CLI flag-based one-liner executables.
+> Solved in v0.1.1: both thermal and blastwave module now feature CLI flag-based one-liner executables for configuration; input data format is now json or csv-based.
 
-- Systematics (model parameter uncertainties) not propagated to final spectra.
+- Systematics not propagated to final spectra (for now).
 
 ## Roadmap
 - [ ] Implement MC efficiency module.
