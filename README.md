@@ -125,34 +125,34 @@ Usage:
          [--toGCE 0|1] --mode vanilla|gs  [flags per mode below]
 
 Required:
-  --out PATH_OR_NAME             (no default; if only a name is given, outputs to ../out/)
+  --out PATH_OR_NAME                (no default; if only a name is given, outputs to ../out/)
 
 Model & I/O (defaults shown):
-  --list PATH/particles.dat      		(default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
-  --decays PATH/decays.dat       (default: <dir_of_list>/decays.dat)
-  --ensemble                     			(default: CE)
-  --width                        			(default: eBW)
-  --species                      			(default: 211,-211,321,-321,2212,-2212)
-  --k                            				(default: 3)
-  --toGCE 0|1                    			(default: 0)
-  --QStats 0|1                   			(default: 1)
-  --feeddown                     			(default: stabilityflag)
-  --mode vanilla|gs              		(default: vanilla)
+  --list PATH/particles.dat      		 (default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
+  --decays PATH/decays.dat          (default: <dir_of_list>/decays.dat)
+  --ensemble                     		 (default: CE)
+  --width                        		 (default: eBW)
+  --species                      		 (default: 211,-211,321,-321,2212,-2212)
+  --k                            		 (default: 3)
+  --toGCE 0|1                    		 (default: 0)
+  --QStats 0|1                   		 (default: 1)
+  --feeddown                     		 (default: stabilityflag)
+  --mode vanilla|gs              		 (default: vanilla)
 
 Vanilla mode (no gammaS, defaults shown):
   --Tch                          			(default: 0.155 GeV)
   --v-min                        			(default: 10)
   --v-max                        			(default: 15000)
-  --v-n                          				(default: 30)
+  --v-n                          			(default: 30)
 
  gammaS mode (defaults shown):
   --nch-min                      			(default: 3)
   --nch-max                      			(default: 2000)
   --nch-n                        			(default: 100)
-  --nch-file PATH_OR_NAME      (default: <unset>; if only a name is given, reads from ../conf/)
+  --nch-file PATH_OR_NAME           (default: <unset>; if only a name is given, reads from ../conf/)
   --tch-a, --tch-b               			(defaults: 0.176, 0.0026)
-  --gs-a, --gs-b, --gs-c         		(defaults: 1, 0.25, 59)
-  --vol-a                        				(default: 2.4)
+  --gs-a, --gs-b, --gs-c         		 (defaults: 1, 0.25, 59)
+  --vol-a                        			(default: 2.4)
 ```
 
 
@@ -194,23 +194,23 @@ Currently reads blastwave parameter values from suitable .csv files, yields from
 cd blastwave/bin
 ./blastwave_thermal
 Usage:  ./blastwave_thermal
-  --thermal-json FILE          	path or bare filename; if no path, looks in ../data/
+  --thermal-json FILE          	 path or bare filename; if no path, looks in ../data/
   OR
   --yields-csv FILE            		use experimental yields from CSV (instead of thermal JSON)
 Options:
-  --primordial                 			(thermal) use JSON primordial yields (default: total)
-  --mode gammaS|vanilla        (thermal) select JSON bins by mode (default: gammaS)
-  --k k1[,k2,...]              			(thermal) restrict to these k values (default: all in JSON)
-  --cent N                     			take first N centralities per k (default: auto)
-  --species PDG[,PDG,...]      	restrict to these PDGs (default: all common)
-  --pt min,max,nbins           	pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
+  --primordial                 		(thermal) use JSON primordial yields (default: total)
+  --mode gammaS|vanilla          (thermal) select JSON bins by mode (default: gammaS)
+  --k k1[,k2,...]              		(thermal) restrict to these k values (default: all in JSON)
+  --cent N                     		take first N centralities per k (default: auto)
+  --species PDG[,PDG,...]      	 restrict to these PDGs (default: all common)
+  --pt min,max,nbins           	 pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
   --out FILE.root              		path or bare filename; if no path, outputs in ../out/
-  --bw-csv FILE.csv            	BW params csv file (default: bw_data_1303.0737.csv)
+  --bw-csv FILE.csv            	 BW params csv file (default: bw_data_1303.0737.csv)
   --bw-path  DIR               		base path for the BW csv file (default: ../data)
-  --timesPt                    			returns spectra as dN/dPt instead of (1/Pt)dN/dPt
+  --timesPt                    		returns spectra as dN/dPt instead of (1/Pt)dN/dPt
   --clampR                     		num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine
-  --tgraph                     			store spectra as TGraph(s) instead of THist(s)
-  --help                       			show this help
+  --tgraph                     		store spectra as TGraph(s) instead of THist(s)
+  --help                       		show this help
   --verbose                    		run with verbose output
 ```
 
@@ -242,11 +242,31 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
 
 **Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
 
-**Reproduce the spectra plots:**
-1. 
+### **Reproduce the spectra plots (w/ thermal yields):**
+1. Generate thermal yields and move them under blastwave/data (or specify suitable path after --out):
+   ```bash
+   cd /thermal_yields/build/bin
+   ./export_dndy_json --out yields_CE_k1.6_k3_k6_gs_1303.0737.json --k "1.6,3.0,6.0" --mode "gs" --nch-file Nch_PbPb_1303.0737_ALICE_template.txt
+   cd ../../out
+   mv yields_CE_k1.6_k3_k6_gs_1303.0737.json ../../blastave/data/.
+   ```
+2. Run blastwave calculation on generated data as follows:
+   ```bash
+   cd /../bin
+   ./blastwave_thermal --thermal-json ../data/yields_CE_k1.6_k3_k6_gs_1303.0737.json --tgraph --out spectra_yields_CE_k1.6_k3_k6_gs_1303.0737_tgraph.root
+   ```
+3. Run (custom) ROOT helper macro to compare against exp. data:
+   ```
+   root [0] .L thermalyields_test.cpp
+   root [1] compareHepData_asTGraphs()
+   ```
+4. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
+   ```bash
+   root [0] TBrowser* t = new TBrowser()
+   # use UI to open and explore .root files
+   ```
 
-
-**Legacy:**
+### **Legacy (w/ experimental yields):**
 1. Run thermal yields with default config:
    ```bash
    cd thermal_yields/build/bin
@@ -259,15 +279,14 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
 3. Run blastwave flow propagation and compare with HEP data:
    ```bash
    root -l
-   .L libTFHIC.so
-   .L libTFHIC_test.cpp++
-   histo()
-   compareHepData_asTGraphs()
+   root [0] .L libTFHIC.so
+   root [1] .L libTFHIC_test.cpp++
+   root [2] histo()
+   root [3] compareHepData_asTGraphs()
    ```
 4. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
    ```bash
-   # in ROOT
-   TBrowser* t = new TBrowser()
+   root [4] TBrowser* t = new TBrowser()
    # use UI to open and explore .root files
    ```
 
