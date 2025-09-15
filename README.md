@@ -125,34 +125,34 @@ Usage:
          [--toGCE 0|1] --mode vanilla|gs  [flags per mode below]
 
 Required:
-  --out PATH_OR_NAME                (no default; if only a name is given, outputs to ../out/)
+  --out PATH_OR_NAME                        (no default; if only a name is given, outputs to ../out/)
 
 Model & I/O (defaults shown):
-  --list PATH/particles.dat      		 (default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
-  --decays PATH/decays.dat          (default: <dir_of_list>/decays.dat)
-  --ensemble                     		 (default: CE)
-  --width                        		 (default: eBW)
-  --species                      		 (default: 211,-211,321,-321,2212,-2212)
-  --k                            		 (default: 3)
-  --toGCE 0|1                    		 (default: 0)
-  --QStats 0|1                   		 (default: 1)
-  --feeddown                     		 (default: stabilityflag)
-  --mode vanilla|gs              		 (default: vanilla)
+  --list PATH/particles.dat                 (default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
+  --decays PATH/decays.dat                  (default: <dir_of_list>/decays.dat)
+  --ensemble                                (default: CE)
+  --width                                   (default: eBW)
+  --species                                 (default: 211,-211,321,-321,2212,-2212)
+  --k                                       (default: 3)
+  --toGCE 0|1                               (default: 0)
+  --QStats 0|1                              (default: 1)
+  --feeddown                                (default: stabilityflag)
+  --mode vanilla|gs                         (default: vanilla)
 
 Vanilla mode (no gammaS, defaults shown):
-  --Tch                          			(default: 0.155 GeV)
-  --v-min                        			(default: 10)
-  --v-max                        			(default: 15000)
-  --v-n                          			(default: 30)
+  --Tch                                     (default: 0.155 GeV)
+  --v-min                                   (default: 10)
+  --v-max                                   (default: 15000)
+  --v-n                                     (default: 30)
 
  gammaS mode (defaults shown):
-  --nch-min                      			(default: 3)
-  --nch-max                      			(default: 2000)
-  --nch-n                        			(default: 100)
-  --nch-file PATH_OR_NAME           (default: <unset>; if only a name is given, reads from ../conf/)
-  --tch-a, --tch-b               			(defaults: 0.176, 0.0026)
-  --gs-a, --gs-b, --gs-c         		 (defaults: 1, 0.25, 59)
-  --vol-a                        			(default: 2.4)
+  --nch-min                                 (default: 3)
+  --nch-max                                 (default: 2000)
+  --nch-n                                   (default: 100)
+  --nch-file PATH_OR_NAME                   (default: <unset>; if only a name is given, reads from ../conf/)
+  --tch-a, --tch-b                          (defaults: 0.176, 0.0026)
+  --gs-a, --gs-b, --gs-c                    (defaults: 1, 0.25, 59)
+  --vol-a                                   (default: 2.4)
 ```
 
 
@@ -194,24 +194,24 @@ Currently reads blastwave parameter values from suitable .csv files, yields from
 cd blastwave/bin
 ./blastwave_thermal
 Usage:  ./blastwave_thermal
-  --thermal-json FILE          	 path or bare filename; if no path, looks in ../data/
+  --thermal-json FILE               path or bare filename; if no path, looks in ../data/
   OR
-  --yields-csv FILE            		use experimental yields from CSV (instead of thermal JSON)
+  --yields-csv FILE                 use experimental yields from CSV (instead of thermal JSON)
 Options:
-  --primordial                 		(thermal) use JSON primordial yields (default: total)
-  --mode gammaS|vanilla          (thermal) select JSON bins by mode (default: gammaS)
-  --k k1[,k2,...]              		(thermal) restrict to these k values (default: all in JSON)
-  --cent N                     		take first N centralities per k (default: auto)
-  --species PDG[,PDG,...]      	 restrict to these PDGs (default: all common)
-  --pt min,max,nbins           	 pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
-  --out FILE.root              		path or bare filename; if no path, outputs in ../out/
-  --bw-csv FILE.csv            	 BW params csv file (default: bw_data_1303.0737.csv)
-  --bw-path  DIR               		base path for the BW csv file (default: ../data)
-  --timesPt                    		returns spectra as dN/dPt instead of (1/Pt)dN/dPt
-  --clampR                     		num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine
-  --tgraph                     		store spectra as TGraph(s) instead of THist(s)
-  --help                       		show this help
-  --verbose                    		run with verbose output
+  --primordial                      (thermal) use JSON primordial yields (default: total)
+  --mode gammaS|vanilla             (thermal) select JSON bins by mode (default: gammaS)
+  --k k1[,k2,...]                   (thermal) restrict to these k values (default: all in JSON)
+  --cent N                          take first N centralities per k (default: auto)
+  --species PDG[,PDG,...]           restrict to these PDGs (default: all common)
+  --pt min,max,nbins                pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
+  --out FILE.root                   path or bare filename; if no path, outputs in ../out/
+  --bw-csv FILE.csv                 BW params csv file (default: bw_data_1303.0737.csv)
+  --bw-path  DIR                    base path for the BW csv file (default: ../data)
+  --timesPt                         returns spectra as dN/dPt instead of (1/Pt)dN/dPt
+  --clampR                          num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine
+  --tgraph                          store spectra as TGraph(s) instead of THist(s)
+  --help                            show this help
+  --verbose                         run with verbose output
 ```
 
 #### 2) libTFHIC.so (legacy)
