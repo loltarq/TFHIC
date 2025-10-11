@@ -1,0 +1,105 @@
+{
+  "schema": "tfhic.hadrons.v1",
+  "note": "Extend this list; token groups drive CSV mapping (PI/K/P/KS/PHI/LAMBDA/etc.).",
+  "hadrons": [
+    {
+      "pdg": 211,
+      "name": "pi+",
+      "latex": "pi^{+}",
+      "mass_GeV": 0.13957039,
+      "token": "PI",
+      "color": 632,
+      "ctau_m": 7.804
+    },
+    {
+      "pdg": -211,
+      "name": "pi-",
+      "latex": "pi^{-}",
+      "mass_GeV": 0.13957039,
+      "token": "PI",
+      "color": 632,
+      "ctau_m": 7.804
+    },
+    {
+      "pdg": 321,
+      "name": "K+",
+      "latex": "K^{+}",
+      "mass_GeV": 0.49367,
+      "token": "K",
+      "color": 600,
+      "ctau_m": 3.713
+    },
+    {
+      "pdg": -321,
+      "name": "K-",
+      "latex": "K^{-}",
+      "mass_GeV": 0.49367,
+      "token": "K",
+      "color": 600,
+      "ctau_m": 3.713
+    },
+    {
+      "pdg": 2212,
+      "name": "p",
+      "latex": "p",
+      "mass_GeV": 0.93827208816,
+      "token": "PI",
+      "color": 416,
+      "ctau_m": 0.0
+    },
+    {
+      "pdg": -2212,
+      "name": "pbar",
+      "latex": "\\bar{p}",
+      "mass_GeV": 0.93827208816,
+      "token": "P",
+      "color": 416,
+      "ctau_m": 0.0
+    },
+    {
+      "pdg": 333,
+      "name": "phi",
+      "latex": "\\phi",
+      "mass_GeV": 1.019461,
+      "token": "PHI",
+      "color": 864,
+      "ctau_m": 4.65e-14
+    },
+    {
+      "pdg": 3122,
+      "name": "Lambda",
+      "latex": "\\Lambda",
+      "mass_GeV": 1.115683,
+      "token": "LAMBDA",
+      "color": 840,
+      "ctau_m": 0.07893
+    },
+    {
+      "pdg": 3312,
+      "name": "Xi-",
+      "latex": "\\Xi^{-}",
+      "mass_GeV": 1.32171,
+      "token": "XI",
+      "color": 868,
+      "ctau_m": 0.04917
+    },
+    {
+      "pdg": 3334,
+      "name": "Omega-",
+      "latex": "\\Omega^{-}",
+      "mass_GeV": 1.67245,
+      "token": "OMEGA",
+      "color": 632,
+      "ctau_m": 0.02463
+    },
+    {
+      "pdg": 1000010020,
+      "name": "Deuteron",
+      "latex": "Deuteron",
+      "mass_GeV": 1.87561,
+      "token": "P",
+      "color": 777,
+      "ctau_m": 0.0
+    }
+  ]
+}

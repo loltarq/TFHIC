@@ -17,3 +17,4 @@ blastwave/bin/
 !docs/plots/thermal_yields_ratios/*.png
 !blastwave/data/*.dat
 !blastwave/data/*.json
+!common/data/*.json
