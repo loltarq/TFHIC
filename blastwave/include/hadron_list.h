@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include "../../common/hadron_catalog.h"
 
 // Enable PDG support for apply_thermal_yields
 #define HADRON_HAS_PDG 1
@@ -18,6 +19,9 @@ struct Hadron
     int pdg;            // PDG code (e.g. 211 for pi+, 321 for K+, 2212 for p)
 #endif
 };
+
+// Build a Hadron from the runtime catalog (with safe fallbacks).
+Hadron make_hadron_from_catalog(int pdg, const HadronCatalog& cat);
 
 // Struct to hold integration data for each hadron / centrality bin
 struct HadronIntegrationInfo
@@ -41,10 +45,5 @@ struct HadronIntegrationInfo
     // Centrality class index (0..9 typically)
     int centrality_class = -1;
 };
-
-// Predefined hadrons
-extern Hadron pion;
-extern Hadron kaon;
-extern Hadron proton;
 
 #endif

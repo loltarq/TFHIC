@@ -5,6 +5,7 @@
 #include <string>
 #include <filesystem>
 #include "hadron_list.h"
+#include "../../common/hadron_catalog.h"
 
 // NEW: species-aware, CSV-driven blastwave parameters.
 // - csv_path: path to CSV with columns:
@@ -16,6 +17,12 @@
 // Returns a [centrality][species] table with BW params set and yield=0.
 std::vector<std::vector<HadronIntegrationInfo>>
 get_integration_info_from_csv(const std::string& csv_path,
+                              const std::vector<int>& species_pdgs,
+                              bool verbose = false);
+
+std::vector<std::vector<HadronIntegrationInfo>>
+get_integration_info_from_csv(const std::string& csv_path,
+                              const HadronCatalog& cat,
                               const std::vector<int>& species_pdgs,
                               bool verbose = false);
                               

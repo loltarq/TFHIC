@@ -14,11 +14,11 @@ APP_SRCS := apps/blastwave_thermal.cpp
 APPS := $(APP_SRCS:apps/%.cpp=$(BINDIR)/%)
 
 # Sources & output library name
-SRCS          := src/hadron_list.cpp src/io_utils.cpp src/blastwave_utils.cpp src/io_thermal.cpp
+SRCS          := src/hadron_list.cpp src/io_utils.cpp src/blastwave_utils.cpp src/io_thermal.cpp ../common/hadron_catalog.cpp
 OBJS          := $(SRCS:.cpp=.o)
 
 LIBNAME       := libTFHIC.so
-INCLUDES      := -Iinclude
+INCLUDES      := -Iinclude -Icommon
 
 CXXFLAGS      := -O2 -Wall -fPIC -std=c++17 $(ROOTCFLAGS) $(INCLUDES)
 

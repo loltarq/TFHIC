@@ -1,4 +1,4 @@
-#include <io_utils.h>
+
 #include <TFile.h>
 #include <TTree.h>
 #include <TDirectory.h>
@@ -9,16 +9,13 @@
 #include <fstream>
 #include <filesystem>
 #include <unordered_map>
-
-#include "io_utils.h"
-#include <filesystem>
-#include <fstream>
 #include <sstream>
 #include <set>
 #include <map>
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include "io_utils.h"
 
 namespace fs = std::filesystem;
 
@@ -52,6 +49,7 @@ static std::string norm_token(std::string t){
   return t;
 }
 
+// DEPRECATED: now using hadron catalog constructor from JSON
 // ---- map PDG to our group token used in CSV
 // Extend as needed; current CSV uses Pi/K/P groups.
 static std::string token_for_pdg(int pdg){
@@ -69,6 +67,7 @@ static std::string token_for_pdg(int pdg){
   }
 }
 
+// DEPRECATED: now using hadron catalog constructor from JSON
 // ---- minimal hadron constructor
 static Hadron make_hadron_from_pdg(int pdg){
   Hadron h{}; h.pdg = pdg;
@@ -137,6 +136,7 @@ static bool read_bw_csv(const std::string& path, std::vector<std::map<std::strin
 
 } // namespace
 
+// DEPRECATED: using the overridden version with hadron catalog from JSON
 std::vector<std::vector<HadronIntegrationInfo>>
 get_integration_info_from_csv(const std::string& csv_path,
                               const std::vector<int>& species_pdgs,
@@ -248,9 +248,122 @@ get_integration_info_from_csv(const std::string& csv_path,
   return out;
 }
 
+std::vector<std::vector<HadronIntegrationInfo>>
+get_integration_info_from_csv(const std::string& csv_path,
+                              const HadronCatalog& cat,
+                              const std::vector<int>& species_pdgs,
+                              bool verbose)
+{
+  std::vector<std::vector<HadronIntegrationInfo>> out;
 
-// only used in test.cpp
-std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::string& filename1, const std::string& filename2, const std::string& path)
+  std::vector<std::map<std::string,std::string>> rows;
+  if (!read_bw_csv(csv_path, rows)) {
+    std::cerr << "[io_utils] ERROR: cannot read " << csv_path << "\n";
+    return out;
+  }
+
+  // Group rows by centrality_class (int), and for each centrality build token-specific and ALL params.
+  std::map<int, PerCentrality> byC;
+  for (const auto& r : rows) {
+    if (!r.count("centrality_class") || !r.count("particle")) continue;
+    int c = std::stoi(r.at("centrality_class"));
+    auto& pc = byC[c];
+    pc.centrality_class = c;
+
+    BWParams p;
+    auto getd = [&](const char* k)->double{
+      auto it=r.find(k); if (it==r.end() || it->second.empty()) return 0.0;
+      return std::stod(it->second);
+    };
+    p.beta_t      = getd("beta_t");
+    p.beta_t_unc1 = getd("beta_t_unc1");
+    p.beta_t_unc2 = getd("beta_t_unc2");
+    p.Tkin        = getd("Tkin");
+    p.Tkin_unc1   = getd("Tkin_unc1");
+    p.Tkin_unc2   = getd("Tkin_unc2");
+    p.n           = getd("n_profile");
+    p.n_unc1      = getd("n_profile_unc1");
+    p.n_unc2      = getd("n_profile_unc2");
+
+    std::string particle = norm_token(r.at("particle"));
+    if (is_all_token(particle)) {
+      pc.has_all   = true;
+      pc.all_params= p;
+    } else {
+      // allow "K;Pi;P" lists
+      for (auto tk : split(particle, ';')) {
+        tk = norm_token(tk);
+        if (!tk.empty()) pc.per_token[tk] = p;
+      }
+    }
+  }
+
+  // Sort centrality classes ascending and emit rows
+  std::vector<int> cents;
+  for (auto& kv : byC) cents.push_back(kv.first);
+  std::sort(cents.begin(), cents.end());
+
+  out.reserve(cents.size());
+  for (int c : cents) {
+    const PerCentrality& pc = byC[c];
+    std::vector<HadronIntegrationInfo> row;
+    row.reserve(species_pdgs.size());
+
+    for (int pdg : species_pdgs) {
+      // choose params: token-specific > ALL > (warn & skip)
+      std::string t = cat.tokenFor(pdg);
+      if (t.empty()) t = "ALL";
+
+      const BWParams* use = nullptr;
+      auto it = pc.per_token.find(t);
+      if (it != pc.per_token.end()) use = &it->second;
+      else if (pc.has_all)          use = &pc.all_params;
+
+      if (!use) {
+        std::cerr << "[io_utils] WARNING: no BW params for PDG " << pdg
+                  << " at centrality " << pc.centrality_class
+                  << " (no token '"<<t<<"' and no ALL). Skipping species.\n";
+        continue;
+      }
+
+      // Build the integration info with yield=0 (thermal JSON will fill it later)
+      HadronIntegrationInfo info{};
+      info.hadron = make_hadron_from_catalog(pdg, cat);
+      if (info.hadron.mass <= 0.0) {
+        std::cerr << "[io_utils] WARNING: unknown mass for PDG "
+                  << pdg << " (name="<< info.hadron.name <<")\n";
+      }
+
+ 
+
+      info.beta_t          = use->beta_t;
+      info.Tkin            = use->Tkin;
+      info.n_profile       = use->n;
+      info.beta_t_unc1     = use->beta_t_unc1;
+      info.beta_t_unc2     = use->beta_t_unc2;
+      info.Tkin_t_unc1     = use->Tkin_unc1;
+      info.Tkin_t_unc2     = use->Tkin_unc2;
+      info.n_profile_unc1  = use->n_unc1;
+      info.n_profile_unc2  = use->n_unc2;
+      info.centrality_class= pc.centrality_class;
+      info.yield           = 0.0;
+
+      row.push_back(std::move(info));
+    }
+
+    if (verbose) {
+      std::cerr << "[io_utils] cent="<< pc.centrality_class
+                << " species="<< row.size() << "\n";
+    }
+
+    out.push_back(std::move(row));
+  }
+
+  return out;
+}
+
+// DEPRECATED: only used in test
+/*std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::string& filename1, const std::string& filename2, const std::string& path)
 {
 
     std::string fullPath1 = (fs::path(path) / filename1).string();
@@ -353,7 +466,7 @@ std::vector<std::vector<HadronIntegrationInfo>> get_integration_info(const std::
     file2->Close();
 
     return allHadrons;
-}
+}*/
 
 void get_correlation_volume_info(const std::string& code,
                  double k_value,

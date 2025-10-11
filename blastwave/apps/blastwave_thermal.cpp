@@ -284,6 +284,18 @@ int main(int argc, char** argv){
     return 2;
   }
 
+  HadronCatalog cat;
+  std::string err;
+  // path
+  if (!cat.load("../../common/data/hadrons.json", &err)) {
+    // Simple fallback if running from build/ subdir
+    if (!cat.load("../../data/hadrons.json", &err)) {
+      std::cerr << "Failed to load hadron catalog: " << err
+                << "\nLooked in ../common/data/hadrons.json and ../data/hadrons.json\n";
+      return 2;
+    }
+  }
+
   // ---------- CSV experimental yields MODE ----------
   if (!yields_csv.empty()){
     // read yields CSV
@@ -299,7 +311,7 @@ int main(int argc, char** argv){
     // BW params from CSV (species-aware: ALL / tokens)
     const std::string bwpath = (fs::path(bw_path) / bw_csv).string();
     if (verbose) std::cerr << "[blastwave_thermal] loading BW params from " << bwpath << "\n";
-    auto all = get_integration_info_from_csv(bwpath, species_use, verbose);
+    auto all = get_integration_info_from_csv(bwpath, cat, species_use, verbose);
     if (all.empty()){ std::cerr << "[blastwave_thermal] No centralities from BW CSV\n"; return 2; }
 
     // centrality count
@@ -415,7 +427,7 @@ int main(int argc, char** argv){
   // BW params from CSV (species-aware)
   const std::string bwpath = (fs::path(bw_path) / bw_csv).string();
   if (verbose) std::cerr << "[blastwave_thermal] loading BW params from " << bwpath << "\n";
-  auto all = get_integration_info_from_csv(bwpath, species_use, verbose);
+  auto all = get_integration_info_from_csv(bwpath, cat, species_use, verbose);
   if (verbose) std::cerr << "[blastwave_thermal] centralities="<<all.size()
                          << " species/cent="<<(all.empty()?0:all[0].size())<<"\n";
   if (all.empty()){ std::cerr << "[blastwave_thermal] No centralities from BW CSV\n"; return 2; }
