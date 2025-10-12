@@ -14,6 +14,7 @@
 #include <TObjString.h>
 
 #include "../include/eff_extrap.h"
+#include "../include/eff_fit.h"
 #include "../include/bw_adapter.h"
 #include "../include/ref_from_root.h"
 #include "../../common/hadron_catalog.h"
@@ -61,7 +62,8 @@ static void usage(const char* prog){
   "  [--kaon-decay-corr]                             # if using kaon as reference for stable particles, correct for its decay\n"
   "  [--kaon-decay-l LENGTH]                         # if correcting for kaon decay, set travel length\n"
   "  [--pt-bins a,b,n]                               # only needed for TGraph spectra w/o metadata\n"
-  "  [--out JSON] [--out-root ROOT]\n";
+  "  [--out JSON] [--out-root ROOT]\n"
+  "  [--fit-refs] [--fit-model logistic/turnon] [--fit-range MIN,MAX]   # forces logistic or turnon fit to input eff curves in the specified range";
 }
 
 // Parse ROOT spec like "file.root#dir/object[#tree-branches ...]"
@@ -95,13 +97,47 @@ static BranchNames parse_branches(const std::string& s){
   return bn;
 }
 
+// Make a TH1D from RefData (works for both pointwise and binned)
+static TH1D* th1_from_ref(const RefData& r, const char* name) {
+  if (r.isBinned()) {
+    const int nb = (int)r.val.size();
+    TH1D* h = new TH1D(name, "", nb, r.edges.data());
+    for (int i=1;i<=nb;++i){ h->SetBinContent(i, r.val[i-1]); }
+    return h;
+  } else { // pointwise: build edges from midpoints
+    const int n = (int)r.x.size();
+    if (n<2) throw std::runtime_error("th1_from_ref: not enough points");
+    std::vector<double> edges(n+1);
+    edges[0] = r.x[0] - 0.5*(r.x[1]-r.x[0]);
+    for (int i=1;i<n;++i) edges[i] = 0.5*(r.x[i-1]+r.x[i]);
+    edges[n] = r.x[n-1] + 0.5*(r.x[n-1]-r.x[n-2]);
+    TH1D* h = new TH1D(name, "", n, edges.data());
+    for (int i=1;i<=n;++i){ h->SetBinContent(i, r.y[i-1]); }
+    return h;
+  }
+}
+
+// Resample TF1 into a dense pointwise RefData over [xmin,xmax]
+static RefData ref_from_TF1(TF1* f, double xmin, double xmax, int N=400) {
+  RefData r;                 // pointwise RefData
+  r.x.resize(N); r.y.resize(N);
+  for (int i=0;i<N;++i) {
+    const double x = xmin + (xmax - xmin) * (i + 0.5)/N;
+    double v = f->Eval(x); if (v<0) v=0; if (v>1) v=1;
+    r.x[i]=x; r.y[i]=v;
+  }
+  return r;
+}
+
 int main(int argc, char** argv){
   std::string bwroot, obj, out_json="efficiency_out.json", out_root;
   std::string pi_in, K_in, p_in;
   int nbins_override=0; double ptmin=0, ptmax=0;
   bool correct_for_kaon_decay = false;
   double kaon_path_length = 3.99;
-
+  bool fit_refs = false;
+  std::string fit_model = "logistic";     // or "turnon"
+  double fit_xmin = -1, fit_xmax = -1;
 
   for (int i=1;i<argc;++i){
     std::string a = argv[i];
@@ -123,15 +159,15 @@ int main(int argc, char** argv){
     {
       std::string c = need(a.c_str());
       kaon_path_length = std::stod(c);
-      //char* endptr;
-      //kaon_path_length = std::strtod(c, &endptr);
-      //if (chr == endptr)
-      //{
-      //  printf("Failed to parse kaon length to double\n");
-      //  usage(argv[0]);
-      //  return 2;
-      //}
-    } 
+    }
+    else if (a=="--fit-refs") fit_refs = true;
+    else if (a=="--fit-model") fit_model = argv[++i];           // logistic | turnon
+    else if (a=="--fit-range")
+    { 
+      auto s=std::string(argv[++i]); // "xmin,xmax"
+      auto c = s.find(','); fit_xmin = std::stod(s.substr(0,c));
+      fit_xmax = std::stod(s.substr(c+1));
+    }
     else if (a=="--help" || a=="-h"){ usage(argv[0]); return 0; }
   }
 
@@ -197,6 +233,41 @@ int main(int argc, char** argv){
   RefData RK  = load_ref_any(K_in);
   RefData Rp  = load_ref_any(p_in);
 
+  // --- Optional smooth fit of the reference ε(pT) curves ---
+  TF1 *f_pi = nullptr, *f_K = nullptr, *f_p = nullptr;
+
+  if (fit_refs) {
+    // Keep originals to extract ranges before we overwrite
+    const RefData Rpi0 = Rpi, RK0 = RK, Rp0 = Rp;
+
+    // Build temporary histograms from RefData
+    TH1D* h_pi = th1_from_ref(Rpi0, "eff_pi_ref");
+    TH1D* h_K  = th1_from_ref(RK0 , "eff_K_ref");
+    TH1D* h_p  = th1_from_ref(Rp0 , "eff_p_ref");
+
+    // Choose model
+    EffModel model = (fit_model=="logistic") ? EffModel::Logistic : EffModel::LogisticTurnOn;
+
+    // Fit to get smooth TF1s (ROOT-native fits)
+    f_pi = fit_efficiency(h_pi, model, fit_xmin, fit_xmax, /*verbose=*/false);
+    f_K  = fit_efficiency(h_K , model, fit_xmin, fit_xmax, /*verbose=*/false);
+    f_p  = fit_efficiency(h_p , model, fit_xmin, fit_xmax, /*verbose=*/false);
+
+    // Resample the fits densely back into pointwise RefData (so isPointwise()==true)
+    auto bounds = [&](const RefData& r)->std::pair<double,double>{
+      if (r.isBinned()) return { r.edges.front(), r.edges.back() };
+      else              return { r.x.front(),     r.x.back()     };
+    };
+    auto [xmin_pi,xmax_pi] = bounds(Rpi0);
+    auto [xmin_K ,xmax_K ] = bounds(RK0 );
+    auto [xmin_p ,xmax_p ] = bounds(Rp0 );
+
+    Rpi = ref_from_TF1(f_pi, xmin_pi, xmax_pi);
+    RK  = ref_from_TF1(f_K , xmin_K , xmax_K );
+    Rp  = ref_from_TF1(f_p , xmin_p , xmax_p );
+
+  }
+
   // Choose extrapolator mode
   ExtrapConfig cfg(correct_for_kaon_decay, kaon_path_length);
   EffExtrapolator X = [&](){
@@ -244,6 +315,9 @@ int main(int argc, char** argv){
     TParameter<int>("pdg", pdg).Write("pdg");
     TObjString(obj.c_str()).Write("source_object");
     TObjString(use_interpolant?"interpolant":"binned_mixture").Write("mode");
+    if (f_pi) { f_pi->SetName("fit_pi"); fout.cd(); f_pi->Write(); }
+    if (f_K ) { f_K ->SetName("fit_K");  fout.cd(); f_K ->Write(); }
+    if (f_p ) { f_p ->SetName("fit_p");  fout.cd(); f_p ->Write(); }
     fout.Close();
     std::cout << "[efficiency_extrap] wrote " << out_root << "\n";
   }
