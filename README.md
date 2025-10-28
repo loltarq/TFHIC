@@ -1,42 +1,17 @@
-# TFHIC
+# TFHIC — Thermal & Flow Hadronization In heavy-Ion Collisions
 
-Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make build).  
-*Thesis project for master's degree in Nuclear & Subnuclear Physics.*
+Model-driven prediction of **hadronic yields**, **pT spectra**, and **detector efficiencies** for heavy-ion collisions.  
+TFHIC couples a **Statistical Hadronization Model** (HRG) for midrapidity yields with a **Boltzmann–Gibbs blast-wave** (BGBW) source for transverse-momentum spectra and provides a mapping from reference efficiencies (π, K, p) to other species.
+
+> This README provides build, config and run instructions. For the physics background refer to **[docs/PHYSICS.md](docs/PHYSICS.md)**.
 
 ---
 
-## Table of Contents
-- [Overview](#overview)
-- [Repository Structure](#repository-structure)
-- [Requirements](#requirements)
-- [Build](#build)
-- [Config & Run](#config--run)
-- [Validation](#validation)
-- [License](#license)
-- [References](#references)
-
-
-## Overview
-**Problem.** Determine particle-species detection efficiencies for heavy-ion collisions, resolving their dependence on pₜ and centrality.
-
-**Approach.**
-1) Generate expected pₜ spectra by combining statistical-hadronization (thermal) yields with a blast-wave flow parameterization.
-2) Feed generated particles into an MC-based fast-simulation/reconstruction to measure detection and selection efficiencies.
-
-**Scope & assumptions.**
-- Hadron species: π±, K±, p/ p̄ (extendable).  
-- Kinematic range: pₜ < 5 GeV/c; acceptance: |η| < 0.5.  
-- Centrality classes: I to X.  
-- Model parameters: T, μ_B, ⟨β_T⟩, T_kin.
-> More details in `docs/physics.md`.
-
-**Status.** Core spectrum/yield components implemented; the MC efficiency module is under development and scheduled next.
-
-
-## Repository Structure
-**blastwave/** - Blast-wave model components, spectra kernels  
-**thermal_yields/** - Thermal/statistical hadronization routines  
-**auxiliary/** - Helper macros, I/O utilities; not critical for build  
+## Highlights
+- **Thermal yields** via HRG (GCE/SCE/CE), resonance feed-down, quantum statistics.
+- **Blast-wave spectra** with proper normalization to thermal yields, robust numerics.
+- **Efficiency extrapolation**: logit-space mapping from (π, K, p) to other hadrons.
+- **Reproducibility**: JSON/YAML sidecars; explicit config cards for physics + BW params.
 
 ## Requirements
 
@@ -154,7 +129,6 @@ Vanilla mode (no gammaS, defaults shown):
   --gs-a, --gs-b, --gs-c                    (defaults: 1, 0.25, 59)
   --vol-a                                   (default: 2.4)
 ```
-
 
 #### 2) TF_CSM-vs-dNpidy (legacy)
 Legacy program: allows to compute yields ratios w.r.t. specific hadrons given a statistical ensemble and model variant.  
@@ -290,16 +264,26 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
    # use UI to open and explore .root files
    ```
 
-## Limitations
-- Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
-> Solved in v0.1.1: both thermal and blastwave module now feature CLI flag-based one-liner executables for configuration; input data format is now json or csv-based.
+---
 
-- Systematics not propagated to final spectra (for now).
+## Citation
+If you use TFHIC, please cite this repository and **Thermal‑FIST**:
 
-## Roadmap
-- [ ] Implement MC efficiency module.
-- [x] Unify configuration via CLI flags or a single YAML file.
-- [ ] Include systematics propragation.
+- TFHIC (this repo): add a `CITATION.cff` or BibTeX of your choosing.
+- Thermal‑FIST: V. Vovchenko *et al.*, “Thermal‑FIST: A package for hadron resonance gas model calculations,” arXiv:1901.05249.
+
+BibTeX (arXiv):
+```bibtex
+@article{ThermalFIST,
+  title         = {Thermal-FIST: A package for hadron resonance gas model calculations},
+  author        = {Vovchenko, Volodymyr and Stoecker, Horst and others},
+  year          = {2019},
+  eprint        = {1901.05249},
+  archivePrefix = {arXiv},
+  primaryClass  = {hep-ph},
+  url           = {https://arxiv.org/abs/1901.05249}
+}
+```
 
 ## License
 MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
@@ -307,7 +291,3 @@ MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
 > **Note on third-party code:** This repository vendors/depends on Thermal-FIST (GPL-3.0) and uses CERN ROOT.
 > Third-party components retain their original licenses. When distributing binaries linked with Thermal-FIST,
 > ensure compliance with **GPL-3.0**; your own original code in this repo is under **MIT**.
-
-
-## References
-[1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
