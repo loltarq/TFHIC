@@ -1,146 +1,81 @@
-# Physics background
+# TFHIC Physics Notes
 
-This repository uses a **statistical hadronization (thermal) model** and a **blast-wave** description for spectra. 
-This approach is based on the notion that, in heavy-ion collisions, primary hadron yields can be determined assuming production from a thermalized source.
-At **chemical freeze-out**, primary particle yields are computed from a **hadron resonance gas (HRG)** in thermal and chemical equilibrium, characterized by a **temperature T** and **chemical potentials μ**. Conservation of charges can be enforced either on average (GCE) or exactly (canonical ensembles), which introduces *canonical suppression* factors. The programs in `thermal_yields/` explore how yields/ratios change with **system size** and **ensemble choice**, providing insight into freeze-out conditions across different collision systems.
-At **kinetic freeze-out**, hadrons decouple from the system's collective expansion and stop interacting. The blast-wave model describes the **transverse momentum (p<sub>T</sub>)** spectra by combining:
+This document summarizes the physics foundations of TFHIC and how the modules connect. For practical build/run details, see the project **README.md**.
 
-- A thermal component characterized by a **kinetic temperature T<sub>kin</sub>**, and
-- A collective radial flow component parameterized by a **transverse velocity profile β<sub>T</sub>(r)**.
+## Overview of the framework
 
-This separation allows one to generate full p<sub>T</sub> spectra for each hadron species, using only the total yields (from the thermal model) and a few macroscopic parameters. The output can then be used to compare with experimental spectra or as input to simulations for computing detection efficiencies.  
-  
-This document summarizes the physics model behind the TFHIC toolkit.
+TFHIC comprises three physics modules and a thin orchestrator:
 
----
+1. **Thermal yields** — hadron resonance gas (HRG) at chemical freeze-out computes primary midrapidity yields $N_i \equiv \mathrm{d}N_i/\mathrm{d}y$, with canonical options and resonance feed-down.
+2. **Blast-wave spectra** — the Boltzmann–Gibbs blast-wave (BGBW) source converts $N_i$ to normalized $p_T$-differential spectra.
+3. **Efficiency extrapolation** — uses predicted spectra of π, K, p and measured/simulated reference efficiencies to infer $\varepsilon_i(p_T)$ for other hadrons.
 
-## 1. Freeze‑out hierarchy
+A pipeline schematic is: **thermal yields → blast-wave spectra → efficiency curves**.
 
-- **Hadronization / pseudo‑critical temperature $T_c$.**
-  The QCD crossover from QGP to a hadron gas. At LHC midrapidity, $\mu_B \approx 0$ and lattice QCD gives $T_c \sim 155\text{–}160\,\mathrm{MeV}$.
+## Thermal yields (HRG)
 
-- **Chemical freeze‑out $T_{\mathrm{ch}}$.**
-  Inelastic reactions effectively cease; **hadron yields** are fixed. At the LHC, data‑driven $T_{\mathrm{ch}}$ is **very close to** $T_c$.
+**Model.** Primary densities follow the HRG partition function at chemical freeze-out $T_{ch}$ with chemical potentials $\boldsymbol{\mu}=(\mu_B,\mu_S,\mu_Q)$:
 
-- **Kinetic freeze‑out $T_{\mathrm{kin}}$.**
-  Elastic scatterings cease; **spectral shapes** are fixed. Typically $T_{\mathrm{kin}} \sim 90\text{–}120\,\mathrm{MeV}$ and centrality dependent.
+```math
+n_i^{\mathrm{prim}}(T_{ch},\boldsymbol{\mu})=\frac{g_i}{2\pi^2}\int_0^\infty \frac{p^2 \mathrm{d}p}{\exp(\frac{E_i(p)-\mu_i}{T_{ch}})\pm 1},\quad
+E_i=\sqrt{p^2+m_i^2},\quad \mu_i=B_i\mu_B+S_i\mu_S+Q_i\mu_Q .
+```
 
-**Ordering:**
+Final yields include resonance decays:
 
-$$
-T_c \gtrsim T_{\mathrm{ch}} > T_{\mathrm{kin}} .
-$$
+```math
+N_i = V n_i^{\mathrm{prim}} + \sum_R \mathrm{Br}(R\to i+X) N_R^{\mathrm{prim}} .
+```
 
-We separate:
-1) **Thermal production** at $T_{\mathrm{ch}}$ $\Rightarrow$ per‑species $dN/dy$.
-2) **Blast‑wave spectra** at $T_{\mathrm{kin}}$ $\Rightarrow$ $p_T$ shapes normalized to those $dN/dy$.
+**Ensembles & constraints.** TFHIC supports GCE/SCE/CE via **Thermal‑FIST** ([arXiv:1901.05249](https://arxiv.org/abs/1901.05249)). Canonical suppression is parameterized by a correlation volume $V_c=k \mathrm{d}V/\mathrm{d}y$. An alternative $\gamma_S$ mode applies a strangeness saturation factor to strange hadrons: $n_i\to \gamma_S^{|S_i|}n_i$.
 
----
+**System-size trends.** Parameterizations vs multiplicity (e.g. $T_{ch}$, $\gamma_S$ as functions of $N_{ch}$) allow automatic scans over centrality/multiplicity.
 
-## 2. Thermal production (statistical hadronization)
+**Outputs.** The thermal app exports JSON mapping **PDG → $\mathrm{d}N/\mathrm{d}y$** with configuration metadata (ensemble, widths, feed-down, k or $\gamma_S$, etc.).
 
-We describe chemical freeze‑out with a hadron resonance gas (HRG). Conserved charges $(B,S,Q)$ are treated **grand‑canonically** (via chemical potentials) or **canonically** (exact conservation in a finite domain).
+## Blast–wave spectra (BGBW)
 
-### 2.1 Ensembles
+**Model.** For a hadron of mass $m_i$, the invariant spectrum at midrapidity
 
-- **GCE:** charges conserved on average via $\mu_B,\mu_S,\mu_Q$.
-- **SCE:** strangeness canonical, $B,Q$ grand‑canonical.
-- **CE:** full canonical conservation of $B,S,Q$.
+```math
+\frac{\mathrm{d}N_i}{p_T \mathrm{d}p_T \mathrm{d}y}\propto\int_0^R r \mathrm{d}r  m_T 
+I_0(\frac{p_T\sinh\rho(r)}{T_kin}) 
+K_1(\frac{m_T\cosh\rho(r)}{T_kin}),
+```
 
-### 2.2 Canonical suppression and correlation volume
+with $m_T=(p_T^2+m_i^2)^\frac{1}{2}$, $\rho(r)=\tanh^{-1}\beta(r)$, and $\beta(r)=\beta_s(r/R)^n$.
+We use parameters $T_{kin}$, $\langle\beta_T\rangle$, and profile `n`, with $\beta_s=\tfrac{n+2}{2}\langle\beta_T\rangle$.
 
-Exact conservation in a **finite domain** reduces the yield of particles carrying the conserved quantum number(s). For strangeness we write
+**Normalization.** Each spectrum is normalized to the thermal yield $N_i$ by rescaling so that $\int \mathrm{d}p_T \mathrm{d}N_i/\mathrm{d}p_T = N_i$. Bin-wise integrals are used when asymmetric binning is provided.
 
-$$
-V_c = k\frac{dV}{dy}, \qquad k \ge 1 ,
-$$
+**Inputs.** Hadron masses/labels from `common/data/hadrons.json`. Blast-wave parameters from CSV (centrality-dependent; species overrides allowed).
 
-with $\frac{dV}{dy}$ being the fireball volume per unit rapidity at chemical freeze‑out and $k$ a dimensionless scale. Larger $k$ $\Rightarrow$ weaker canonical suppression (GCE is recovered as $k\to\infty$).
+**Numerics & checks.** Radial integral via ROOT; guard `clampR` ensures $\beta(r)<1$. Sanity tests verify normalization to $N_i$ and positivity.
 
-### 2.3 Strangeness saturation $\gamma_S$
+## Efficiency extrapolation (summary)
 
-A phenomenological modifier for (under)saturation of strangeness:
+Efficiencies are represented either as pointwise curves (logit interpolation) or binned step functions. Reference efficiencies for $(\pi, K, p)$ are ingested from ROOT objects. For a target species `i` with token `T` (meson, strange–meson, baryon), TFHIC combines reference logits with weights $(w_\pi,w_K,w_p)$:
 
-$$
-N_i \propto \gamma_S^{s_i} ,
-$$
+```math
+\mathrm{logit} \varepsilon_i(p_T) \approx w_\pi^{(T)} g_\pi(p_T)+w_K^{(T)} g_K(p_T)+w_p^{(T)} g_p(p_T), \qquad \varepsilon_i=(1+e^{-g})^{-1}.
+```
 
-where $s_i$ is the number of valence strange + anti‑strange quarks in species $i$. $\gamma_S$ and canonical suppression are **different mechanisms**; assuming $\gamma_S \le 1$ introduces a dependency on the multiplicity $dN_{\mathrm{ch}}/d\eta$ of the chemical freeze-out temperature $T_{\mathrm{ch}}$ and volume.
+## Analysis products
 
-### 2.4 Primary vs total yields
+- Baseline $p_T$ spectra for $\pi, K, p$ across centrality classes.
+- Ratios $K/\pi$, $p/\pi$ vs $p_T$.
+- Integrated $\mathrm{d}N/\mathrm{d}y$, $\langle p_T\rangle$, and species ratios vs centrality.
+- Efficiency curves for $\Lambda,\Xi,\Omega,\phi$ with uncertainty bands.
+- Sensitivity scans in $T_{ch}, \gamma_S$ or k (thermal) and $T_{kin}, \langle\beta_T\rangle, n$ (blast-wave).
 
-- **Primary:** direct thermal production (before resonance decays).
-- **Total:** after applying strong/weak decays (branching ratios).
+## Uncertainties
 
-### 2.5 From multiplicity/centrality to volume
+Sources: HRG inputs (particle list/decays/widths), canonical scheme, system-size parametrizations, blast-wave parameters, efficiency mapping weights, and numerical integration tolerances. Propagation via pseudo-experiments yields covariances for yields and spectra.
 
-Centrality or event activity (often via $dN_{\mathrm{ch}}/d\eta$) is mapped to a chemical freeze‑out volume $V$ or a rapidity density of volume $dV/dy$. The precise mapping is analysis‑specific; in TFHIC we treat $V$ (or $dV/dy$) as a monotonic function of the chosen multiplicity estimator.
+## Reproducibility
 
-### 2.6 Modes
+Results are tied to a physics configuration card (freeze-out parameters, ensemble, particle list version) and a software tag (commit hash, build flags). Plots should embed sidecar metadata (binning, covariances).
 
-- **Canonical‑suppression (CE) mode — volume scan in $k$.** For a fixed centrality (fixed $V$ and $T_{\mathrm{ch}}$), vary $V_{c} = k\frac{dV}{dy}$ to study canonical effects based on the size of the correlation volume
+## References
 
-- **$\gamma_S$ variant — scan in multiplicity $dN_{\mathrm{ch}}/d\eta$.** The control variable is multiplicity. For a provided grid in $\{dN_{\mathrm{ch}}/d\eta\}$ the thermal model parameters are evaluated as functions of multiplicity, so that
-
-$$
-  T_{\mathrm{ch}} = T_{\mathrm{ch}}(dN_{\mathrm{ch}}/d\eta), \qquad
-  \frac{dV}{dy} = \frac{dV}{dy}(dN_{\mathrm{ch}}/d\eta), \qquad
-  V_c = k\frac{dV}{dy}(dN_{\mathrm{ch}}/d\eta) .
-$$
-
----
-
-## 3. Blast‑wave spectra
-
-At kinetic freeze‑out we model the $p_T$ spectra with a standard blast‑wave ansatz (Boltzmann–Gibbs form plus radial flow). A common expression for the **shape kernel** is
-
-$$
-\frac{dN}{p_Tdp_Tdy} \propto
-\int_0^R rdr m_T
-I_0\left(\frac{p_T\sinh \rho(r)}{T_{\mathrm{kin}}}\right)
-K_1\left(\frac{m_T\cosh \rho(r)}{T_{\mathrm{kin}}}\right),
-$$
-
-with $m_T=\sqrt{p_T^2+m^2}$, $\rho(r)=\tanh^{-1}\beta_T(r)$, and a transverse‑flow profile
-
-$$
-\beta_T(r) = \beta_s\big( r/R \big)^{n} \qquad
-\langle \beta_T \rangle = \frac{2}{2+n}\beta_s .
-$$
-
-Parameters: $T_{\mathrm{kin}}$, $\langle \beta_T \rangle$ (or $\beta_s$), and the profile exponent $n$. Mass ordering of spectra emerges naturally from flow.  
-Spectra are normalized to yields determined via thermal model.
-
-### 3.2 Centrality and species dependence
-
-Blast‑wave parameters may depend on **centrality** and, optionally, on the **particle species**. In TFHIC they are provided via a CSV. A token `ALL` applies to all species in that centrality unless overridden by species groups.
-
----
-
-## 4. CLI flag mapping
-
-### 4.1 Thermal yields exporter
-
-| Symbol | Meaning | CLI flag vanilla | CLI flag $\gamma_S$ |
-|---|---|---|---|
-| $T_{\mathrm{ch}}$ | chemical freeze-out temperature | --Tch | --tch-a, --tch-b |
-| Ensemble | statistical ensemble for charge conservation | --ensemble | --ensemble |
-| Resonance decay width | handle for resonance decay width (eBW, ZeroWidth, BWTwoGamma) | --width | --width |
-| $dV/dy$ | rapidity density of volume | multiplicity dependent in $\gamma_S$ mode |
-| $V_c = kdV/dy$ | correlation volume | $k$ still applies |
-| $\gamma_S$ | strangeness saturation factor | $0.6\text{–}1.0$ phenomenologically |
-| $dN/dy$ | rapidity density at midrapidity | input to normalization |
-| $\langle\beta_T\rangle, n$ | mean flow and profile exponent | centrality dependent |
-
-**Rapidity vs pseudorapidity.** The thermal model outputs $dN/dy$ (midrapidity). Experimental centrality is often specified by $dN_{\mathrm{ch}}/d\eta$; TFHIC assumes a monotonic mapping from $dN_{\mathrm{ch}}/d\eta$ to $V$ or $dV/dy$.
-
-
----
-
-
-## 5. References and further readings
-[1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
-[2] V. Vovchenko, B. Dönigus, and H. Stoecker, *Canonical statistical model analysis of p‑p, p‑Pb, and Pb‑Pb collisions at the LHC*, *Phys. Rev. C* **100**, 054906 (2019). [arXiv:1906.03145](https://arxiv.org/abs/1906.03145), [doi:10.1103/PhysRevC.100.054906](https://doi.org/10.1103/PhysRevC.100.054906)  
-[3] ALICE Collaboration, *Centrality dependence of π, K, p production in Pb–Pb collisions at √sₙₙ = 2.76 TeV*, *Phys. Rev. C* **88**, 044910 (2013). [arXiv:1303.0737](https://arxiv.org/abs/1303.0737), [doi:10.1103/PhysRevC.88.044910](https://doi.org/10.1103/PhysRevC.88.044910)
-
-
+- **Thermal‑FIST:** V. Vovchenko *et al.*, *Thermal‑FIST: A package for hadron resonance gas model calculations*, arXiv:1901.05249 — https://arxiv.org/abs/1901.05249
