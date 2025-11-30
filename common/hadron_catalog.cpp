@@ -1,63 +1,79 @@
 #include "hadron_catalog.h"
 #include <fstream>
 #include <sstream>
+#include <cctype>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-#if __has_include(<nlohmann/json.hpp>)
-  #include <nlohmann/json.hpp>
-  using json = nlohmann::json;
-#else
-  #include "third_party/json.hpp"
-  using json = nlohmann::json;
-#endif
+static std::string upper(std::string s){ for(char&c:s) c=std::toupper(c); return s; }
 
-bool HadronCatalog::load(const std::string& path, std::string* err) {
-  byPdg_.clear();
+static void fill_from_json(HadronDef& h, const json& it, int fallback_pdg=0){
+  h.pdg = it.value("pdg", fallback_pdg);
+  h.name = it.value("name", std::string());
+  h.token = upper(it.value("token", std::string()));
+  if(h.token.empty() && !h.name.empty()){
+    // Try to derive token from name (first alpha block)
+    for(char c: h.name){ if(std::isalpha((unsigned char)c)) h.token.push_back(std::toupper(c)); else if(!h.token.empty()) break; }
+    if(h.token.empty()) h.token = "UNK";
+  }
+  // Accept several mass key variants
+  if(it.contains("mass_GeV")) h.mass_GeV = it["mass_GeV"].get<double>();
+  else if(it.contains("mass")) h.mass_GeV = it["mass"].get<double>();
+  else if(it.contains("m"))    h.mass_GeV = it["m"].get<double>();
+  else if(it.contains("massGeV")) h.mass_GeV = it["massGeV"].get<double>();
+  else h.mass_GeV = 0.0;
+
+  // c*tau in meters, if available (non-critical)
+  if(it.contains("ctau_m")) h.ctau_m = it["ctau_m"].get<double>();
+  else if(it.contains("ctau")) h.ctau_m = it["ctau"].get<double>();
+  else h.ctau_m = 0.0;
+
+  h.Z = it.value("Z", 0);
+  h.A = it.value("A", 0);
+}
+
+bool HadronCatalog::load(const std::string& path, std::string* err){
+  byPDG_.clear();
   std::ifstream in(path);
-  if(!in) {
-    if (err) *err = "Cannot open hadron catalog JSON: " + path;
-    return false;
-  }
-  json j;
-  try { in >> j; }
-  catch (const std::exception& e) {
-    if (err) *err = std::string("JSON parse error: ")+e.what();
-    return false;
-  }
-  if (!j.contains("hadrons") || !j["hadrons"].is_array()) {
-    if (err) *err = "Missing 'hadrons' array in catalog";
-    return false;
-  }
-  for (const auto& h : j["hadrons"]) {
-    HadronDef d;
-    d.pdg      = h.value("pdg", 0);
-    d.name     = h.value("name", "");
-    d.latex    = h.value("latex", d.name);
-    d.mass_GeV = h.value("mass_GeV", 0.0);
-    d.token    = h.value("token", "ALL");
-    d.color    = h.value("color", 1);
-    if (j.contains("ctau_m") && j["ctau_m"].is_number()) {
-      d.ctau_m = j["ctau_m"].get<double>();
-    } else {
-      d.ctau_m = 0.0; // default
+  if(!in){ if(err) *err="cannot open "+path; return false; }
+  json j; in >> j;
+
+  auto ingest_array = [&](const json& arr)->bool{
+    if(!arr.is_array()) return false;
+    for(const auto& it : arr){
+      if(!it.is_object()) continue;
+      HadronDef h; fill_from_json(h, it, it.value("pdg", 0));
+      if(h.pdg!=0) byPDG_[h.pdg] = h;
     }
-    if (d.pdg == 0 || d.mass_GeV <= 0) continue;
-    byPdg_[d.pdg] = std::move(d);
+    return !byPDG_.empty();
+  };
+
+  // Case 1: top-level array
+  if(ingest_array(j)) return true;
+
+  // Case 2: object with a known array field
+  if(j.is_object()){
+    const char* keys[] = {"hadrons","particles","entries","data","list"};
+    for(const char* k: keys){
+      if(j.contains(k) && ingest_array(j.at(k))) return true;
+    }
+    // Case 3: object mapping PDG string -> hadron object
+    bool any=false;
+    for(auto it = j.begin(); it!=j.end(); ++it){
+      if(!it.value().is_object()) continue;
+      int pdg = 0;
+      try{ pdg = std::stoi(it.key()); } catch(...) { pdg = it.value().value("pdg", 0); }
+      HadronDef h; fill_from_json(h, it.value(), pdg);
+      if(h.pdg!=0){ byPDG_[h.pdg] = h; any=true; }
+    }
+    if(any) return true;
   }
-  return !byPdg_.empty();
+
+  if(err) *err = "unrecognized JSON schema (expected array or object with array/map)";
+  return false;
 }
 
 const HadronDef* HadronCatalog::get(int pdg) const {
-  auto it = byPdg_.find(pdg);
-  return (it==byPdg_.end()) ? nullptr : &it->second;
-}
-
-std::string HadronCatalog::tokenFor(int pdg) const {
-  auto* d = get(pdg);
-  return d ? d->token : "ALL";
-}
-
-std::vector<int> HadronCatalog::pdgs() const {
-  std::vector<int> v; v.reserve(byPdg_.size());
-  for (auto& kv : byPdg_) v.push_back(kv.first);
-  return v;
+  auto it = byPDG_.find(pdg); if(it==byPDG_.end()) return nullptr;
+  return &it->second;
 }

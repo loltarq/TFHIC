@@ -43,7 +43,7 @@
       "name": "p",
       "latex": "p",
       "mass_GeV": 0.93827208816,
-      "token": "PI",
+      "token": "P",
       "color": 416,
       "ctau_m": 0.0
     },
@@ -97,9 +97,11 @@
       "name": "Deuteron",
       "latex": "Deuteron",
       "mass_GeV": 1.87561,
-      "token": "D",
+      "token": "P",
       "color": 777,
-      "ctau_m": 0.0
+      "ctau_m": 0.0,
+      "A": 2,
+      "Z": 1
     }
   ]
 }
