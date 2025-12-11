@@ -10,6 +10,7 @@ static std::string upper(std::string s){ for(char&c:s) c=std::toupper(c); return
 static void fill_from_json(HadronDef& h, const json& it, int fallback_pdg=0){
   h.pdg = it.value("pdg", fallback_pdg);
   h.name = it.value("name", std::string());
+  h.latex = it.value("latex", h.name);
   h.token = upper(it.value("token", std::string()));
   if(h.token.empty() && !h.name.empty()){
     // Try to derive token from name (first alpha block)
@@ -30,6 +31,7 @@ static void fill_from_json(HadronDef& h, const json& it, int fallback_pdg=0){
 
   h.Z = it.value("Z", 0);
   h.A = it.value("A", 0);
+  h.color = it.value("color", 1);
 }
 
 bool HadronCatalog::load(const std::string& path, std::string* err){
@@ -76,4 +78,16 @@ bool HadronCatalog::load(const std::string& path, std::string* err){
 const HadronDef* HadronCatalog::get(int pdg) const {
   auto it = byPDG_.find(pdg); if(it==byPDG_.end()) return nullptr;
   return &it->second;
+}
+
+std::string HadronCatalog::tokenFor(int pdg) const {
+  auto it = byPDG_.find(pdg);
+  if(it==byPDG_.end()) return "ALL";
+  return it->second.token.empty() ? "ALL" : it->second.token;
+}
+
+std::vector<int> HadronCatalog::pdgs() const {
+  std::vector<int> v; v.reserve(byPDG_.size());
+  for (auto& kv : byPDG_) v.push_back(kv.first);
+  return v;
 }

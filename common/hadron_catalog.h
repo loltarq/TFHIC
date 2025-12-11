@@ -1,16 +1,19 @@
 #pragma once
 #include <map>
 #include <string>
+#include <vector>
 
 struct HadronDef {
   int pdg = 0;
   std::string name;
+  std::string latex;     // LaTeX-friendly label (optional)
   std::string token;      // short token like "PI","K","P","D","HE3","HE4"
   double mass_GeV = 0.0;
   double ctau_m   = 0.0;  // 0 for stable
   // Optional (default 0 if missing in JSON)
   int Z = 0;              // atomic number
   int A = 0;              // mass number
+  int color = 1;          // ROOT-like color code (optional)
 };
 
 class HadronCatalog {
@@ -21,6 +24,11 @@ public:
   //  - an object map { "211": {pdg:211,...}, "-211": {...}, ... }
   bool load(const std::string& jsonPath, std::string* err=nullptr);
   const HadronDef* get(int pdg) const;
+  bool has(int pdg) const { return byPDG_.count(pdg)!=0; }
+  // Return token string for a PDG (uppercased). Falls back to "ALL" if unknown.
+  std::string tokenFor(int pdg) const;
+  // Convenience: list of PDGs present in the catalog.
+  std::vector<int> pdgs() const;
 private:
   std::map<int, HadronDef> byPDG_;
 };

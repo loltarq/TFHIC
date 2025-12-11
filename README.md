@@ -214,7 +214,18 @@ Options:
   --verbose                         run with verbose output
 ```
 
-#### 2) libTFHIC.so (legacy)
+#### 2) bin/predict_light_spectra
+Fits the Pb–Pb blast-wave parameters vs. multiplicity, evaluates them at user-provided dN/dη targets (e.g. O–O / Ne–Ne), interpolates thermal yields from a gammaS JSON scan, and produces normalized pT spectra (one PDF per species plus a ROOT file with graphs).  
+Example (run from `blastwave/bin`):
+```
+./predict_light_spectra \
+  --thermal-json ../data/yields_CE_k6_gs_NchScan.json \
+  --systems "OO:60,120;NeNe:150,220" \
+  --k 6 --pt 0,10,400 --mode gammaS --pdf ../out/predict_OO_NeNe.pdf
+```
+Use `--help` for the full list of knobs (fit formulas, species list, primordial/total yields, etc.).
+
+#### 3) libTFHIC.so (legacy)
 Legacy shared library that allows to use the blastwave calculation routines to compute the pT spectrum of a hadron given the blastwave parameters and (optionally) a target yield for normalization.  
 The blastwave routines store data in TGraph or TH1D objects; these can be analyzed with ROOT helper macros.
 

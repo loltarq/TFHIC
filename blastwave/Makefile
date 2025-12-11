@@ -10,7 +10,7 @@ CXX           := g++
 
 # --- Apps (minimal flags) ---
 BINDIR ?= bin
-APP_SRCS := apps/blastwave_thermal.cpp
+APP_SRCS := apps/blastwave_thermal.cpp apps/predict_light_spectra.cpp
 APPS := $(APP_SRCS:apps/%.cpp=$(BINDIR)/%)
 
 # Sources & output library name

@@ -128,7 +128,7 @@ TH1D* computePtSpectrum(HadronIntegrationInfo info, double pTmin, double pTmax, 
     double scaleFactor = info.yield / rawIntegral;
 
     f->SetParameter(4, scaleFactor);
-    TH1D* hPtNorm = new TH1D("hPt", htitle.c_str(), nBins, 0., 5.);
+    TH1D* hPtNorm = new TH1D("hPt", htitle.c_str(), nBins, pTmin, pTmax);
 
     for (int i = 1; i <= hPtNorm->GetNbinsX(); ++i)
     {
