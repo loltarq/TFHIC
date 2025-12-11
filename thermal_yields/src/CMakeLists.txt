@@ -23,27 +23,21 @@ endif()
 # If you truly need extra includes for your own headers in this subdir, add them here.
 # target_include_directories(<target> PRIVATE "${PROJECT_SOURCE_DIR}/include")
 
-add_executable(TF_CSM-vs-dNpidy TF_CSM-vs-dNpidy.cpp)
-target_link_libraries(TF_CSM-vs-dNpidy PRIVATE ThermalFIST)
-target_compile_features(TF_CSM-vs-dNpidy PRIVATE cxx_std_17)
-
 add_executable(export_dndy_json export_dndy_json.cpp)
 target_link_libraries(export_dndy_json PRIVATE ThermalFIST)
 target_compile_features(export_dndy_json PRIVATE cxx_std_17)
 
 # Helpful RPATH so executables run from the build/install tree with shared ThermalFIST
 if(UNIX AND NOT APPLE)
-  set_target_properties(TF_CSM-vs-dNpidy export_dndy_json PROPERTIES
+  set_target_properties(export_dndy_json PROPERTIES
     BUILD_RPATH "\$ORIGIN;${CMAKE_BINARY_DIR};${CMAKE_BINARY_DIR}/lib"
     INSTALL_RPATH "\$ORIGIN"
   )
 endif()
 
 # Visual Studio folder grouping (optional)
-set_property(TARGET TF_CSM-vs-dNpidy   PROPERTY FOLDER "apps")
 set_property(TARGET export_dndy_json   PROPERTY FOLDER "apps")
 
 # Install to <prefix>/bin
-install(TARGETS TF_CSM-vs-dNpidy export_dndy_json
+install(TARGETS export_dndy_json
         RUNTIME DESTINATION bin)
-

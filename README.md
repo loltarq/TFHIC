@@ -79,7 +79,6 @@ cmake --build . -j
 ```
 This produces the following executables:
 - `thermal_yields/build/bin/export_dndy_json`
-- `thermal_yields/build/bin/TF_CSM-vs-dNpidy`
 
 > Notes  
 > • The project sets **C++17**.  
@@ -155,32 +154,6 @@ Vanilla mode (no gammaS, defaults shown):
   --vol-a                                   (default: 2.4)
 ```
 
-
-#### 2) TF_CSM-vs-dNpidy (legacy)
-Legacy program: allows to compute yields ratios w.r.t. specific hadrons given a statistical ensemble and model variant.  
-Output stored in column-based .dat file.  
-
-**Set thermal model analysis configuration** in `thermal_yields/conf/_AnalysisConfig.config`:
-- line 1: output file relative path; only used if runtime arg custom output is set to 1.
-- line 2: relative path to particle injection list for thermal model.
-- line 3: list of particles to analyze; txt file stored in same folder as config file.
-- line 4: resonance width scheme to use in thermal model.
-- line 5: correlation volume factors for scan.
-
-**Run from the build directory** so outputs land in `thermal_yields/out/` by default;  
-
-**Requires args**; the program prints guidance on missing args. Example:
-```bash
-cd thermal_yields/build
-./TF_CSM-vs-dNpidy
-# Not enough arguments provided
-# Required arguments, in order: custom output file flag [0,1], toGCE flag [0,1], Ensemble [GCE,CE,SCE], GammaS model flag [0,1], Ensemble, GammaS model flag ...
-# E.g. to compute yield ratios to GCE in Vanilla Strangeness-canonical and GammaS full canonical picture, with default output file, run the script as follows:
-# ./TF_CSM-vs-dNpidy 0 1 SCE 0 CE 1
-```
-
-Thermal yield results are stored under the `thermal_yields/out/` folder in .dat files.
-
 ### B) `blastwave/` from ROOT
 
 #### 1) bin/blastwave_thermal
@@ -236,10 +209,6 @@ root -l
 In the ROOT prompt:
 ```
 root [0] .L libTFHIC.so
-root [1] .L libTFHIC_test.cpp++     # ROOT wrapper macro
-root [2] histo()                    # from test wrapper: generates spectra; writes ROOT files under out/
-root [3] compareHepData()           # from test wrapper: optional comparison macro
-root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph comparison
 ```
 
 ### Notes
@@ -278,28 +247,7 @@ root [4] compareHepData_asTGraphs() # from test wrapper: optional TGraph compari
    ```
 
 ### **Legacy (w/ experimental yields):**
-1. Run thermal yields with default config:
-   ```bash
-   cd thermal_yields/build/bin
-   ./TF_CSM-vs-dNpidy 0 0 GCE 0
-   ```
-2. Move results to blastwave data folder:
-   ```bash
-   mv ../../out/*.dat ../../../blastwave/data/
-   ```
-3. Run blastwave flow propagation and compare with HEP data:
-   ```bash
-   root -l
-   root [0] .L libTFHIC.so
-   root [1] .L libTFHIC_test.cpp++
-   root [2] histo()
-   root [3] compareHepData_asTGraphs()
-   ```
-4. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
-   ```bash
-   root [4] TBrowser* t = new TBrowser()
-   # use UI to open and explore .root files
-   ```
+Deprecated workflow removed; use the JSON-based `export_dndy_json` + `blastwave_thermal` path above.
 
 ## Limitations
 - Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
