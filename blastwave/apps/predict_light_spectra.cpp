@@ -40,6 +40,7 @@
 #include "blastwave_utils.h"
 #include "hadron_list.h"
 #include "../../common/hadron_catalog.h"
+#include "runtime_paths.h"
 
 namespace fs = std::filesystem;
 
@@ -72,21 +73,6 @@ static std::vector<int> parse_int_list(const std::string& s){
 }
 static std::vector<double> parse_double_list(const std::string& s){
   std::vector<double> v; for (auto& x : split(s, ',')) v.push_back(std::stod(x)); return v;
-}
-
-static std::string resolve_path_or_guess(const std::string& in,
-                                         const std::vector<std::string>& fallbacks)
-{
-  if (in.empty()) return in;
-  fs::path p(in);
-  if (p.is_absolute() || p.has_parent_path()) return in;
-  // Try fallbacks/<file>
-  for (const auto& base : fallbacks){
-    fs::path cand = fs::path(base) / p;
-    std::error_code ec;
-    if (fs::exists(cand, ec)) return cand.string();
-  }
-  return in;
 }
 
 // ---------- physics containers ----------
@@ -385,8 +371,8 @@ static void print_help(const char* prog){
 "  --thermal-json PATH            Thermal-FIST yields JSON (gammaS scan recommended)\n"
 "  --systems SPEC                 Semicolon-separated list: NAME:n1,n2;NAME2:n3,... (e.g. OO:60,120;NeNe:150,220)\n"
 "Options:\n"
-"  --bw-csv FILE                  Pb-Pb blast-wave fit CSV (default: ../data/bw_data_1910.07678.csv; if it contains an Nch column, no map is needed)\n"
-"  --nch-map FILE                 dNch/deta list for centralities (used only if CSV lacks Nch; default: ../../thermal_yields/conf/Nch_PbPb_pp_1910.07678_ALICE.txt)\n"
+"  --bw-csv FILE                  Pb-Pb blast-wave fit CSV (default: bw_data_1910.07678.csv in data-dir; if it contains an Nch column, no map is needed)\n"
+"  --nch-map FILE                 dNch/deta list for centralities (used only if CSV lacks Nch; default: Nch_PbPb_pp_1910.07678_ALICE.txt in conf-dir)\n"
 "  --mode gammaS|vanilla          Thermal JSON mode filter (default: gammaS)\n"
 "  --k values                     Comma-separated k list for yields (default: all k in JSON)\n"
 "  --species PDG,...              Species PDG list (default: pi+/-, K+/-, p/-, deuteron)\n"
@@ -398,13 +384,17 @@ static void print_help(const char* prog){
 "  --fit-beta-pars a,b,c          Initial parameters for beta fit (comma-separated)\n"
 "  --fit-T-pars a,b,c             Initial parameters for T fit (comma-separated)\n"
 "  --fit-n-pars a,b,c             Initial parameters for n fit (comma-separated)\n"
-"  --out ROOTFILE                 Output ROOT (default: ../out/predict_light_spectra.root)\n"
-"  --pdf FILE                     Quick-look PDF (default: ../out/predict_light_spectra.pdf)\n"
+"  --out ROOTFILE                 Output ROOT (default: out-dir/predict_light_spectra.root)\n"
+"  --pdf FILE                     Quick-look PDF (default: out-dir/predict_light_spectra.pdf)\n"
+"  --data-dir PATH                Base data dir for bare filenames\n"
+"  --conf-dir PATH                Base config dir for bare filenames\n"
+"  --out-dir PATH                 Base output dir for bare filenames\n"
 "  --no-pdf                       Skip PDF overlay\n"
 "  --primordial                   Use primordial yields (default: total)\n"
 "  --timesPt                      Return dN/dpT instead of (1/pT)dN/dpT\n"
 "  --clampR                       Numerical stability: clamp r instead of beta\n"
-"  --verbose                      Verbose logging\n";
+"  --verbose                      Verbose logging\n"
+"Env overrides: TFHIC_DATA, TFHIC_CONF, TFHIC_OUT.\n";
 }
 
 // ---------- main ----------
@@ -412,8 +402,8 @@ int main(int argc, char** argv){
   if (argc==1){ print_help(argv[0]); return 0; }
 
   // defaults
-  std::string bw_csv = "../data/bw_data_1910.07678.csv";
-  std::string nch_map = "../../thermal_yields/conf/Nch_PbPb_pp_1910.07678_ALICE.txt"; // optional if CSV has Nch column
+  std::string bw_csv = "bw_data_1910.07678.csv";
+  std::string nch_map = "Nch_PbPb_pp_1910.07678_ALICE.txt"; // optional if CSV has Nch column
   std::string thermal_json;
   std::string thermal_mode = "gammaS";
   std::vector<double> klist; // empty -> all k found in JSON
@@ -425,13 +415,14 @@ int main(int argc, char** argv){
   std::string f_T    = "[0] + [1]*log(x)";
   std::string f_n    = "[0] + ([1]-[0])/(1 + x/[2])";
   std::vector<double> f_beta_pars, f_T_pars, f_n_pars;
-  std::string out_root = "../out/predict_light_spectra.root";
-  std::string out_pdf  = "../out/predict_light_spectra.pdf";
+  std::string out_root = "predict_light_spectra.root";
+  std::string out_pdf  = "predict_light_spectra.pdf";
   bool make_pdf = true;
   bool primordial = false;
   bool timesPt = false;
   bool clampR = false;
   bool verbose = false;
+  std::string dataDirFlag, confDirFlag, outDirFlag;
 
   auto next = [&](int& i, const char* flag)->std::string{
     if (i+1>=argc){ std::cerr << "Missing value after " << flag << "\n"; std::exit(2); }
@@ -457,6 +448,9 @@ int main(int argc, char** argv){
     else if (a=="--fit-n-pars")    f_n_pars    = parse_double_list(next(i,a.c_str()));
     else if (a=="--out")      out_root = next(i,a.c_str());
     else if (a=="--pdf")      { out_pdf = next(i,a.c_str()); make_pdf=true; }
+    else if (a=="--data-dir") dataDirFlag = next(i,a.c_str());
+    else if (a=="--conf-dir") confDirFlag = next(i,a.c_str());
+    else if (a=="--out-dir")  outDirFlag  = next(i,a.c_str());
     else if (a=="--no-pdf")   make_pdf=false;
     else if (a=="--primordial") primordial=true;
     else if (a=="--timesPt")  timesPt=true;
@@ -474,17 +468,18 @@ int main(int argc, char** argv){
     print_help(argv[0]); return 2;
   }
 
-  // resolve simple fallback locations
-  bw_csv   = resolve_path_or_guess(bw_csv,   {"../data", "data"});
-  nch_map  = resolve_path_or_guess(nch_map,  {"../../thermal_yields/conf", "../conf", "../data"});
-  thermal_json = resolve_path_or_guess(thermal_json, {"../data", "data"});
-  out_root = resolve_path_or_guess(out_root, {"../out", "out"});
-  out_pdf  = resolve_path_or_guess(out_pdf,  {"../out", "out"});
+  auto paths = resolve_runtime_paths(argv[0], dataDirFlag, confDirFlag, outDirFlag, "blastwave/out");
+
+  fs::path bw_csv_path = resolve_data_path(paths, bw_csv);
+  fs::path nch_map_path = resolve_conf_path(paths, nch_map);
+  fs::path thermal_json_path = resolve_data_path(paths, thermal_json);
+  fs::path out_root_path = resolve_out_path(paths, out_root);
+  fs::path out_pdf_path = resolve_out_path(paths, out_pdf);
 
   // load inputs
-  auto nchVals = read_nch_map(nch_map);
+  auto nchVals = read_nch_map(nch_map_path.string());
 
-  auto bwPts = read_bw_csv(bw_csv, nchVals, "ALL", verbose);
+  auto bwPts = read_bw_csv(bw_csv_path.string(), nchVals, "ALL", verbose);
   if (bwPts.empty()){
     std::cerr << "[predict] ERROR: no BW rows loaded. Abort.\n"; return 2;
   }
@@ -494,18 +489,17 @@ int main(int argc, char** argv){
     std::cerr << "[predict] ERROR: could not parse --systems string\n"; return 2;
   }
 
-  auto yieldTables = load_yield_tables(thermal_json, thermal_mode, klist, !primordial, verbose);
+  auto yieldTables = load_yield_tables(thermal_json_path.string(), thermal_mode, klist, !primordial, verbose);
   if (yieldTables.empty()){
     std::cerr << "[predict] ERROR: no yields found in JSON for requested mode/k\n"; return 2;
   }
 
   HadronCatalog catalog;
   std::string err;
-  if (!catalog.load("../../common/data/hadrons.json", &err)){
-    if(!catalog.load("../common/data/hadrons.json", &err)){
-      std::cerr << "[predict] ERROR: cannot load hadron catalog: " << err << "\n";
-      return 2;
-    }
+  const std::string hadrons_path = resolve_data_path(paths, "hadrons.json").string();
+  if (!catalog.load(hadrons_path, &err)){
+    std::cerr << "[predict] ERROR: cannot load hadron catalog: " << err << "\n";
+    return 2;
   }
 
   // graphs + fits
@@ -524,10 +518,11 @@ int main(int argc, char** argv){
   auto fn    = fit_graph(g_n,    f_n,    "f_n_vs_nch",    fitmin, fitmax, verbose, &status_n,    f_n_pars);
 
   // prepare output ROOT
-  fs::path outPath(out_root);
+  fs::path outPath(out_root_path);
   if (outPath.has_parent_path()) fs::create_directories(outPath.parent_path());
-  TFile* fout = TFile::Open(out_root.c_str(), "RECREATE");
-  if (!fout || fout->IsZombie()){ std::cerr << "[predict] ERROR: cannot create ROOT file " << out_root << "\n"; return 2; }
+  const std::string out_root_s = out_root_path.string();
+  TFile* fout = TFile::Open(out_root_s.c_str(), "RECREATE");
+  if (!fout || fout->IsZombie()){ std::cerr << "[predict] ERROR: cannot create ROOT file " << out_root_s << "\n"; return 2; }
 
   const double chi2_beta = fbeta->GetChisquare();
   const double chi2_T    = fT->GetChisquare();
@@ -592,9 +587,11 @@ int main(int argc, char** argv){
   TParameter<int>("npt", npt).Write("npt");
   TParameter<double>("ptmin", ptmin).Write("ptmin");
   TParameter<double>("ptmax", ptmax).Write("ptmax");
-  TNamed("thermal_json", thermal_json.c_str()).Write();
+  const std::string thermal_json_s = thermal_json_path.string();
+  TNamed("thermal_json", thermal_json_s.c_str()).Write();
   TNamed("thermal_mode", thermal_mode.c_str()).Write();
-  TNamed("bw_csv", bw_csv.c_str()).Write();
+  const std::string bw_csv_s = bw_csv_path.string();
+  TNamed("bw_csv", bw_csv_s.c_str()).Write();
   TNamed("fit_formula_beta", f_beta.c_str()).Write();
   TNamed("fit_formula_T", f_T.c_str()).Write();
   TNamed("fit_formula_n", f_n.c_str()).Write();
@@ -682,15 +679,16 @@ int main(int argc, char** argv){
 
   fout->Write();
   fout->Close();
-  std::cout << "[predict] Wrote ROOT output to " << out_root << "\n";
+  std::cout << "[predict] Wrote ROOT output to " << out_root_s << "\n";
 
   // quick-look PDF (one canvas per species/system/k to reduce clutter)
   if (make_pdf && !spectra_by_species.empty()){
-    fs::path pdfPath(out_pdf);
+    fs::path pdfPath(out_pdf_path);
     if (pdfPath.has_parent_path()) fs::create_directories(pdfPath.parent_path());
     gStyle->SetOptStat(0);
     TCanvas c("c","c",900,700);
-    c.Print((out_pdf+"[").c_str()); // open
+    const std::string out_pdf_s = out_pdf_path.string();
+    c.Print((out_pdf_s+"[").c_str()); // open
 
     for (auto& kv : spectra_by_species){
       int pdg = kv.first;
@@ -734,12 +732,12 @@ int main(int argc, char** argv){
           lat.SetTextSize(0.04);
           lat.DrawLatex(0.12, 0.94, title.c_str());
           leg.Draw();
-          c.Print(out_pdf.c_str());
+          c.Print(out_pdf_s.c_str());
         }
       }
     }
-    c.Print((out_pdf+"]").c_str()); // close
-    std::cout << "[predict] Wrote quick-look PDF to " << out_pdf << "\n";
+    c.Print((out_pdf_s+"]").c_str()); // close
+    std::cout << "[predict] Wrote quick-look PDF to " << out_pdf_s << "\n";
   }
 
   return 0;

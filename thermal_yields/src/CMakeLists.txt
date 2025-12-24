@@ -25,6 +25,9 @@ endif()
 
 add_executable(export_dndy_json export_dndy_json.cpp)
 target_link_libraries(export_dndy_json PRIVATE ThermalFIST)
+if(TARGET tfhic_common)
+  target_link_libraries(export_dndy_json PRIVATE tfhic_common)
+endif()
 target_compile_features(export_dndy_json PRIVATE cxx_std_17)
 
 # Helpful RPATH so executables run from the build/install tree with shared ThermalFIST

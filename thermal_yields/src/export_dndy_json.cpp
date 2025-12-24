@@ -12,6 +12,8 @@
 #include <algorithm>
 #include <filesystem>
 
+#include "runtime_paths.h"
+
 #include "HRGBase.h"
 #include "HRGEV.h"
 #include "ThermalFISTConfig.h"
@@ -27,42 +29,9 @@ static std::string ensure_json_ext(const std::string& path) {
     return (p.string() + ".json");        // append default
 }
 
-// Does the string contain a directory separator?
-static inline bool has_dirsep(const std::string& s) {
-    return s.find('/') != std::string::npos || s.find('\\') != std::string::npos;
-}
-
-// Best-effort base dir (dir of the executable, else current working dir)
-static std::filesystem::path base_dir_from_argv0(const char* argv0) {
-    std::filesystem::path p(argv0);
-    if (p.has_parent_path()) {
-        std::error_code ec;
-        auto abs = std::filesystem::absolute(p, ec);
-        return (ec ? p : abs).parent_path();
-    }
-    return std::filesystem::current_path();
-}
-
-// Resolve --out: if only a filename, place it under <base>/../out/
-static std::string resolve_out_path(const std::string& outFlag,
-                                    const std::filesystem::path& baseDir) {
-    if (outFlag.empty()) return outFlag; // caller will error on empty
-    if (has_dirsep(outFlag)) return outFlag; // user provided a path
-    auto outDir = baseDir / ".." / ".." / "out";
-    std::filesystem::create_directories(outDir);
-    return (outDir / outFlag).string();
-}
-
-// Resolve --nch-file: if only a filename, look in <base>/../conf/
-static std::string resolve_conf_file(const std::string& fileFlag,
-                                     const std::filesystem::path& baseDir) {
-    if (fileFlag.empty()) return fileFlag;
-    if (has_dirsep(fileFlag)) return fileFlag; // path provided; use as-is
-    auto tryPath = baseDir / ".." / ".." / "conf" / fileFlag;
-    std::error_code ec;
-    if (std::filesystem::exists(tryPath, ec)) return tryPath.string();
-    // Fall back to cwd lookup or let downstream code handle not-found
-    return fileFlag;
+static inline bool is_bare_path(const std::string& s) {
+    std::filesystem::path p(s);
+    return !s.empty() && !p.is_absolute() && !p.has_parent_path();
 }
 
 static std::string default_particles_list() {
@@ -115,10 +84,13 @@ static void print_help_with_defaults(const char* prog, const Defaults& D){
 "         [--QStats 1|0] [--feeddown primordial|weak|strong|em|stabilityflag]\n"
 "         [--toGCE 0|1] --mode vanilla|gs  [flags per mode below]\n"
 "\nRequired:\n"
-"  --out PATH_OR_NAME             (no default; if only a name is given, outputs to ../out/)\n"
+"  --out PATH_OR_NAME             (no default; if only a name is given, outputs to out-dir)\n"
 "\nModel & I/O (defaults shown):\n"
 "  --list PATH/particles.dat      (default: " << D.list_default << ")\n"
 "  --decays PATH/decays.dat       (default: <dir_of_list>/decays.dat)\n"
+"  --data-dir PATH                (override data dir for bare filenames)\n"
+"  --conf-dir PATH                (override conf dir for --nch-file)\n"
+"  --out-dir PATH                 (override output dir for bare --out)\n"
 "  --ensemble                     (default: " << D.ensemble << ")\n"
 "  --width                        (default: " << D.width    << ")\n"
 "  --species                      (default: " << D.species_csv << ")\n"
@@ -143,7 +115,8 @@ static void print_help_with_defaults(const char* prog, const Defaults& D){
 "\nNotes:\n"
 "  * dV/dy is the thermodynamic volume per unit rapidity; canonical volume Vc = k * dV/dy.\n"
 "  * B, Q, S (and charm) chemical potentials are set to 0; QS on for mesons, off for baryons.\n"
-"  * JSON contains dNdy_primary and dNdy_total (per chosen feeddown).\n\n";
+"  * JSON contains dNdy_primary and dNdy_total (per chosen feeddown).\n"
+"  * Env overrides: TFHIC_DATA, TFHIC_CONF, TFHIC_OUT.\n\n";
 }
 
 // ---------- Small helpers ----------
@@ -261,6 +234,7 @@ int main(int argc, char** argv){
     double nchMin=D.nchMin, nchMax=D.nchMax; int nchN=D.nchN; std::string nchFile=D.nchFile;
 
     // Parse CLI
+    std::string dataDirFlag, confDirFlag, outDirFlag;
     auto need = [&](bool ok){ if(!ok){ print_help_with_defaults(argv[0], D); std::exit(2);} };
     for(int i=1;i<argc;i++){
         std::string a = argv[i];
@@ -273,6 +247,9 @@ int main(int argc, char** argv){
         if(a=="--out") outPath = nexts();
         else if(a=="--list") listPath = nexts();
         else if(a=="--decays") decaysPath = nexts();
+        else if(a=="--data-dir") dataDirFlag = nexts();
+        else if(a=="--conf-dir") confDirFlag = nexts();
+        else if(a=="--out-dir")  outDirFlag  = nexts();
         else if(a=="--ensemble") ensemble = nexts();
         else if(a=="--width") width = nexts();
         else if(a=="--species") pdgs = parse_csv_pdgs(nexts());
@@ -300,21 +277,31 @@ int main(int argc, char** argv){
         else { std::cerr << "Unknown arg: " << a << "\n"; print_help_with_defaults(argv[0], D); return 2; }
     }
 
-    // Compute base directory and default out/conf roots
-    auto exeDir = base_dir_from_argv0(argv[0]);
+    auto paths = resolve_runtime_paths(argv[0], dataDirFlag, confDirFlag, outDirFlag,
+                                       "thermal_yields/out");
 
-    // Make --out land in ../out/ if it's just a filename
+    // Make --out land in out-dir if it's just a filename
     if (outPath.empty()) {
         print_help_with_defaults(argv[0], D);
         return 2;
     }
-    outPath = resolve_out_path(outPath, exeDir);
+    outPath = resolve_out_path(paths, outPath).string();
     // Ensure output file has json extension if not specified in the CLI flag
     outPath = ensure_json_ext(outPath);
 
-    // If --nch-file is a bare name, look for it in ../conf/
+    // If --nch-file is a bare name, look for it in conf dir
     if (!nchFile.empty()) {
-        nchFile = resolve_conf_file(nchFile, exeDir);
+        nchFile = resolve_conf_path(paths, nchFile).string();
+    }
+
+    // Allow --list/--decays bare names to resolve via data dir if not found locally.
+    if (is_bare_path(listPath) && !file_exists(listPath)) {
+        std::string candidate = resolve_data_path(paths, listPath).string();
+        if (file_exists(candidate)) listPath = candidate;
+    }
+    if (!decaysPath.empty() && is_bare_path(decaysPath) && !file_exists(decaysPath)) {
+        std::string candidate = resolve_data_path(paths, decaysPath).string();
+        if (file_exists(candidate)) decaysPath = candidate;
     }
 
     // Ensure output directory exists

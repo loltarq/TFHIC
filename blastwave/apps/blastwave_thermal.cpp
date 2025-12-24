@@ -27,6 +27,7 @@
 #include "hadron_list.h"
 #include "io_utils.h"
 #include "blastwave_utils.h"
+#include "runtime_paths.h"
 #include <filesystem>
 #include <cctype> 
 
@@ -61,46 +62,35 @@ static std::vector<int> parse_int_list(const std::string& s){
 static std::vector<double> parse_double_list(const std::string& s){
   std::vector<double> v; for (auto& x : split(s, ',')) v.push_back(std::stod(x)); return v;
 }
-// default folder for thermal JSONs when only a filename is given
-static const std::string kDefaultThermalDir = "../data";
-static std::string normalize_thermal_json_path(const std::string& in) {
-  if (in.empty()) return in;
-  fs::path p(in);
-  // If user passed an absolute path or included a directory, keep as-is
-  if (p.is_absolute() || p.has_parent_path()) return in;
-  // Else, try ../data/<filename>; if it exists, use it; otherwise keep original
-  fs::path candidate = fs::path(kDefaultThermalDir) / p;
-  return fs::exists(candidate) ? candidate.string() : in;
-}
-static const std::string kDefaultOutDir = "../out";
-static std::string derive_out_name(const std::string& jsonPath){
-  // spectra_<basename>.root under ../out/
+static std::string derive_out_name(const std::string& jsonPath, const fs::path& outDir){
+  // spectra_<basename>.root under outDir
   auto pos = jsonPath.find_last_of("/\\");
   std::string base = (pos==std::string::npos) ? jsonPath : jsonPath.substr(pos+1);
   auto dot = base.find_last_of('.');
   if (dot != std::string::npos) base = base.substr(0, dot);
-  fs::create_directories(kDefaultOutDir);              // ensure ../out exists
-  return (fs::path(kDefaultOutDir) / ("spectra_" + base + ".root")).string();
+  fs::create_directories(outDir);
+  return (outDir / ("spectra_" + base + ".root")).string();
 }
-static std::string normalize_out_path(const std::string& out) {
+static std::string normalize_out_path(const RuntimePaths& paths, const std::string& out) {
   if (out.empty()) return out;
   fs::path p(out);
-  // if user gave an absolute path or included a directory, keep it
   if (p.is_absolute() || p.has_parent_path()) {
     if (p.has_parent_path()) fs::create_directories(p.parent_path());
     return p.string();
   }
-  // bare filename -> place it under ../out/
-  fs::create_directories(kDefaultOutDir);
-  return (fs::path(kDefaultOutDir) / p.filename()).string();
+  return resolve_out_path(paths, out).string();
+}
+static bool is_bare_path(const fs::path& p){
+  return !p.empty() && !p.is_absolute() && !p.has_parent_path();
 }
 static int print_help(const char* prog,
                       const std::string& bw_csv,
                       const std::string& bw_path)
 {
+  const std::string bw_path_note = bw_path.empty() ? "<data-dir>" : bw_path;
   std::cerr
     << "Usage:  " << prog << "\n"
-    << "  --thermal-json FILE          path or bare filename; if no path, looks in ../data/\n"
+    << "  --thermal-json FILE          path or bare filename; if no path, looks in data-dir\n"
     << "  OR\n"
     << "  --yields-csv FILE            use experimental yields from CSV (instead of thermal JSON)\n"
     << "Options:\n"
@@ -110,14 +100,18 @@ static int print_help(const char* prog,
     << "  --cent N                     take first N centralities per k (default: auto)\n"
     << "  --species PDG[,PDG,...]      restrict to these PDGs (default: all common)\n"
     << "  --pt min,max,nbins           pT grid (default: 0,10,400). Use --timesPt for dN/dpT.\n"
-    << "  --out FILE.root              path or bare filename; if no path, outputs in ../out/\n"
+    << "  --out FILE.root              path or bare filename; if no path, outputs in out-dir\n"
+    << "  --data-dir PATH              base data dir for bare filenames\n"
+    << "  --conf-dir PATH              base config dir (unused here; for consistency)\n"
+    << "  --out-dir PATH               base output dir for bare filenames\n"
     << "  --bw-csv FILE.csv            BW params csv file (default: " << bw_csv << ")\n"
-    << "  --bw-path  DIR               base path for the BW csv file (default: " << bw_path << ")\n"
+    << "  --bw-path  DIR               base path for the BW csv file (default: " << bw_path_note << ")\n"
     << "  --timesPt                    returns spectra as dN/dPt instead of (1/Pt)dN/dPt\n"
     << "  --clampR                     num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine\n"
     << "  --tgraph                     store spectra as TGraph(s) instead of THist(s)\n"
     << "  --help                       show this help\n"
-    << "  --verbose                    run with verbose output\n";
+    << "  --verbose                    run with verbose output\n"
+    << "Env overrides: TFHIC_DATA, TFHIC_OUT.\n";
   return 0;
 }
 
@@ -245,7 +239,7 @@ int main(int argc, char** argv){
 
   // BW + alternative yield source
   std::string bw_csv   = "bw_data_1303.0737.csv";       // BW parameters (CSV), under bw_path
-  std::string bw_path  = "../data";                     // base folder for CSVs
+  std::string bw_path;                                  // base folder for CSVs
   std::string yields_csv = "";                          // experimental yields CSV (optional)
 
   if (argc == 1) return print_help(argv[0], bw_csv, bw_path);
@@ -255,6 +249,7 @@ int main(int argc, char** argv){
   bool timesPt=false, tgraph=false, clampR=false;
 
   // Parse args
+  std::string dataDirFlag, confDirFlag, outDirFlag;
   for (int i=1;i<argc;i++){
     std::string a = argv[i];
     auto next = [&](const char* flag){ if (i+1>=argc){ std::cerr<<"Missing value after "<<flag<<"\n"; std::exit(2);} return std::string(argv[++i]); };
@@ -266,6 +261,9 @@ int main(int argc, char** argv){
     else if (a=="--cent") centN = std::stoi(next("--cent"));
     else if (a=="--species") species = parse_int_list(next("--species"));
     else if (a=="--out") out_root = next("--out");
+    else if (a=="--data-dir") dataDirFlag = next("--data-dir");
+    else if (a=="--conf-dir") confDirFlag = next("--conf-dir");
+    else if (a=="--out-dir")  outDirFlag  = next("--out-dir");
     else if (a=="--verbose") verbose = true;
     else if (a=="--pt") { auto v = parse_double_list(next("--pt")); if(v.size()==3){ ptmin=v[0]; ptmax=v[1]; nbins=(int)v[2]; } }
     else if (a=="--timesPt") timesPt = true;
@@ -276,7 +274,14 @@ int main(int argc, char** argv){
     else if (a=="--help" || a=="-h") { print_help(argv[0], bw_csv, bw_path); return 0; }
   }
 
-  thermal_json = normalize_thermal_json_path(thermal_json);
+  auto paths = resolve_runtime_paths(argv[0], dataDirFlag, confDirFlag, outDirFlag, "blastwave/out");
+
+  if (!thermal_json.empty()) {
+    thermal_json = resolve_data_path(paths, thermal_json).string();
+  }
+
+  fs::path bw_base = bw_path.empty() ? paths.data_dir : fs::path(bw_path);
+  if (!bw_path.empty() && is_bare_path(bw_base)) bw_base = paths.data_dir / bw_base;
 
   // must have at least one yield source
   if (thermal_json.empty() && yields_csv.empty()){
@@ -287,21 +292,20 @@ int main(int argc, char** argv){
   HadronCatalog cat;
   std::string err;
   // path
-  if (!cat.load("../../common/data/hadrons.json", &err)) {
-    // Simple fallback if running from build/ subdir
-    if (!cat.load("../../data/hadrons.json", &err)) {
-      std::cerr << "Failed to load hadron catalog: " << err
-                << "\nLooked in ../common/data/hadrons.json and ../data/hadrons.json\n";
-      return 2;
-    }
+  const std::string hadrons_path = resolve_data_path(paths, "hadrons.json").string();
+  if (!cat.load(hadrons_path, &err)) {
+    std::cerr << "Failed to load hadron catalog: " << err
+              << "\nTried " << hadrons_path << "\n";
+    return 2;
   }
 
   // ---------- CSV experimental yields MODE ----------
   if (!yields_csv.empty()){
     // read yields CSV
     YieldCSV Y;
-    const std::string ypath = (fs::path(bw_path) / yields_csv).string();
-    if (!read_yields_csv(ypath, Y, verbose)) return 2;
+    fs::path ypath = fs::path(yields_csv);
+    if (is_bare_path(ypath)) ypath = bw_base / ypath;
+    if (!read_yields_csv(ypath.string(), Y, verbose)) return 2;
 
     // species selection (CSV-driven if none given)
     std::vector<int> species_use = species;
@@ -309,9 +313,10 @@ int main(int argc, char** argv){
       species_use.assign(Y.pdgs.begin(), Y.pdgs.end());
 
     // BW params from CSV (species-aware: ALL / tokens)
-    const std::string bwpath = (fs::path(bw_path) / bw_csv).string();
+    fs::path bwpath = fs::path(bw_csv);
+    if (is_bare_path(bwpath)) bwpath = bw_base / bwpath;
     if (verbose) std::cerr << "[blastwave_thermal] loading BW params from " << bwpath << "\n";
-    auto all = get_integration_info_from_csv(bwpath, cat, species_use, verbose);
+    auto all = get_integration_info_from_csv(bwpath.string(), cat, species_use, verbose);
     if (all.empty()){ std::cerr << "[blastwave_thermal] No centralities from BW CSV\n"; return 2; }
 
     // centrality count
@@ -319,8 +324,8 @@ int main(int argc, char** argv){
     int C    = (centN>0) ? std::min(centN, Cmax) : Cmax;
 
     // output path
-    if (out_root.empty()) out_root = derive_out_name("csv_yields"); // ../out/spectra_csv_yields.root
-    else out_root = normalize_out_path(out_root);
+    if (out_root.empty()) out_root = derive_out_name("csv_yields", paths.out_dir);
+    else out_root = normalize_out_path(paths, out_root);
 
     // ROOT out
     TFile* fout = TFile::Open(out_root.c_str(), "RECREATE");
@@ -332,8 +337,10 @@ int main(int argc, char** argv){
     TParameter<double>("ptmax", ptmax).Write("ptmax");
     TParameter<int>("timesPt", (int)timesPt).Write("timesPt");
     TNamed("yield_source", "csv").Write("yield_source");
-    TNamed("yields_csv", ypath.c_str()).Write("yields_csv");
-    TNamed("bw_csv", bwpath.c_str()).Write("bw_csv");
+    const std::string ypath_s = ypath.string();
+    const std::string bwpath_s = bwpath.string();
+    TNamed("yields_csv", ypath_s.c_str()).Write("yields_csv");
+    TNamed("bw_csv", bwpath_s.c_str()).Write("bw_csv");
 
     // optional k wrapper (k-independent CSV yields)
     fout->mkdir("k_1"); fout->cd("k_1");
@@ -425,16 +432,17 @@ int main(int argc, char** argv){
   }
 
   // BW params from CSV (species-aware)
-  const std::string bwpath = (fs::path(bw_path) / bw_csv).string();
+  fs::path bwpath = fs::path(bw_csv);
+  if (is_bare_path(bwpath)) bwpath = bw_base / bwpath;
   if (verbose) std::cerr << "[blastwave_thermal] loading BW params from " << bwpath << "\n";
-  auto all = get_integration_info_from_csv(bwpath, cat, species_use, verbose);
+  auto all = get_integration_info_from_csv(bwpath.string(), cat, species_use, verbose);
   if (verbose) std::cerr << "[blastwave_thermal] centralities="<<all.size()
                          << " species/cent="<<(all.empty()?0:all[0].size())<<"\n";
   if (all.empty()){ std::cerr << "[blastwave_thermal] No centralities from BW CSV\n"; return 2; }
 
   // output
-  if (out_root.empty()) out_root = derive_out_name(thermal_json);
-  else out_root = normalize_out_path(out_root);
+  if (out_root.empty()) out_root = derive_out_name(thermal_json, paths.out_dir);
+  else out_root = normalize_out_path(paths, out_root);
 
   TFile* fout = TFile::Open(out_root.c_str(), "RECREATE");
   if(!fout || fout->IsZombie()){ std::cerr << "Cannot create output ROOT: " << out_root << "\n"; return 2; }
@@ -446,7 +454,8 @@ int main(int argc, char** argv){
   TNamed("thermal_json", thermal_json.c_str()).Write("thermal_json");
   TNamed("thermal_kind", total ? "total":"primordial").Write("thermal_kind");
   TNamed("thermal_mode", mode.c_str()).Write("thermal_mode");
-  TNamed("bw_csv", bwpath.c_str()).Write("bw_csv");
+  const std::string bwpath_s = bwpath.string();
+  TNamed("bw_csv", bwpath_s.c_str()).Write("bw_csv");
 
   // loop over k and centralities from JSON
   for (double k : klist){

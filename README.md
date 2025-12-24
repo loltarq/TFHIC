@@ -1,6 +1,6 @@
 # TFHIC
 
-Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make build).  
+Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake build).  
 *Thesis project for master's degree in Nuclear & Subnuclear Physics.*
 
 ---
@@ -10,6 +10,7 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 - [Repository Structure](#repository-structure)
 - [Requirements](#requirements)
 - [Build](#build)
+- [Container](#container)
 - [Config & Run](#config--run)
 - [Validation](#validation)
 - [License](#license)
@@ -42,13 +43,13 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake/make
 
 ### Toolchain
 - **Compiler:** C++17-capable (e.g., GCC ≥ 7, Clang ≥ 5, MSVC 19.14+).
-- **CMake:** ≥ **2.8.11**  
-  *Reason:* `thermal_yields/CMakeLists.txt` sets `cmake_minimum_required(VERSION 2.8)`, while the bundled **Thermal-FIST** uses `2.8.11`. Any newer 3.x is fine.
-- **GNU Make:** needed for the `blastwave/` Makefile build.
+- **CMake:** ≥ **3.16**  
+  *Reason:* top-level build drives all modules; subprojects inherit this requirement.
 
 ### Libraries
-- **CERN ROOT 6.x** — **required only for `blastwave/`**  
-  Used to build and load `blastwave/libTFHIC.so` and `blastwave/bin/blastwave_thermal` (`root-config` is invoked by the Makefile; typical workflow is loading the `.so` in ROOT/Cling and running macros).
+- **CERN ROOT 6.x** — **required only for `blastwave/` targets**  
+  Used to build `libTFHIC.so`, `blastwave_thermal`, and `predict_light_spectra`.  
+  Build guard: `-DTFHIC_WITH_ROOT=ON` (default).
   - Installation instructions available @ https://root.cern/install
   - Verify version: `which root-config` and `root-config --version`
 
@@ -70,52 +71,57 @@ git clone --recurse-submodules https://github.com/loltarq/TFHIC.git
 cd TFHIC
 ```
 
-### A) `thermal_yields/` (CMake; ROOT **not required**)
+### 1) Unified CMake build (all modules)
 ```bash
-cd thermal_yields
-mkdir build && cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build . -j
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=ON
+cmake --build build -j
 ```
-This produces the following executables:
-- `thermal_yields/build/bin/export_dndy_json`
+Outputs:
+- `build/bin/export_dndy_json`
+- `build/bin/blastwave_thermal`
+- `build/bin/predict_light_spectra`
+- `build/lib/libTFHIC.so`
 
-> Notes  
-> • The project sets **C++17**.  
-> • Eigen is bundled.  
-> • If ROOT/Minuit2 is found, it’s used; otherwise a local Minuit2 is built.  
-> • Run from the **build** dir: programs write results to `../out/`.
-
-### B) `blastwave/` (Makefile; **requires ROOT 6**)
+### 2) Thermal-only build (no ROOT)
 ```bash
-cd blastwave
-make        # uses root-config to find headers/libs
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=OFF
+cmake --build build -j
 ```
-This builds the following:
-- `blastwave/libTFHIC.so`
-- `blastwave/bin/blastwave_thermal`
 
-Rebuild after changes to core src:
+### 3) Install (optional)
 ```bash
-make clean
-make
+cmake --install build --prefix /opt/tfhic
+```
+
+## Container
+
+Build the image:
+```bash
+docker build -t tfhic:latest .
+```
+
+Run with a writable output mount:
+```bash
+docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
+  /opt/tfhic/install/bin/blastwave_thermal --help
 ```
 
 ---
 
 ## Config & Run
 
-### A) `thermal_yields/build/bin/`
+### A) `build/bin/` (or `install/bin/`)
 
-#### 1) export_dndny_json
+#### 1) export_dndy_json
 Main one-liner executable: allows to compute absolute thermal yields of 1 or more hadrons specifying all configuration parameters via CLI flags.  
 Yields and metadata output is stored in .json file for later use (e.g. blastwave pT spectrum normalization).    
 
-**Run from the build directory** so outputs land in `thermal_yields/out/` by default;    
+Paths are resolved via CLI flags or env vars (`TFHIC_DATA`, `TFHIC_CONF`, `TFHIC_OUT`).  
+Bare filenames are placed under `--out-dir` (or `TFHIC_OUT`, or the repo out dir when running from source).
 
 **Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
 ```bash
-./export_dndny_json
+./export_dndy_json
 Usage:
   ./export_dndy_json --out PATH --list PATH/particles.dat [--decays PATH/decays.dat]
          --ensemble GCE|SCE|CE --width eBW|ZeroWidth|BWTwoGamma
@@ -124,7 +130,7 @@ Usage:
          [--toGCE 0|1] --mode vanilla|gs  [flags per mode below]
 
 Required:
-  --out PATH_OR_NAME                        (no default; if only a name is given, outputs to ../out/)
+  --out PATH_OR_NAME                        (no default; if only a name is given, outputs to out-dir)
 
 Model & I/O (defaults shown):
   --list PATH/particles.dat                 (default: <TFHIC_folder>/thermal_yields/Thermal-FIST/input/list/PDG2014/list-withnuclei.dat)
@@ -156,18 +162,18 @@ Vanilla mode (no gammaS, defaults shown):
 
 ### B) `blastwave/` from ROOT
 
-#### 1) bin/blastwave_thermal
+#### 1) blastwave_thermal
 Main one-liner executable: allows for the computation of the pT spectrum configuring all relevant parameters via CLI flags.  
 Currently reads blastwave parameter values from suitable .csv files, yields from either thermal .json(s) or custom .csv files.  
 
-**Run from the build directory** so outputs land in `thermal_yields/out/` by default;    
+Paths are resolved via CLI flags or env vars (`TFHIC_DATA`, `TFHIC_OUT`).  
 
 **Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
 ```bash
-cd blastwave/bin
+cd build/bin
 ./blastwave_thermal
 Usage:  ./blastwave_thermal
-  --thermal-json FILE               path or bare filename; if no path, looks in ../data/
+  --thermal-json FILE               path or bare filename; if no path, looks in data-dir
   OR
   --yields-csv FILE                 use experimental yields from CSV (instead of thermal JSON)
 Options:
@@ -177,9 +183,11 @@ Options:
   --cent N                          take first N centralities per k (default: auto)
   --species PDG[,PDG,...]           restrict to these PDGs (default: all common)
   --pt min,max,nbins                pT grid (default: 0,10,400). Use --timesPt for dN/dpT.
-  --out FILE.root                   path or bare filename; if no path, outputs in ../out/
+  --out FILE.root                   path or bare filename; if no path, outputs in out-dir
+  --data-dir PATH                   base data dir for bare filenames
+  --out-dir PATH                    base output dir for bare filenames
   --bw-csv FILE.csv                 BW params csv file (default: bw_data_1303.0737.csv)
-  --bw-path  DIR                    base path for the BW csv file (default: ../data)
+  --bw-path  DIR                    base path for the BW csv file (default: data-dir)
   --timesPt                         returns spectra as dN/dPt instead of (1/Pt)dN/dPt
   --clampR                          num stability: clamp fireball radius instead of forcing subluminal beta in blastwave calculation routine
   --tgraph                          store spectra as TGraph(s) instead of THist(s)
@@ -187,14 +195,14 @@ Options:
   --verbose                         run with verbose output
 ```
 
-#### 2) bin/predict_light_spectra
+#### 2) predict_light_spectra
 Fits the Pb–Pb blast-wave parameters vs. multiplicity, evaluates them at user-provided dN/dη targets (e.g. O–O / Ne–Ne), interpolates thermal yields from a gammaS JSON scan, and produces normalized pT spectra (one PDF per species plus a ROOT file with graphs).  
-Example (run from `blastwave/bin`):
+Example (run from `build/bin`):
 ```
 ./predict_light_spectra \
-  --thermal-json ../data/yields_CE_k6_gs_NchScan.json \
+  --thermal-json yields_CE_k6_gs_NchScan.json \
   --systems "OO:60,120;NeNe:150,220" \
-  --k 6 --pt 0,10,400 --mode gammaS --pdf ../out/predict_OO_NeNe.pdf
+  --k 6 --pt 0,10,400 --mode gammaS --pdf predict_OO_NeNe.pdf
 ```
 Use `--help` for the full list of knobs (fit formulas, species list, primordial/total yields, etc.).
 
@@ -203,7 +211,7 @@ Legacy shared library that allows to use the blastwave calculation routines to c
 The blastwave routines store data in TGraph or TH1D objects; these can be analyzed with ROOT helper macros.
 
 ```bash
-cd blastwave
+cd build/lib
 root -l
 ```
 In the ROOT prompt:
@@ -223,17 +231,25 @@ root [0] .L libTFHIC.so
 **Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
 
 ### **Reproduce the spectra plots (w/ thermal yields):**
-1. Generate thermal yields and move them under blastwave/data (or specify suitable path after --out):
+1. Generate thermal yields directly into the blastwave data dir (or use `--out` with a full path):
    ```bash
-   cd /thermal_yields/build/bin
-   ./export_dndy_json --out yields_CE_k1.6_k3_k6_gs_1303.0737.json --k "1.6,3.0,6.0" --mode "gs" --nch-file Nch_PbPb_1303.0737_ALICE_template.txt
-   cd ../../out
-   mv yields_CE_k1.6_k3_k6_gs_1303.0737.json ../../blastave/data/.
+   cd build/bin
+   ./export_dndy_json \
+     --out yields_CE_k1.6_k3_k6_gs_1303.0737.json \
+     --out-dir ../blastwave/data \
+     --k "1.6,3.0,6.0" --mode "gs" \
+     --nch-file Nch_PbPb_1303.0737_ALICE_template.txt \
+     --conf-dir ../thermal_yields/conf
    ```
 2. Run blastwave calculation on generated data as follows:
    ```bash
-   cd /../bin
-   ./blastwave_thermal --thermal-json ../data/yields_CE_k1.6_k3_k6_gs_1303.0737.json --tgraph --out spectra_yields_CE_k1.6_k3_k6_gs_1303.0737_tgraph.root
+   cd build/bin
+   ./blastwave_thermal \
+     --thermal-json yields_CE_k1.6_k3_k6_gs_1303.0737.json \
+     --data-dir ../blastwave/data \
+     --tgraph \
+     --out spectra_yields_CE_k1.6_k3_k6_gs_1303.0737_tgraph.root \
+     --out-dir ../blastwave/out
    ```
 3. Run (custom) ROOT helper macro to compare against exp. data:
    ```

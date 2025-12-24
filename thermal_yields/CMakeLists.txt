@@ -1,9 +1,16 @@
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.16)
 
-project (TFHIC)
+if (CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+  project(thermal_yields LANGUAGES CXX)
+endif()
 
 # ThermalFIST
 add_subdirectory(Thermal-FIST)
 
-# research
+# Common helpers (paths, catalog) if not provided by parent
+if(NOT TARGET tfhic_common)
+  add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/../common ${CMAKE_BINARY_DIR}/common)
+endif()
+
+# apps
 add_subdirectory(src)
