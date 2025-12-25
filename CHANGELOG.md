@@ -2,9 +2,14 @@
 All notable changes to this project will be documented here.
 
 ## [Unreleased]
-- thermal_yields module implementation: statistical hadronization calculation routines
-- blastwave module implementation: blastwave pT spectrum calculation routines
-- auxiliary functions: root to csv (and viceversa) exporter, root histo plotter
+- Unified top-level CMake build for all modules; removed blastwave Makefile.
+- Added runtime path resolver with CLI/env overrides; supports install layout and repo fallbacks.
+- Added Dockerfile (ROOT base image) and `.dockerignore` for reproducible container builds.
+- Vendored full nlohmann/json headers for container portability.
+- Added install-time env setup script (`build/tfhic-env.sh`, install to `share/tfhic`).
+- Added CMake options `TFHIC_WITH_ROOT` and `TFHIC_WITH_QT` (Qt GUI disabled by default).
+- Added RPATH for installed blastwave executables to find `libTFHIC.so`.
+- Updated README build/run/validation instructions and Docker quick test.
 
 
 ## [0.1.0] - Initial public docs
