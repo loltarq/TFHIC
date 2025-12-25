@@ -43,6 +43,11 @@ add_executable(predict_light_spectra apps/predict_light_spectra.cpp)
 target_link_libraries(predict_light_spectra PRIVATE tfhic_blastwave)
 target_compile_features(predict_light_spectra PRIVATE cxx_std_17)
 
+set_target_properties(blastwave_thermal predict_light_spectra PROPERTIES
+  BUILD_RPATH "\$ORIGIN/../lib"
+  INSTALL_RPATH "\$ORIGIN/../lib"
+)
+
 install(TARGETS tfhic_blastwave blastwave_thermal predict_light_spectra
         LIBRARY DESTINATION lib
         RUNTIME DESTINATION bin)

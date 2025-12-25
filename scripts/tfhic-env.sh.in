@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Source this to set TFHIC_DATA/TFHIC_CONF defaults for bare filenames.
+
+if [[ -z "${TFHIC_DATA:-}" ]]; then
+  if [[ -d "@TFHIC_DATA_DIR@" ]]; then
+    export TFHIC_DATA="@TFHIC_DATA_DIR@"
+  elif [[ -d "@TFHIC_SOURCE_DIR@/blastwave/data" ]]; then
+    export TFHIC_DATA="@TFHIC_SOURCE_DIR@/blastwave/data"
+  fi
+fi
+
+if [[ -z "${TFHIC_CONF:-}" ]]; then
+  if [[ -d "@TFHIC_CONF_DIR@" ]]; then
+    export TFHIC_CONF="@TFHIC_CONF_DIR@"
+  elif [[ -d "@TFHIC_SOURCE_DIR@/thermal_yields/conf" ]]; then
+    export TFHIC_CONF="@TFHIC_SOURCE_DIR@/thermal_yields/conf"
+  fi
+fi
+
+if [[ -z "${TFHIC_OUT:-}" && -n "@TFHIC_OUT_DIR@" ]]; then
+  if [[ -d "@TFHIC_OUT_DIR@" ]]; then
+    export TFHIC_OUT="@TFHIC_OUT_DIR@"
+  fi
+fi

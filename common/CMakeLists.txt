@@ -15,6 +15,7 @@ target_include_directories(tfhic_common
   PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/third_party
 )
 
 target_compile_features(tfhic_common PUBLIC cxx_std_17)

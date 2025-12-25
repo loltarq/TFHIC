@@ -1,0 +1,6 @@
+build/
+cmake-build-*/
+thermal_yields/build/
+blastwave/bin/
+out/
+.git/

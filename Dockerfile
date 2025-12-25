@@ -8,6 +8,8 @@ WORKDIR /opt/tfhic
 COPY . /opt/tfhic
 
 RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=ON \
+  -DCMAKE_DISABLE_FIND_PACKAGE_Qt5Widgets=ON \
+  -DCMAKE_DISABLE_FIND_PACKAGE_Qt5PrintSupport=ON \
   && cmake --build build -j"$(nproc)" \
   && cmake --install build --prefix /opt/tfhic/install
 

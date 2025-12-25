@@ -87,11 +87,25 @@ Outputs:
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=OFF
 cmake --build build -j
 ```
+Qt GUI (QtThermalFIST) is disabled by default. To enable it:
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_QT=ON
+```
 
 ### 3) Install (optional)
 ```bash
 cmake --install build --prefix /opt/tfhic
 ```
+
+### 4) Optional env setup (recommended for bare filenames)
+```bash
+source build/tfhic-env.sh
+```
+After install:
+```bash
+source /opt/tfhic/share/tfhic/tfhic-env.sh
+```
+Note: Docker images already set `TFHIC_DATA/TFHIC_CONF/TFHIC_OUT`, so you don’t need this when running inside the container.
 
 ## Container
 
@@ -105,6 +119,8 @@ Run with a writable output mount:
 docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
   /opt/tfhic/install/bin/blastwave_thermal --help
 ```
+Docker runs already have `TFHIC_DATA=/opt/tfhic/install/share/tfhic/data`,
+`TFHIC_CONF=/opt/tfhic/install/share/tfhic/conf`, and `TFHIC_OUT=/data/out`.
 
 ---
 
@@ -117,6 +133,7 @@ Main one-liner executable: allows to compute absolute thermal yields of 1 or mor
 Yields and metadata output is stored in .json file for later use (e.g. blastwave pT spectrum normalization).    
 
 Paths are resolved via CLI flags or env vars (`TFHIC_DATA`, `TFHIC_CONF`, `TFHIC_OUT`).  
+You can `source build/tfhic-env.sh` (or the installed env script) to set `TFHIC_DATA/CONF` automatically.
 Bare filenames are placed under `--out-dir` (or `TFHIC_OUT`, or the repo out dir when running from source).
 
 **Requires args in the form of CLI flags**; programs prints guidance on missing args. Example:
@@ -229,6 +246,28 @@ root [0] .L libTFHIC.so
 **Thermal sanity checks.** Canonical suppression increases with |S| and decreases with larger correlation volume Vc; proton/kaon/pion ordering behaves as expected.
 
 **Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
+
+### **Docker quick test (pO/OO/NeNe):**
+Run the following from the repo root (outputs land in `./out` on the host):
+```bash
+sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
+  /opt/tfhic/install/bin/export_dndy_json \
+  --out yields-pO-NeNe-OO-gs.json \
+  --nch-file Nch_pO_NeNe_OO.txt \
+  --mode gs \
+  --species 211,321,2212,3122,3312,3334,1000010020
+
+sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
+  /opt/tfhic/install/bin/predict_light_spectra \
+  --thermal-json /data/out/yields-pO-NeNe-OO-gs.json \
+  --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" \
+  --mode gammaS \
+  --species 211,321,2212,3122,3312,3334,1000010020 \
+  --timesPt --pt 0,10,400 \
+  --out /data/out/prediction.root \
+  --pdf /data/out/prediction.pdf
+```
+Note: Using `sudo` will create root-owned files in `./out`. If you want user-owned outputs, add `--user "$(id -u):$(id -g)"` to each `docker run`.
 
 ### **Reproduce the spectra plots (w/ thermal yields):**
 1. Generate thermal yields directly into the blastwave data dir (or use `--out` with a full path):

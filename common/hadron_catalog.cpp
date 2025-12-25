@@ -2,8 +2,13 @@
 #include <fstream>
 #include <sstream>
 #include <cctype>
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
+#if __has_include(<nlohmann/json.hpp>)
+  #include <nlohmann/json.hpp>
+  using json = nlohmann::json;
+#else
+  #include "third_party/json.hpp"
+  using json = nlohmann::json;
+#endif
 
 static std::string upper(std::string s){ for(char&c:s) c=std::toupper(c); return s; }
 
