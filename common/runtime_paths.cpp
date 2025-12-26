@@ -2,6 +2,7 @@
 #include "tfhic_config.h"
 
 #include <cstdlib>
+#include <sstream>
 #include <system_error>
 
 namespace fs = std::filesystem;
@@ -29,18 +30,31 @@ static fs::path exe_dir_from_argv0(const char* argv0) {
   return fs::current_path();
 }
 
+static bool has_repo_layout(const fs::path& p) {
+  return dir_exists(p / "blastwave") &&
+         dir_exists(p / "thermal_yields") &&
+         dir_exists(p / "common");
+}
+
+static bool looks_like_build_dir(const fs::path& p) {
+  if (!fs::exists(p / "CMakeCache.txt") && !dir_exists(p / "CMakeFiles")) return false;
+  if (!p.has_parent_path()) return false;
+  // If parent also matches the repo layout, prefer parent as the true source root.
+  return has_repo_layout(p.parent_path());
+}
+
 static fs::path find_repo_root(const fs::path& start) {
   fs::path cur = start;
+  fs::path last_match;
   for (int i = 0; i < 6; ++i) {
-    if (dir_exists(cur / "blastwave") &&
-        dir_exists(cur / "thermal_yields") &&
-        dir_exists(cur / "common")) {
-      return cur;
+    if (has_repo_layout(cur)) {
+      if (!looks_like_build_dir(cur)) return cur;
+      last_match = cur;
     }
     if (!cur.has_parent_path()) break;
     cur = cur.parent_path();
   }
-  return {};
+  return last_match;
 }
 
 static std::string get_env(const char* key) {
@@ -166,4 +180,71 @@ std::filesystem::path resolve_out_path(const RuntimePaths& paths, const std::str
   fs::path p(file);
   if (!is_bare_name(p)) return p;
   return paths.out_dir / p;
+}
+
+std::filesystem::path resolve_common_data_path(const RuntimePaths& paths, const std::string& file) {
+  if (file.empty()) return {};
+  fs::path p(file);
+  if (!is_bare_name(p)) return p;
+
+  if (!paths.repo_root.empty()) {
+    fs::path candidate = paths.repo_root / "common" / "data" / p;
+    std::error_code ec;
+    if (dir_exists(candidate.parent_path()) && fs::exists(candidate, ec) && !ec) return candidate;
+  }
+
+  fs::path cur = paths.exe_dir;
+  for (int i = 0; i < 6; ++i) {
+    fs::path candidate = cur / "common" / "data" / p;
+    std::error_code ec;
+    if (dir_exists(candidate.parent_path()) && fs::exists(candidate, ec) && !ec) return candidate;
+    if (!cur.has_parent_path()) break;
+    cur = cur.parent_path();
+  }
+
+  return resolve_data_path(paths, file);
+}
+
+static std::vector<fs::path> common_data_search_dirs(const RuntimePaths& paths) {
+  std::vector<fs::path> dirs;
+  if (!paths.repo_root.empty()) {
+    dirs.push_back(paths.repo_root / "common" / "data");
+  }
+  fs::path cur = paths.exe_dir;
+  for (int i = 0; i < 6; ++i) {
+    dirs.push_back(cur / "common" / "data");
+    if (!cur.has_parent_path()) break;
+    cur = cur.parent_path();
+  }
+  return dirs;
+}
+
+static std::string describe_dirs(const std::vector<fs::path>& dirs) {
+  std::ostringstream out;
+  for (const auto& p : dirs) {
+    out << "  - " << p.string() << "\n";
+  }
+  return out.str();
+}
+
+std::string describe_data_search(const RuntimePaths& paths) {
+  std::vector<fs::path> dirs;
+  dirs.push_back(paths.data_dir);
+  dirs.insert(dirs.end(), paths.data_fallbacks.begin(), paths.data_fallbacks.end());
+  return describe_dirs(dirs);
+}
+
+std::string describe_conf_search(const RuntimePaths& paths) {
+  std::vector<fs::path> dirs;
+  dirs.push_back(paths.conf_dir);
+  dirs.insert(dirs.end(), paths.conf_fallbacks.begin(), paths.conf_fallbacks.end());
+  return describe_dirs(dirs);
+}
+
+std::string describe_common_data_search(const RuntimePaths& paths) {
+  auto dirs = common_data_search_dirs(paths);
+  // Fall back to data dirs as well since resolve_common_data_path will.
+  dirs.push_back(paths.data_dir);
+  dirs.insert(dirs.end(), paths.data_fallbacks.begin(), paths.data_fallbacks.end());
+  return describe_dirs(dirs);
 }

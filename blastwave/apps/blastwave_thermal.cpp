@@ -278,6 +278,11 @@ int main(int argc, char** argv){
 
   if (!thermal_json.empty()) {
     thermal_json = resolve_data_path(paths, thermal_json).string();
+    if (!fs::exists(thermal_json)) {
+      std::cerr << "[blastwave_thermal] ERROR: thermal JSON not found: " << thermal_json << "\n"
+                << "Searched data dirs:\n" << describe_data_search(paths);
+      return 2;
+    }
   }
 
   fs::path bw_base = bw_path.empty() ? paths.data_dir : fs::path(bw_path);
@@ -292,10 +297,10 @@ int main(int argc, char** argv){
   HadronCatalog cat;
   std::string err;
   // path
-  const std::string hadrons_path = resolve_data_path(paths, "hadrons.json").string();
+  const std::string hadrons_path = resolve_common_data_path(paths, "hadrons.json").string();
   if (!cat.load(hadrons_path, &err)) {
-    std::cerr << "Failed to load hadron catalog: " << err
-              << "\nTried " << hadrons_path << "\n";
+    std::cerr << "[blastwave_thermal] ERROR: cannot load hadron catalog: " << err << "\n"
+              << "Searched common data dirs:\n" << describe_common_data_search(paths);
     return 2;
   }
 
@@ -305,6 +310,14 @@ int main(int argc, char** argv){
     YieldCSV Y;
     fs::path ypath = fs::path(yields_csv);
     if (is_bare_path(ypath)) ypath = bw_base / ypath;
+    if (!fs::exists(ypath)) {
+      std::cerr << "[blastwave_thermal] ERROR: yields CSV not found: " << ypath << "\n"
+                << "Searched yields dir:\n  - " << bw_base.string() << "\n";
+      if (bw_path.empty()) {
+        std::cerr << "Data dirs:\n" << describe_data_search(paths);
+      }
+      return 2;
+    }
     if (!read_yields_csv(ypath.string(), Y, verbose)) return 2;
 
     // species selection (CSV-driven if none given)
@@ -315,6 +328,14 @@ int main(int argc, char** argv){
     // BW params from CSV (species-aware: ALL / tokens)
     fs::path bwpath = fs::path(bw_csv);
     if (is_bare_path(bwpath)) bwpath = bw_base / bwpath;
+    if (!fs::exists(bwpath)) {
+      std::cerr << "[blastwave_thermal] ERROR: BW CSV not found: " << bwpath << "\n"
+                << "Searched BW dir:\n  - " << bw_base.string() << "\n";
+      if (bw_path.empty()) {
+        std::cerr << "Data dirs:\n" << describe_data_search(paths);
+      }
+      return 2;
+    }
     if (verbose) std::cerr << "[blastwave_thermal] loading BW params from " << bwpath << "\n";
     auto all = get_integration_info_from_csv(bwpath.string(), cat, species_use, verbose);
     if (all.empty()){ std::cerr << "[blastwave_thermal] No centralities from BW CSV\n"; return 2; }

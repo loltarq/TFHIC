@@ -309,14 +309,16 @@ int main(int argc, char** argv){
 
     if (!file_exists(listPath)) {
         std::cerr << "ERROR: particles list not found at '" << listPath
-                << "'. Pass a valid path with --list.\n";
+                << "'. Pass a valid path with --list.\n"
+                << "Searched data dirs:\n" << describe_data_search(paths);
         return 2;
     }
     if (decaysPath.empty())
         decaysPath = default_decays_for(listPath);
     if (!file_exists(decaysPath)) {
         std::cerr << "ERROR: decays file not found at '" << decaysPath
-                << "'. Pass a valid path with --decays or fix your installation.\n";
+                << "'. Pass a valid path with --decays or fix your installation.\n"
+                << "Searched data dirs:\n" << describe_data_search(paths);
         return 2;
     }
 
@@ -426,7 +428,8 @@ int main(int argc, char** argv){
         if (!nchFile.empty()) {
             std::ifstream fin(nchFile);
             if (!fin) {
-                std::cerr << "Cannot open --nch-file " << nchFile << ", falling back to range.\n";
+                std::cerr << "Cannot open --nch-file " << nchFile << ", falling back to range.\n"
+                          << "Searched conf dirs:\n" << describe_conf_search(paths);
             } else {
                 std::string line;
                 while (std::getline(fin, line)) {

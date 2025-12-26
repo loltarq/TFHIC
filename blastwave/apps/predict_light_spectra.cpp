@@ -477,6 +477,22 @@ int main(int argc, char** argv){
   fs::path out_pdf_path = resolve_out_path(paths, out_pdf);
 
   // load inputs
+  if (!bw_csv_path.empty() && !fs::exists(bw_csv_path)) {
+    std::cerr << "[predict] ERROR: BW CSV not found: " << bw_csv_path << "\n"
+              << "Searched data dirs:\n" << describe_data_search(paths);
+    return 2;
+  }
+  if (!thermal_json_path.empty() && !fs::exists(thermal_json_path)) {
+    std::cerr << "[predict] ERROR: thermal JSON not found: " << thermal_json_path << "\n"
+              << "Searched data dirs:\n" << describe_data_search(paths);
+    return 2;
+  }
+  if (!nch_map.empty() && !fs::exists(nch_map_path)) {
+    std::cerr << "[predict] WARNING: Nch map not found: " << nch_map_path << "\n"
+              << "Searched conf dirs:\n" << describe_conf_search(paths)
+              << "(will rely on CSV Nch column if present)\n";
+    nch_map_path.clear();
+  }
   auto nchVals = read_nch_map(nch_map_path.string());
 
   auto bwPts = read_bw_csv(bw_csv_path.string(), nchVals, "ALL", verbose);
@@ -496,9 +512,10 @@ int main(int argc, char** argv){
 
   HadronCatalog catalog;
   std::string err;
-  const std::string hadrons_path = resolve_data_path(paths, "hadrons.json").string();
+  const std::string hadrons_path = resolve_common_data_path(paths, "hadrons.json").string();
   if (!catalog.load(hadrons_path, &err)){
-    std::cerr << "[predict] ERROR: cannot load hadron catalog: " << err << "\n";
+    std::cerr << "[predict] ERROR: cannot load hadron catalog: " << err << "\n"
+              << "Searched common data dirs:\n" << describe_common_data_search(paths);
     return 2;
   }
 

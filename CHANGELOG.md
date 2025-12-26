@@ -2,6 +2,12 @@
 All notable changes to this project will be documented here.
 
 ## [Unreleased]
+- thermal_yields module implementation: statistical hadronization calculation routines
+- blastwave module implementation: blastwave pT spectrum calculation routines
+- auxiliary functions: root to csv (and viceversa) exporter, root histo plotter
+
+## [0.1.3]
+### Adding
 - Unified top-level CMake build for all modules; removed blastwave Makefile.
 - Added runtime path resolver with CLI/env overrides; supports install layout and repo fallbacks.
 - Added Dockerfile (ROOT base image) and `.dockerignore` for reproducible container builds.
@@ -9,16 +15,13 @@ All notable changes to this project will be documented here.
 - Added install-time env setup script (`build/tfhic-env.sh`, install to `share/tfhic`).
 - Added CMake options `TFHIC_WITH_ROOT` and `TFHIC_WITH_QT` (Qt GUI disabled by default).
 - Added RPATH for installed blastwave executables to find `libTFHIC.so`.
+### Updating
 - Updated README build/run/validation instructions and Docker quick test.
 
-
-## [0.1.0] - Initial public docs
+## [0.1.2]
 ### Adding
-- Root README with build/run instructions
-- Physics background (`docs/physics.md`) and docs landing page (`docs/README.md`)
-- MIT `LICENSE`
-- Code style via `.clang-format`
-- `CITATION.cff` for academic citation
+- New blastwave app `blastwave/apps/predict_light_spectra.cpp` for small-system spectra prediction.
+
 
 ## [0.1.1] - Bridge between core modules
 ### Adding
@@ -29,3 +32,11 @@ All notable changes to this project will be documented here.
 - Root README
 - Physics documentation (`docs/physics.md`)
 - fix to blastwave computePtSpectrum method in `blastwave/src/blastwave_utils.cpp` to perform normalization strictly on dN/dpT
+
+## [0.1.0] - Initial public docs
+### Adding
+- Root README with build/run instructions
+- Physics background (`docs/physics.md`) and docs landing page (`docs/README.md`)
+- MIT `LICENSE`
+- Code style via `.clang-format`
+- `CITATION.cff` for academic citation

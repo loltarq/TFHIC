@@ -23,3 +23,8 @@ RuntimePaths resolve_runtime_paths(const char* argv0,
 std::filesystem::path resolve_data_path(const RuntimePaths& paths, const std::string& file);
 std::filesystem::path resolve_conf_path(const RuntimePaths& paths, const std::string& file);
 std::filesystem::path resolve_out_path(const RuntimePaths& paths, const std::string& file);
+std::filesystem::path resolve_common_data_path(const RuntimePaths& paths, const std::string& file);
+
+std::string describe_data_search(const RuntimePaths& paths);
+std::string describe_conf_search(const RuntimePaths& paths);
+std::string describe_common_data_search(const RuntimePaths& paths);

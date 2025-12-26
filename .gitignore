@@ -7,7 +7,6 @@ blastwave/bin/
 *.o
 *.so
 *.so.*
-*.root
 *.png
 *.dat
 *.json
