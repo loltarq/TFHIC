@@ -69,7 +69,7 @@ struct Defaults {
     std::string list_default = default_particles_list();
     // vanilla
     double Tch_fixed = 0.155;
-    double vMin=10., vMax=15000.; int vN=30;
+    double vMin=10., vMax=15000.; int vN=30; std::string vFile="";
     // gammaS
     double nchMin=3., nchMax=2000.; int nchN=100; std::string nchFile="";
     GSParams gspar; // aT,bT,aG,bG,cG,aV
@@ -89,7 +89,7 @@ static void print_help_with_defaults(const char* prog, const Defaults& D){
 "  --list PATH/particles.dat      (default: " << D.list_default << ")\n"
 "  --decays PATH/decays.dat       (default: <dir_of_list>/decays.dat)\n"
 "  --data-dir PATH                (override data dir for bare filenames)\n"
-"  --conf-dir PATH                (override conf dir for --nch-file)\n"
+"  --conf-dir PATH                (override conf dir for --nch-file/--v-file)\n"
 "  --out-dir PATH                 (override output dir for bare --out)\n"
 "  --ensemble                     (default: " << D.ensemble << ")\n"
 "  --width                        (default: " << D.width    << ")\n"
@@ -104,6 +104,7 @@ static void print_help_with_defaults(const char* prog, const Defaults& D){
 "  --v-min                        (default: " << D.vMin << ")\n"
 "  --v-max                        (default: " << D.vMax << ")\n"
 "  --v-n                          (default: " << D.vN   << ")\n"
+"  --v-file PATH_OR_NAME          (default: <unset>; if only a name is given, reads from ../conf/)\n"
 "\n gammaS mode (defaults shown):\n"
 "  --nch-min                      (default: " << D.nchMin << ")\n"
 "  --nch-max                      (default: " << D.nchMax << ")\n"
@@ -228,6 +229,7 @@ int main(int argc, char** argv){
     // Vanilla
     double Tch_fixed = D.Tch_fixed;
     double vMin=D.vMin, vMax=D.vMax; int vN=D.vN;
+    std::string vFile = D.vFile;
 
     // gammaS
     GSParams gspar = D.gspar;
@@ -263,6 +265,7 @@ int main(int argc, char** argv){
         else if(a=="--v-min") vMin = nextd();
         else if(a=="--v-max") vMax = nextd();
         else if(a=="--v-n")   vN   = nexti();
+        else if(a=="--v-file") vFile = nexts();
 
         else if(a=="--nch-min") nchMin = nextd();
         else if(a=="--nch-max") nchMax = nextd();
@@ -289,9 +292,12 @@ int main(int argc, char** argv){
     // Ensure output file has json extension if not specified in the CLI flag
     outPath = ensure_json_ext(outPath);
 
-    // If --nch-file is a bare name, look for it in conf dir
+    // If --nch-file/--v-file are bare names, look for them in conf dir
     if (!nchFile.empty()) {
         nchFile = resolve_conf_path(paths, nchFile).string();
+    }
+    if (!vFile.empty()) {
+        vFile = resolve_conf_path(paths, vFile).string();
     }
 
     // Allow --list/--decays bare names to resolve via data dir if not found locally.
@@ -364,7 +370,25 @@ int main(int argc, char** argv){
     out << std::setprecision(10);
 
     if (mode=="vanilla"){
-        std::vector<double> vscan; logspace(vscan, vMin, vMax, vN);
+        std::vector<double> vscan;
+        if (!vFile.empty()) {
+            std::ifstream fin(vFile);
+            if (!fin) {
+                std::cerr << "Cannot open --v-file " << vFile << ", falling back to range.\n"
+                          << "Searched conf dirs:\n" << describe_conf_search(paths);
+            } else {
+                std::string line;
+                while (std::getline(fin, line)) {
+                    auto pos = line.find_first_not_of(" \t");
+                    if (pos == std::string::npos || line[pos] == '#') continue;
+                    try {
+                        double x = std::stod(line.substr(pos));
+                        if (x > 0) vscan.push_back(x);
+                    } catch (...) { /* ignore malformed lines */ }
+                }
+            }
+        }
+        if (vscan.empty()) logspace(vscan, vMin, vMax, vN);
         for (double k : klist){
             for (double dVdy : vscan){
                 const double Vc = k * dVdy;

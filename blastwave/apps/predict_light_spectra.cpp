@@ -22,6 +22,7 @@
 #include <string>
 #include <limits>
 #include <vector>
+#include <utility>
 
 #include <TCanvas.h>
 #include <TFile.h>
@@ -79,6 +80,7 @@ static std::vector<double> parse_double_list(const std::string& s){
 struct BWPoint {
   int cent = -1;
   double nch = std::numeric_limits<double>::quiet_NaN();
+  double dvdy = std::numeric_limits<double>::quiet_NaN();
   double beta = 0, beta_stat = 0, beta_sys = 0;
   double Tkin = 0, Tkin_stat = 0, Tkin_sys = 0;
   double nprof = 0, nprof_stat = 0, nprof_sys = 0;
@@ -86,6 +88,7 @@ struct BWPoint {
 
 struct YieldBin {
   double nch = 0;
+  double dvdy = 0;
   std::map<int,double> yields;
 };
 struct YieldTable {
@@ -151,6 +154,8 @@ static std::vector<BWPoint> read_bw_csv(const std::string& path,
   int bi = colidx("beta_t"), bu1=colidx("beta_t_unc1"), bu2=colidx("beta_t_unc2");
   int ti = colidx("Tkin"),   tu1=colidx("Tkin_unc1"),   tu2=colidx("Tkin_unc2");
   int ni = colidx("n_profile"), nu1=colidx("n_profile_unc1"), nu2=colidx("n_profile_unc2");
+  int vi = colidx("dvdy");
+  if (vi < 0) vi = colidx("dv/dy");
   if(ci<0 || bi<0 || ti<0 || ni<0){
     std::cerr << "[predict] ERROR: BW CSV missing required columns\n";
     return out;
@@ -188,6 +193,7 @@ static std::vector<BWPoint> read_bw_csv(const std::string& path,
     p.nprof     = asDouble(ni);
     p.nprof_stat= asDouble(nu1);
     p.nprof_sys = asDouble(nu2);
+    if (vi >= 0) p.dvdy = asDouble(vi);
 
     if (nci>=0){
       p.nch = asDouble(nci);
@@ -212,6 +218,13 @@ static std::vector<BWPoint> read_bw_csv(const std::string& path,
 }
 
 // ---------- thermal yields ----------
+static std::string normalize_mode(const std::string& m){
+  std::string ml = lower(m);
+  if (ml=="gs") return std::string("gammas");
+  if (ml.rfind("gamma",0)==0) return std::string("gammas");
+  return ml;
+}
+
 static std::vector<YieldTable> load_yield_tables(const std::string& jsonPath,
                                                  const std::string& mode,
                                                  const std::vector<double>& klist,
@@ -238,18 +251,11 @@ static std::vector<YieldTable> load_yield_tables(const std::string& jsonPath,
     }
   };
 
-  auto normMode = [](const std::string& m){
-    std::string ml = lower(m);
-    if (ml=="gs") return std::string("gammas");
-    if (ml.rfind("gamma",0)==0) return std::string("gammas");
-    return ml;
-  };
-
-  std::string modeLower = normMode(mode);
+  std::string modeLower = normalize_mode(mode);
   for (const auto& b : j["bins"]){
-    if (!b.contains("Nch") || !b.contains("k")) continue;
+    if (!b.contains("k")) continue;
     if (!modeLower.empty() && b.contains("mode")){
-      std::string bm = normMode(b["mode"].get<std::string>());
+      std::string bm = normalize_mode(b["mode"].get<std::string>());
       if (bm != modeLower) continue;
     }
     double k = b["k"].get<double>();
@@ -258,7 +264,13 @@ static std::vector<YieldTable> load_yield_tables(const std::string& jsonPath,
     if (!b.contains(key)) continue;
 
     YieldBin yb;
-    yb.nch = b["Nch"].get<double>();
+    if (modeLower == "vanilla") {
+      if (!b.contains("dVdy")) continue;
+      yb.dvdy = b["dVdy"].get<double>();
+    } else {
+      if (!b.contains("Nch")) continue;
+      yb.nch = b["Nch"].get<double>();
+    }
     for (auto it = b[key].begin(); it!=b[key].end(); ++it){
       int pdg = std::stoi(it.key());
       yb.yields[pdg] = it.value().get<double>();
@@ -267,29 +279,37 @@ static std::vector<YieldTable> load_yield_tables(const std::string& jsonPath,
   }
 
   for (auto& t : out){
-    std::sort(t.bins.begin(), t.bins.end(), [](const YieldBin&a,const YieldBin&b){ return a.nch < b.nch; });
-    if(verbose) std::cerr << "[predict] k="<<t.k<<" bins="<<t.bins.size()
-                           << " Nch in ["<< (t.bins.empty()?0:t.bins.front().nch)
-                           << ", "<< (t.bins.empty()?0:t.bins.back().nch) << "]\n";
+    if (modeLower == "vanilla") {
+      std::sort(t.bins.begin(), t.bins.end(), [](const YieldBin&a,const YieldBin&b){ return a.dvdy < b.dvdy; });
+      if(verbose) std::cerr << "[predict] k="<<t.k<<" bins="<<t.bins.size()
+                             << " dVdy in ["<< (t.bins.empty()?0:t.bins.front().dvdy)
+                             << ", "<< (t.bins.empty()?0:t.bins.back().dvdy) << "]\n";
+    } else {
+      std::sort(t.bins.begin(), t.bins.end(), [](const YieldBin&a,const YieldBin&b){ return a.nch < b.nch; });
+      if(verbose) std::cerr << "[predict] k="<<t.k<<" bins="<<t.bins.size()
+                             << " Nch in ["<< (t.bins.empty()?0:t.bins.front().nch)
+                             << ", "<< (t.bins.empty()?0:t.bins.back().nch) << "]\n";
+    }
   }
 
   return out;
 }
 
-static std::map<int,double> interpolate_yields(const YieldTable& tab, double targetNch){
+static std::map<int,double> interpolate_yields(const YieldTable& tab, double target, bool use_dvdy){
   std::map<int,double> out;
   if (tab.bins.empty()) return out;
-  if (targetNch <= tab.bins.front().nch) return tab.bins.front().yields;
-  if (targetNch >= tab.bins.back().nch)  return tab.bins.back().yields;
+  auto getx = [&](const YieldBin& b){ return use_dvdy ? b.dvdy : b.nch; };
+  if (target <= getx(tab.bins.front())) return tab.bins.front().yields;
+  if (target >= getx(tab.bins.back()))  return tab.bins.back().yields;
 
-  auto upperIt = std::upper_bound(tab.bins.begin(), tab.bins.end(), targetNch,
-    [](double val, const YieldBin& b){ return val < b.nch; });
+  auto upperIt = std::upper_bound(tab.bins.begin(), tab.bins.end(), target,
+    [&](double val, const YieldBin& b){ return val < getx(b); });
   if (upperIt == tab.bins.begin()) return upperIt->yields;
   if (upperIt == tab.bins.end())   return tab.bins.back().yields;
   auto lowerIt = upperIt - 1;
 
-  double x1 = lowerIt->nch, x2 = upperIt->nch;
-  double t = (targetNch - x1) / (x2 - x1);
+  double x1 = getx(*lowerIt), x2 = getx(*upperIt);
+  double t = (target - x1) / (x2 - x1);
 
   std::set<int> pdgs;
   for (auto& kv : lowerIt->yields) pdgs.insert(kv.first);
@@ -301,6 +321,39 @@ static std::map<int,double> interpolate_yields(const YieldTable& tab, double tar
     out[pdg] = y1 + t*(y2 - y1);
   }
   return out;
+}
+
+static std::vector<std::pair<double,double>> build_nch_dvdy_map(const std::vector<BWPoint>& pts){
+  std::vector<std::pair<double,double>> out;
+  for (const auto& p : pts){
+    if (!std::isfinite(p.nch) || !std::isfinite(p.dvdy)) continue;
+    out.emplace_back(p.nch, p.dvdy);
+  }
+  std::sort(out.begin(), out.end(), [](const auto& a, const auto& b){ return a.first < b.first; });
+  return out;
+}
+
+static double map_nch_to_dvdy(const std::vector<std::pair<double,double>>& map, double nch){
+  if (map.size() < 2) return std::numeric_limits<double>::quiet_NaN();
+  if (nch <= map.front().first){
+    auto [x1,y1] = map[0];
+    auto [x2,y2] = map[1];
+    double t = (nch - x1) / (x2 - x1);
+    return y1 + t*(y2 - y1);
+  }
+  if (nch >= map.back().first){
+    auto [x1,y1] = map[map.size()-2];
+    auto [x2,y2] = map[map.size()-1];
+    double t = (nch - x1) / (x2 - x1);
+    return y1 + t*(y2 - y1);
+  }
+  auto upperIt = std::upper_bound(map.begin(), map.end(), nch,
+    [](double val, const auto& p){ return val < p.first; });
+  auto lowerIt = upperIt - 1;
+  double x1 = lowerIt->first, y1 = lowerIt->second;
+  double x2 = upperIt->first, y2 = upperIt->second;
+  double t = (nch - x1) / (x2 - x1);
+  return y1 + t*(y2 - y1);
 }
 
 // ---------- fitting helpers ----------
@@ -386,6 +439,8 @@ static void print_help(const char* prog){
 "  --fit-n-pars a,b,c             Initial parameters for n fit (comma-separated)\n"
 "  --out ROOTFILE                 Output ROOT (default: out-dir/predict_light_spectra.root)\n"
 "  --pdf FILE                     Quick-look PDF (default: out-dir/predict_light_spectra.pdf)\n"
+"Notes:\n"
+"  * vanilla mode expects dVdy in the BW CSV; yields are interpolated vs dVdy using a linear Nch->dVdy map.\n"
 "  --data-dir PATH                Base data dir for bare filenames\n"
 "  --conf-dir PATH                Base config dir for bare filenames\n"
 "  --out-dir PATH                 Base output dir for bare filenames\n"
@@ -498,6 +553,16 @@ int main(int argc, char** argv){
   auto bwPts = read_bw_csv(bw_csv_path.string(), nchVals, "ALL", verbose);
   if (bwPts.empty()){
     std::cerr << "[predict] ERROR: no BW rows loaded. Abort.\n"; return 2;
+  }
+
+  const bool vanilla_mode = (normalize_mode(thermal_mode) == "vanilla");
+  std::vector<std::pair<double,double>> nch_dvdy_map;
+  if (vanilla_mode) {
+    nch_dvdy_map = build_nch_dvdy_map(bwPts);
+    if (nch_dvdy_map.size() < 2) {
+      std::cerr << "[predict] ERROR: vanilla mode requires dVdy in BW CSV for Nch->dVdy mapping.\n";
+      return 2;
+    }
   }
 
   auto systems = parse_systems(systems_spec);
@@ -641,17 +706,29 @@ int main(int argc, char** argv){
   int centrality_tag = 0;
   for (const auto& sys : systems){
     for (double nch : sys.nch_values){
+      double target_yield = nch;
+      double dvdy = std::numeric_limits<double>::quiet_NaN();
+      if (vanilla_mode) {
+        dvdy = map_nch_to_dvdy(nch_dvdy_map, nch);
+        if (!std::isfinite(dvdy)) {
+          std::cerr << "[predict] WARNING: cannot map Nch=" << nch << " to dVdy; skipping.\n";
+          continue;
+        }
+        target_yield = dvdy;
+      }
       double beta = fbeta->Eval(nch);
       double T    = fT->Eval(nch);
       double nprof= fn->Eval(nch);
       if (verbose){
-        std::cerr << "[predict] " << sys.name << " Nch="<<nch
-                  << " -> beta_t="<<beta<<" Tkin="<<T<<" n="<<nprof<<"\n";
+        std::cerr << "[predict] " << sys.name << " Nch="<<nch;
+        if (vanilla_mode) std::cerr << " dVdy="<<dvdy;
+        std::cerr << " -> beta_t="<<beta<<" Tkin="<<T<<" n="<<nprof<<"\n";
       }
       for (const auto& tab : yieldTables){
-        auto yields = interpolate_yields(tab, nch);
+        auto yields = interpolate_yields(tab, target_yield, vanilla_mode);
         if (yields.empty()){
-          std::cerr << "[predict] WARNING: no yields for k="<<tab.k<<" at Nch="<<nch<<"\n";
+          std::cerr << "[predict] WARNING: no yields for k="<<tab.k<<" at "
+                    << (vanilla_mode ? "dVdy=" : "Nch=") << target_yield << "\n";
           continue;
         }
 
