@@ -1,6 +1,6 @@
 # Physics background
 
-TFHIC predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to collision systems or centrality bins where data are sparse, using published blast-wave fits and consistent thermal assumptions.
+TFHIC predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields (using the Thermal-FIST library [1]) with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to collision systems or centrality bins where data are sparse, using published blast-wave fits and consistent thermal assumptions.
 
 This document summarizes the physics motivation, modeling assumptions, and how the workflow maps to the code.
 
@@ -74,11 +74,29 @@ with $s_i$ the number of valence strange + anti-strange quarks. The idea is that
 
 ### 3.4 Primary vs total yields
 
-Thermal-FIST provides:
+Thermal-FIST [1] provides:
 - **Primary yields** (before resonance decays).
 - **Total yields** (after decays, per chosen feeddown).
 
 TFHIC output both yields in the JSON yield tables from the export_dNdy_json app.
+
+### 3.5 Thermal CLI parameterization (what the flags mean)
+
+The exporter exposes two parameterizations for the thermal scan, matching the two freeze-out scenarios:
+
+**Vanilla mode (fixed $T_{\mathrm{ch}}$, scan in volume):**
+- `--Tch`: chemical freeze-out temperature $T_{\mathrm{ch}}$ (GeV).
+- `--v-min`, `--v-max`, `--v-n`: define a log-spaced scan of $dV/dy$ between the two bounds with `--v-n` points.
+- `--v-file`: optional explicit list of $dV/dy$ values (one per line). If provided, it overrides the `v-min/v-max/v-n` scan and is resolved via the conf directory.
+
+**$\gamma_S$ mode (scan in multiplicity):**
+- `--nch-min`, `--nch-max`, `--nch-n`: define a log-spaced scan of $dN_{\mathrm{ch}}/d\eta$ between the two bounds with `--nch-n` points.
+- `--nch-file`: optional explicit list of $dN_{\mathrm{ch}}/d\eta$ values (one per line). If provided, it overrides the `nch-min/nch-max/nch-n` scan and is resolved via the conf directory.
+- `--tch-a`, `--tch-b`: set the multiplicity-dependent chemical freeze-out temperature
+  $T_{\mathrm{ch}} = a_T - b_T \ln(dN_{\mathrm{ch}}/d\eta)$.
+- `--gs-a`, `--gs-b`, `--gs-c`: set the multiplicity-dependent strangeness saturation
+  $\gamma_S = a_G - b_G \exp[-(dN_{\mathrm{ch}}/d\eta)/c_G]$.
+- `--vol-a`: sets the volume scaling $dV/dy = a_V \, dN_{\mathrm{ch}}/d\eta$, which then enters $V_c = k \, dV/dy$.
 
 ---
 
@@ -99,10 +117,10 @@ For single freeze-out, $T_{\mathrm{ch}}$ is fixed (e.g., 150 MeV) across all mul
 - A data-driven mapping $N_{\mathrm{ch}} \to dV/dy$ is used to normalize the spectra consistently.
 
 This mapping is built by pairing:
-- $dV/dy$ values from the blast-wave table (e.g., Table III), and
+- $dV/dy$ values from the blast-wave table (e.g., ref. [4] Table III), and
 - $N_{\mathrm{ch}}$ values from an external centrality table for the same bins.
 
-Piecewise linear interpolation provides $dV/dy(N_{\mathrm{ch}})$ for target systems.
+Piecewise linear interpolation provides $dV/dy(N_{\mathrm{ch}})$ for target systems. See section 6 for more details.
 
 ---
 
