@@ -1,4 +1,4 @@
-name: Build (thermal_yields)
+name: Build (TFHIC)
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-thermal:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -18,21 +18,34 @@ jobs:
 
       - name: Configure
         run: |
-          cd thermal_yields
-          mkdir -p build && cd build
-          cmake .. -DCMAKE_BUILD_TYPE=Release
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=OFF -DTFHIC_WITH_QT=OFF
 
       - name: Build
         run: |
-          cd thermal_yields/build
-          cmake --build . -j
-          
+          cmake --build build -j
+
       - name: Smoke run
         run: |
-          cd thermal_yields/build
-          ./TF_CSM-vs-dNpidy || true
+          ./build/bin/export_dndy_json --help
+          ./build/bin/blastwave_thermal --help || true
+          ./build/bin/predict_light_spectra --help || true
 
       - name: Test
         run: |
-          cd thermal_yields/build
-          ctest --output-on-failure
+          ctest --test-dir build --output-on-failure
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Build image
+        run: |
+          docker build -t tfhic:ci .
+
+      - name: Smoke run (container)
+        run: |
+          docker run --rm tfhic:ci /opt/tfhic/install/bin/export_dndy_json --help
+          docker run --rm tfhic:ci /opt/tfhic/install/bin/predict_light_spectra --help

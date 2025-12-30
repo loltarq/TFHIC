@@ -18,20 +18,21 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 
 
 ## Overview
-**Problem.** Determine particle-species detection efficiencies for heavy-ion collisions, resolving their dependence on pₜ and centrality.
+**Problem.** Predict identified-hadron pT spectra in heavy-ion and small collision systems by combining thermal yields with blast-wave flow fits, and extrapolating these to target centralities or multiplicities.
 
 **Approach.**
-1) Generate expected pₜ spectra by combining statistical-hadronization (thermal) yields with a blast-wave flow parameterization.
-2) Feed generated particles into an MC-based fast-simulation/reconstruction to measure detection and selection efficiencies.
+1) Compute per-species yields at chemical freeze-out with a statistical hadronization model (Thermal-FIST).
+2) Fit blast-wave parameters vs centrality/multiplicity from a reference dataset (e.g., Pb-Pb).
+3) Extrapolate/interpolate those parameters to target systems, generate spectra, and normalize with the thermal yields.
 
 **Scope & assumptions.**
-- Hadron species: π±, K±, p/ p̄ (extendable).  
-- Kinematic range: pₜ < 5 GeV/c; acceptance: |η| < 0.5.  
-- Centrality classes: I to X.  
-- Model parameters: T, μ_B, ⟨β_T⟩, T_kin.
+- Focus on light/strange hadrons (configurable PDG list) and midrapidity yields.
+- Thermal model: GCE/SCE/CE with optional gammaS variant or fixed Tch (vanilla).
+- Blast-wave parameters are taken from literature tables and parameterized vs dNch/deta.
+- Outputs are ROOT/PDF quick looks for spectra comparisons, not a full detector simulation.
 > More details in `docs/physics.md`.
 
-**Status.** Core spectrum/yield components implemented; the MC efficiency module is under development and scheduled next.
+**Status.** Core thermal+yields and blast-wave prediction pipeline implemented; container build and analysis helpers are included.
 
 
 ## Repository Structure
@@ -96,6 +97,12 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_QT=ON
 ```bash
 cmake --install build --prefix /opt/tfhic
 ```
+Note: the installed `tfhic-env.sh` is generated at **configure time** using `CMAKE_INSTALL_PREFIX`.
+If you want the env script to point at `/opt/tfhic`, configure with:
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/tfhic
+```
+then install. Using `cmake --install --prefix ...` alone does **not** regenerate the script.
 
 ### 4) Optional env setup (recommended for bare filenames)
 ```bash
