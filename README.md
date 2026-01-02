@@ -231,7 +231,7 @@ Use the following for the full list of configuration flags:
 ```
 ./predict_light_spectra --help
 ```
-See also the Validation section for reference uses.
+See `docs/physics` section for reference uses.
 
 
 #### 3) libTFHIC.so (shared lib)
@@ -265,11 +265,14 @@ root [0] .L libTFHIC.so
    root [0] .L thermalyields_test.cpp
    root [1] compareHepData_asTGraphs()
    ```
-3. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
+3. Spectra comparison results stored as .root files under `/out`; can be explored with a TBrowser instance:
    ```bash
    root [0] TBrowser* t = new TBrowser()
    # use UI to open and explore .root files
    ```
+   
+See `docs/plots/blastwave_exp` plots for some sample outputs.
+
 ### **Spectra extrapolation:**
 See `docs/physics.md` section 9: Sample analysis.
 

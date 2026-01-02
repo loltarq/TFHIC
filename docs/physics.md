@@ -197,7 +197,7 @@ This section mirrors `docs/template_commands.txt` and explains the physics inten
 
 ### 9.1 CE/gammaS, Pb-Pb 5.02 TeV blast-wave (1910.07678)
 
-Physics rationale: compute CE yields in $\gamma_S$ mode on a $dN_{\mathrm{ch}}/d\eta$ grid for the target systems, so that $T_{\mathrm{ch}}$ and $dV/dy$ follow the multiplicity-dependent parameterization (Vovchenko 1906.03145). Then extrapolate Pb-Pb blast-wave parameters from 1910.07678 vs $dN_{\mathrm{ch}}/d\eta$ and normalize the spectra with those yields. The output filename records the source dataset.
+Compute yields with a canonical ensemble, $\gamma_S$ variant, thermal model on a centrality ($dN_{\mathrm{ch}}/d\eta$) grid for the target systems (Ne-Ne, p-O, O-O), so that $T_{\mathrm{ch}}$ and $dV/dy$ follow the multiplicity-dependent parameterization of [2]. Then extrapolate Pb-Pb blast-wave parameters from [3] vs $dN_{\mathrm{ch}}/d\eta$ and normalize the spectra with those yields. The output filename records the source dataset.
 
 ```bash
 ./export_dndy_json --out yields-pO-NeNe-OO-gs.json --nch-file Nch_pO_NeNe_OO.txt --mode gs --species 211,321,2212,3122,3312,3334,1000010020 --k 1.0,1.6,3.0,6.0
@@ -207,7 +207,7 @@ Physics rationale: compute CE yields in $\gamma_S$ mode on a $dN_{\mathrm{ch}}/d
 
 ### 9.2 CE/gammaS with fixed Tch, Pb-Pb 2.76 TeV Table III (1907.11059)
 
-Physics rationale: enforce a single-freeze-out temperature by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but still use the $\gamma_S$ workflow to keep the yields tabulated vs $dN_{\mathrm{ch}}/d\eta$ for the target systems. Blast-wave parameters come from Table III (single freeze-out) and are fit vs $dN_{\mathrm{ch}}/d\eta$, with $T_{\mathrm{kin}}$ fixed to 0.150 GeV to match the table assumptions.
+Enforce a single-freeze-out temperature by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but still use the $\gamma_S$ variant workflow to keep the yields tabulated vs $dN_{\mathrm{ch}}/d\eta$ for the target systems. Blast-wave parameters come from Table III (single freeze-out) and are fit vs $dN_{\mathrm{ch}}/d\eta$, with $T_{\mathrm{kin}}$ fixed to 0.150 GeV to match the table assumptions.
 
 ```bash
 ./export_dndy_json --out yields-pO-NeNe-OO-gs-fixedTchem.json --nch-file Nch_pO_NeNe_OO.txt --mode gs --species 211,321,2212,3122,3312,3334,1000010020 --k 1.0,1.6,3.0,6.0 --tch-a 0.150 --tch-b 0 --gs-a 1 --gs-b 0
@@ -217,7 +217,7 @@ Physics rationale: enforce a single-freeze-out temperature by fixing $T_{\mathrm
 
 ### 9.3 CE/vanilla, fixed Tch, dV/dy scan from Table III (1907.11059)
 
-Physics rationale: implement single freeze-out consistently by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but now in vanilla mode where yields are tabulated vs $dV/dy$. The $dV/dy$ grid is taken directly from Table III, and the $N_{\mathrm{ch}} \to dV/dy$ mapping used in prediction ensures the normalization matches the same table assumptions.
+Implement single freeze-out consistently by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but now in vanilla mode where yields are tabulated vs $dV/dy$. The $dV/dy$ grid is taken directly from Table III of [4], and the $N_{\mathrm{ch}} \to dV/dy$ mapping used in prediction ensures the normalization matches the same table assumptions.
 
 ```bash
 ./export_dndy_json --out yields-pO-NeNe-OO-vanilla_dVscan.json --mode vanilla --species 211,321,2212,3122,3312,3334,1000010020 --k 1.0,1.6,3.0,6.0 --Tch 0.150 --v-file dVdy_TableIII_1907.11059.txt
@@ -225,9 +225,9 @@ Physics rationale: implement single freeze-out consistently by fixing $T_{\mathr
 ./predict_light_spectra --thermal-json ../../thermal_yields/out/yields-pO-NeNe-OO-vanilla_dVscan.json --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" --mode vanilla --species 211,321,2212,3122,3312,3334,1000010020 --timesPt --pt 0,10,400 --out prediction_PbPb2.76_1907.11059_CEvanilla_TchemFIXED.root --pdf prediction_PbPb2.76_1907.11059_CEvanilla_TchemFIXED.pdf --bw-csv bw_data_1907.11059.csv --fit-T "[0]" --fit-T-pars 0.150 --fit-n-pars 0.23,3.55,70
 ```
 
-### 9.4 Docker equivalents (same physics, containerized)
+### 9.4 Docker equivalent workflow
 
-Physics rationale: the same three workflows above, but executed inside the container. The output filenames still encode the dataset provenance; all outputs are written to a single host-mounted directory for reproducibility.
+The same three workflows above, but executed inside the container. The output filenames still encode the dataset provenance; all outputs are written to a single host-mounted directory for reproducibility.
 
 ```bash
 sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest   /opt/tfhic/install/bin/export_dndy_json --out yields-pO-NeNe-OO-gs.json --nch-file Nch_pO_NeNe_OO.txt --mode gs --species 211,321,2212,3122,3312,3334,1000010020 --k 1.0,1.6,3.0,6.0
@@ -248,7 +248,9 @@ sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest   /opt/tfhic/insta
 ## 10. References
 
 [1] V. Vovchenko and H. Stoecker, Thermal-FIST: A package for heavy-ion collisions and hadronic equation of state, Comput. Phys. Commun. 244, 295 (2019), arXiv:1901.05249.
-[2] V. Vovchenko, B. Dönigus, and H. Stoecker, Canonical statistical model analysis of p-p, p-Pb, and Pb-Pb collisions at the LHC, Phys. Rev. C 100, 054906 (2019),  	arXiv:1906.03145. 
-[3] ALICE Collaboration, Production of charged pions, kaons and (anti-)protons in Pb-Pb and inelastic pp collisions at sqrt(sNN)=5.02 TeV, arXiv:1910.07678. 
-[4] A. Mazeliauskas, V. Vislavicius, Temperature and fluid velocity on the freeze-out surface from pi, K, P spectra in pp, p--Pb and Pb--Pb collisions,  	arXiv:1907.11059.  
-[5] Blast-wave fits and tables referenced in the repository CSV inputs (see `blastwave/data/`), including arXiv:1907.11059 and arXiv:1910.07678.
+
+[2] V. Vovchenko, B. Dönigus, and H. Stoecker, Canonical statistical model analysis of p-p, p-Pb, and Pb-Pb collisions at the LHC, Phys. Rev. C 100, 054906 (2019), arXiv:1906.03145.
+
+[3] ALICE Collaboration, Production of charged pions, kaons and (anti-)protons in Pb-Pb and inelastic pp collisions at sqrt(sNN)=5.02 TeV, arXiv:1910.07678.
+
+[4] A. Mazeliauskas, V. Vislavicius, Temperature and fluid velocity on the freeze-out surface from pi, K, P spectra in pp, p--Pb and Pb--Pb collisions, arXiv:1907.11059.
