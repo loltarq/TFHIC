@@ -234,9 +234,8 @@ Use the following for the full list of configuration flags:
 See also the Validation section for reference uses.
 
 
-#### 3) libTFHIC.so (legacy)
-Legacy shared library that allows to use the blastwave calculation routines to compute the pT spectrum of a hadron given the blastwave parameters and (optionally) a target yield for normalization.  
-The blastwave routines store data in TGraph or TH1D objects; these can be analyzed with ROOT helper macros.
+#### 3) libTFHIC.so (shared lib)
+Shared library used by the blastwave apps; enables blastwave calculation routines to compute the pT spectrum of a hadron given the blastwave parameters and (optionally) a target yield for normalization. Library methods can be loaded and accessed in a ROOT session, however they are not intended for direct use.
 
 ```bash
 cd build/lib
@@ -254,63 +253,27 @@ root [0] .L libTFHIC.so
 
 ## Validation
 
-**Thermal sanity checks.** Canonical suppression increases with |S| and decreases with larger correlation volume Vc; proton/kaon/pion ordering behaves as expected.
-
-**Spectra comparison.** Blast-wave spectra reproduce the qualitative pₜ-shapes of reference data. See `docs/plots` for some samples.
-
-### **Docker quick test (pO/OO/NeNe):**
-Run the following from the repo root (outputs land in `./out` on the host):
-```bash
-sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
-  /opt/tfhic/install/bin/export_dndy_json \
-  --out yields-pO-NeNe-OO-gs.json \
-  --nch-file Nch_pO_NeNe_OO.txt \
-  --mode gs \
-  --species 211,321,2212,3122,3312,3334,1000010020
-
-sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
-  /opt/tfhic/install/bin/predict_light_spectra \
-  --thermal-json /data/out/yields-pO-NeNe-OO-gs.json \
-  --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" \
-  --mode gammaS \
-  --species 211,321,2212,3122,3312,3334,1000010020 \
-  --timesPt --pt 0,10,400 \
-  --out /data/out/prediction.root \
-  --pdf /data/out/prediction.pdf
-```
-Note: Using `sudo` will create root-owned files in `./out`. If you want user-owned outputs, add `--user "$(id -u):$(id -g)"` to each `docker run`.
-
-### **Reproduce the spectra plots (w/ thermal yields):**
-1. Generate thermal yields directly into the blastwave data dir (or use `--out` with a full path):
-   ```bash
-   cd build/bin
-   ./export_dndy_json \
-     --out yields_CE_k1.6_k3_k6_gs_1303.0737.json \
-     --out-dir ../blastwave/data \
-     --k "1.6,3.0,6.0" --mode "gs" \
-     --nch-file Nch_PbPb_1303.0737_ALICE_template.txt \
-     --conf-dir ../thermal_yields/conf
-   ```
-2. Run blastwave calculation on generated data as follows:
-   ```bash
-   cd build/bin
-   ./blastwave_thermal \
-     --thermal-json yields_CE_k1.6_k3_k6_gs_1303.0737.json \
-     --data-dir ../blastwave/data \
-     --tgraph \
-     --out spectra_yields_CE_k1.6_k3_k6_gs_1303.0737_tgraph.root \
-     --out-dir ../blastwave/out
-   ```
-3. Run (custom) ROOT helper macro to compare against exp. data:
+### **Reproduce the spectra plots:**
+`libTFHIC.so` blastwave calculation routines test against experimental data. Reproduce Pt spectrum trends of [2], fig. 4. Can be run only with Dev-built layout.
+1. From repo root:
+    ```bash
+    cd auxiliary/thermal_yields-test
+    root
+    ```
+2. Load ROOT macro to generate comparison of spectra from blastwave model against exp. data:
    ```
    root [0] .L thermalyields_test.cpp
    root [1] compareHepData_asTGraphs()
    ```
-4. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
+3. Spectra comparison results stored as .root files under `blastwave/out`; can be explored with a TBrowser instance:
    ```bash
    root [0] TBrowser* t = new TBrowser()
    # use UI to open and explore .root files
    ```
+### **Spectra extrapolation:**
+See `docs/physics.md` section 9: Sample analysis.
+
+---
 
 ## Current Limitations
 - Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
@@ -333,3 +296,4 @@ MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
 
 ## References
 [1] V. Vovchenko and H. Stoecker, *Thermal‑FIST: A package for heavy-ion collisions and hadronic equation of state*, *Comput. Phys. Commun.* **244**, 295–310 (2019). [arXiv:1901.05249](https://arxiv.org/abs/1901.05249), [doi:10.1016/j.cpc.2019.06.024](https://doi.org/10.1016/j.cpc.2019.06.024)  
+[2] ALICE Collaboration, Centrality dependence of π, K, p production in Pb-Pb collisions at sqrt(sNN) = 2.76 TeV, [arXiv: 1303.0737] (https://arxiv.org/abs/1303.0737)
