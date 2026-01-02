@@ -72,7 +72,11 @@ git clone --recurse-submodules https://github.com/loltarq/TFHIC.git
 cd TFHIC
 ```
 
-### 1) Unified CMake build (all modules)
+There are 2 main options to build & run TFHIC: dev build (A), and docker (B).
+A third one - installation - is also available, but has not yet been extensively tested and may be not working correctly.
+
+### A) Dev-build: unified CMake
+At the repo root:
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=ON
 cmake --build build -j
@@ -83,57 +87,59 @@ Outputs:
 - `build/bin/predict_light_spectra`
 - `build/lib/libTFHIC.so`
 
-### 2) Thermal-only build (no ROOT)
+Notes: 
+- ThermalFIST's Qt GUI is disabled by default, as it's not integral to this program. Regardless, a cmake option is available to enable it:
+```bash
+cmake -S . ... -DTFHIC_WITH_QT=ON
+```
+- It is possible to perform a ROOT-less build, albeit only the `thermal_yields` module would be built in this case:
 ```bash
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=OFF
 cmake --build build -j
 ```
-Qt GUI (QtThermalFIST) is disabled by default. To enable it:
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_QT=ON
-```
-
-### 3) Install (optional)
-```bash
-cmake --install build --prefix /opt/tfhic
-```
-Note: the installed `tfhic-env.sh` is generated at **configure time** using `CMAKE_INSTALL_PREFIX`.
-If you want the env script to point at `/opt/tfhic`, configure with:
-```bash
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/tfhic
-```
-then install. Using `cmake --install --prefix ...` alone does **not** regenerate the script.
-
-### 4) Optional env setup (recommended for bare filenames)
+- After build, it is recommended to source the environment variables setup script `tfhic-env.sh`, which guarantees consistent path resolution when providing path-less strings as input/output file names:
 ```bash
 source build/tfhic-env.sh
 ```
-After install:
-```bash
-source /opt/tfhic/share/tfhic/tfhic-env.sh
-```
-Note: Docker images already set `TFHIC_DATA/TFHIC_CONF/TFHIC_OUT`, so you don’t need this when running inside the container.
+- Default path resolutions when providing bare file-names in the Dev-build layout:
+> `TFHIC/build/bin/export_dndy_json`, out: `TFHIC/thermal_yields/out/`, in: `TFHIC/thermal_yields/conf/`
+> `TFHIC/build/bin/blastwave_thermal`, out: `TFHIC/blastwave/out/`, in: `TFHIC/blastwave/data/`
+> `TFHIC/build/bin/predict_light_spectra`, out: `TFHIC/blastwave/out/`, in: `TFHIC/blastwave/data/`
 
-## Container
+### (B) Docker Container
 
 Build the image:
 ```bash
 docker build -t tfhic:latest .
 ```
 
-Run with a writable output mount:
+It is recommended to run it with a writable input/output mount:
 ```bash
 docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest \
   /opt/tfhic/install/bin/blastwave_thermal --help
 ```
-Docker runs already have `TFHIC_DATA=/opt/tfhic/install/share/tfhic/data`,
-`TFHIC_CONF=/opt/tfhic/install/share/tfhic/conf`, and `TFHIC_OUT=/data/out`.
+Docker runs don't need the env script sourced, as they already have `TFHIC_DATA=/opt/tfhic/install/share/tfhic/data`,
+`TFHIC_CONF=/opt/tfhic/install/share/tfhic/conf`, and `TFHIC_OUT=/data/out` set.
+
+### C) Installation (with a grain of salt)
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DTFHIC_WITH_ROOT=ON -DCMAKE_INSTALL_PREFIX=/opt/tfhic
+cmake --build build -j
+cmake --install build --prefix /opt/tfhic
+source /opt/tfhic/share/tfhic/tfhic-env.sh
+```
+Notes:
+- The installed `tfhic-env.sh` is generated at **configure time** using `CMAKE_INSTALL_PREFIX`. Replace the sample `/opt/tfhic` with your preferred installation path.
+- Default path resolutions when providing bare file-names in the Installation layout:
+> input data: `<CMAKE_INSTALL_PREFIX>/share/tfhic/data` and `<CMAKE_INSTALL_PREFIX>/share/tfhic/conf`, with fallbacks to the repo Dev-build default paths.
+> output data: `<CMAKE_INSTALL_PREFIX>/bin/out`
+- The installation layout has not been extensively tested, and may not work as intended.
 
 ---
 
 ## Config & Run
 
-### A) `build/bin/` (or `install/bin/`)
+### A) `build/bin/` (or `<CMAKE_INSTALL_PREFIX>/bin/`)
 
 #### 1) export_dndy_json
 Main one-liner executable: allows to compute absolute thermal yields of 1 or more hadrons specifying all configuration parameters via CLI flags.  
@@ -184,10 +190,10 @@ Vanilla mode (no gammaS, defaults shown):
   --vol-a                                   (default: 2.4)
 ```
 
-### B) `blastwave/` from ROOT
+### B) `blastwave/`
 
 #### 1) blastwave_thermal
-Main one-liner executable: allows for the computation of the pT spectrum configuring all relevant parameters via CLI flags.  
+Main one-liner executable: allows for the computation of pT spectra configuring all relevant parameters via CLI flags.  
 Currently reads blastwave parameter values from suitable .csv files, yields from either thermal .json(s) or custom .csv files.  
 
 Paths are resolved via CLI flags or env vars (`TFHIC_DATA`, `TFHIC_OUT`).  
@@ -220,15 +226,13 @@ Options:
 ```
 
 #### 2) predict_light_spectra
-Fits the Pb–Pb blast-wave parameters vs. multiplicity, evaluates them at user-provided dN/dη targets (e.g. O–O / Ne–Ne), interpolates thermal yields from a gammaS JSON scan, and produces normalized pT spectra (one PDF per species plus a ROOT file with graphs).  
-Example (run from `build/bin`):
+Fits an input blast-wave parameter set vs. multiplicity, evaluates it at user-provided dN/dη targets (e.g. O–O / Ne–Ne), interpolates thermal yields from a thermal JSON scan, and produces normalized pT spectra.  
+Use the following for the full list of configuration flags:
 ```
-./predict_light_spectra \
-  --thermal-json yields_CE_k6_gs_NchScan.json \
-  --systems "OO:60,120;NeNe:150,220" \
-  --k 6 --pt 0,10,400 --mode gammaS --pdf predict_OO_NeNe.pdf
+./predict_light_spectra --help
 ```
-Use `--help` for the full list of knobs (fit formulas, species list, primordial/total yields, etc.).
+See also the Validation section for reference uses.
+
 
 #### 3) libTFHIC.so (legacy)
 Legacy shared library that allows to use the blastwave calculation routines to compute the pT spectrum of a hadron given the blastwave parameters and (optionally) a target yield for normalization.  
@@ -308,19 +312,16 @@ Note: Using `sudo` will create root-owned files in `./out`. If you want user-own
    # use UI to open and explore .root files
    ```
 
-### **Legacy (w/ experimental yields):**
-Deprecated workflow removed; use the JSON-based `export_dndy_json` + `blastwave_thermal` path above.
-
-## Limitations
+## Current Limitations
 - Current executable interface is minimal; configuration split between simple txt files and rigid runtime input.
 > Solved in v0.1.1: both thermal and blastwave module now feature CLI flag-based one-liner executables for configuration; input data format is now json or csv-based.
 
-- Systematics not propagated to final spectra (for now).
+- Systematics not propagated to final spectra.
 
-## Roadmap
-- [ ] Implement MC efficiency module.
-- [x] Unify configuration via CLI flags or a single YAML file.
-- [ ] Include systematics propragation.
+- Lacking ease-of-use and many QOL improvements.
+
+- Physics documentation to be expanded.
+
 
 ## License
 MIT © 2025 Lorenzo (loltarq). See [LICENSE](LICENSE).
