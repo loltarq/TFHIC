@@ -1,8 +1,8 @@
 # Physics background
 
-TFHIC predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields (using the Thermal-FIST library [1]) with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to collision systems or centrality bins where data are sparse, using published blast-wave fits and consistent thermal assumptions.
+TFHIC predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields (using the Thermal-FIST library [1]) with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to centrality bins corresponding to collision systems that are going to be investigated in future ALICE runs, using published blast-wave fits and consistent thermal assumptions.
 
-This document summarizes the physics motivation, modeling assumptions, and how the workflow maps to the code.
+This document summarizes the physics motivation, modeling assumptions, and how the workflow maps to the code. It is not meant to be a deep-dive in the underlying physics, which will instead be exhaustively addressed in the (upcoming) thesis. 
 
 ---
 
@@ -100,7 +100,33 @@ The exporter exposes two parameterizations for the thermal scan, matching the tw
 
 ---
 
-## 4. Blast-wave CLI parameterization (predict_light_spectra)
+## 4. Blast-wave spectra
+
+At kinetic freeze-out, the blast-wave model combines local thermal motion with a collective transverse flow profile. A standard kernel is:
+
+$$
+\frac{dN}{p_T dp_T dy} \propto \int_0^R r \, dr \, m_T \,
+I_0\left(\frac{p_T \sinh \rho}{T_{\mathrm{kin}}}\right)
+K_1\left(\frac{m_T \cosh \rho}{T_{\mathrm{kin}}}\right)
+$$
+
+with $m_T = \sqrt{p_T^2 + m^2}$ and $\rho(r) = \tanh^{-1}\beta_T(r)$. The flow profile is:
+
+$$
+\beta_T(r) = \beta_s \left(\frac{r}{R}\right)^n, \qquad
+\langle \beta_T \rangle = \frac{2}{2+n} \, \beta_s.
+$$
+
+Parameters:
+- $T_{\mathrm{kin}}$ (kinetic freeze-out temperature)
+- $\langle \beta_T \rangle$ (mean transverse flow)
+- $n$ (profile exponent)
+
+TFHIC fits these parameters vs multiplicity from reference experimental data ([2],[3],[4]) and applies them to target systems for tailored pT spectra predictions.
+
+---
+
+## 5. Blast-wave CLI parameterization (predict_light_spectra)
 
 The spectra prediction step is controlled by the blast-wave inputs and the multiplicity grid:
 
@@ -118,7 +144,7 @@ The spectra prediction step is controlled by the blast-wave inputs and the multi
 
 ---
 
-## 5. Freeze-out scenarios used in TFHIC
+## 6. Freeze-out scenarios used in TFHIC
 
 ### Two-step freeze-out (gammaS workflow)
 
@@ -142,32 +168,6 @@ Piecewise linear interpolation provides $dV/dy(N_{\mathrm{ch}})$ for target syst
 
 ---
 
-## 6. Blast-wave spectra
-
-At kinetic freeze-out, the blast-wave model combines local thermal motion with a collective transverse flow profile. A standard kernel is:
-
-$$
-\frac{dN}{p_T dp_T dy} \propto \int_0^R r \, dr \, m_T \,
-I_0\left(\frac{p_T \sinh \rho}{T_{\mathrm{kin}}}\right)
-K_1\left(\frac{m_T \cosh \rho}{T_{\mathrm{kin}}}\right)
-$$
-
-with $m_T = \sqrt{p_T^2 + m^2}$ and $\rho(r) = \tanh^{-1}\beta_T(r)$. The flow profile is:
-
-$$
-\beta_T(r) = \beta_s \left(\frac{r}{R}\right)^n, \qquad
-\langle \beta_T \rangle = \frac{2}{2+n} \, \beta_s.
-$$
-
-Parameters:
-- $T_{\mathrm{kin}}$ (kinetic freeze-out temperature)
-- $\langle \beta_T \rangle$ (mean transverse flow)
-- $n$ (profile exponent)
-
-TFHIC fits these parameters vs multiplicity and applies them to target systems.
-
----
-
 ## 7. Centrality, multiplicity, and mapping
 
 TFHIC assumes a monotonic relation between:
@@ -187,7 +187,7 @@ The prediction step produces:
 - A ROOT file with fit graphs, fit functions, and spectra.
 - A quick-look PDF (optional) with fitted curves and spectra plots.
 
-These outputs are intended for comparison studies and feasibility assessments. They are not a replacement for full event simulations.
+These outputs are intended for comparison studies and feasibility assessments.
 
 ---
 
