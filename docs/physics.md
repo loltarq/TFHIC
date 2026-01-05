@@ -126,9 +126,9 @@ TFHIC fits these parameters vs multiplicity from reference experimental data ([2
 
 ---
 
-## 5. Blast-wave CLI parameterization (predict_light_spectra)
+### 4.1 Blast-wave CLI parameterization
 
-The spectra prediction step is controlled by the blast-wave inputs and the multiplicity grid:
+The spectra prediction step (predict_light_spectra app) is controlled by the blast-wave inputs and the multiplicity grid:
 
 - `--systems`: target systems and their $dN_{\mathrm{ch}}/d\eta$ values (one list per system). These values define where the blast-wave fits are evaluated.
 - `--bw-csv`: blast-wave parameter table ($\langle\beta_T\rangle$, $T_{\mathrm{kin}}$, $n$, optional $dV/dy$). This is the provenance for the reference dataset.
@@ -144,7 +144,7 @@ The spectra prediction step is controlled by the blast-wave inputs and the multi
 
 ---
 
-## 6. Freeze-out scenarios used in TFHIC
+## 5. Freeze-out scenarios used in TFHIC
 
 ### Two-step freeze-out (gammaS workflow)
 
@@ -168,7 +168,7 @@ Piecewise linear interpolation provides $dV/dy(N_{\mathrm{ch}})$ for target syst
 
 ---
 
-## 7. Centrality, multiplicity, and mapping
+## 6. Centrality, multiplicity, and mapping
 
 TFHIC assumes a monotonic relation between:
 - Centrality class <-> $dN_{\mathrm{ch}}/d\eta$ <-> $dV/dy$.
@@ -181,7 +181,7 @@ This keeps the thermal normalization consistent with the freeze-out assumptions 
 
 ---
 
-## 8. Outputs and interpretation
+## 7. Outputs and interpretation
 
 The prediction step produces:
 - A ROOT file with fit graphs, fit functions, and spectra.
@@ -191,11 +191,11 @@ These outputs are intended for comparison studies and feasibility assessments.
 
 ---
 
-## 9. Sample analysis
+## 8. Sample analysis
 
 This section mirrors `docs/template_commands.txt` and explains the physics intent behind each command block. In each case, the output filename of `predict_light_spectra` encodes the source paper or table used for the blast-wave inputs, and acts as the provenance tag for the assumptions.
 
-### 9.1 CE/gammaS, Pb-Pb 5.02 TeV blast-wave (1910.07678)
+### 8.1 CE/gammaS, Pb-Pb 5.02 TeV blast-wave (1910.07678)
 
 Compute yields with a canonical ensemble, $\gamma_S$ variant, thermal model on a centrality ($dN_{\mathrm{ch}}/d\eta$) grid for the target systems (Ne-Ne, p-O, O-O), so that $T_{\mathrm{ch}}$ and $dV/dy$ follow the multiplicity-dependent parameterization of [2]. Then extrapolate Pb-Pb blast-wave parameters from [3] vs $dN_{\mathrm{ch}}/d\eta$ and normalize the spectra with those yields. The output filename records the source dataset.
 
@@ -205,7 +205,7 @@ Compute yields with a canonical ensemble, $\gamma_S$ variant, thermal model on a
 ./predict_light_spectra --thermal-json ../../thermal_yields/out/yields-pO-NeNe-OO-gs.json --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" --mode gammaS --species 211,321,2212,3122,3312,3334,1000010020 --timesPt --pt 0,10,400 --out prediction_PbPb5.02_1910.07678_CEgs.root --pdf prediction_PbPb5.02_1910.07678_CEgs.pdf
 ```
 
-### 9.2 CE/gammaS with fixed Tch, Pb-Pb 2.76 TeV Table III (1907.11059)
+### 8.2 CE/gammaS with fixed Tch, Pb-Pb 2.76 TeV Table III (1907.11059)
 
 Enforce a single-freeze-out temperature by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but still use the $\gamma_S$ variant workflow to keep the yields tabulated vs $dN_{\mathrm{ch}}/d\eta$ for the target systems. Blast-wave parameters come from Table III (single freeze-out) and are fit vs $dN_{\mathrm{ch}}/d\eta$, with $T_{\mathrm{kin}}$ fixed to 0.150 GeV to match the table assumptions.
 
@@ -215,7 +215,7 @@ Enforce a single-freeze-out temperature by fixing $T_{\mathrm{ch}} = 0.150$ GeV 
 ./predict_light_spectra --thermal-json ../../thermal_yields/out/yields-pO-NeNe-OO-gs-fixedTchem.json --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" --mode gammaS --species 211,321,2212,3122,3312,3334,1000010020 --timesPt --pt 0,10,400 --out prediction_PbPb2.76_1907.11059_CEgs_TchemFIXED.root --pdf prediction_PbPb2.76_1907.11059_CEgs_TchemFIXED.pdf --bw-csv bw_data_1907.11059.csv --fit-T "[0]" --fit-T-pars 0.150 --fit-n-pars 0.23,3.55,70
 ```
 
-### 9.3 CE/vanilla, fixed Tch, dV/dy scan from Table III (1907.11059)
+### 8.3 CE/vanilla, fixed Tch, dV/dy scan from Table III (1907.11059)
 
 Implement single freeze-out consistently by fixing $T_{\mathrm{ch}} = 0.150$ GeV and $\gamma_S = 1$, but now in vanilla mode where yields are tabulated vs $dV/dy$. The $dV/dy$ grid is taken directly from Table III of [4], and the $N_{\mathrm{ch}} \to dV/dy$ mapping used in prediction ensures the normalization matches the same table assumptions.
 
@@ -225,7 +225,7 @@ Implement single freeze-out consistently by fixing $T_{\mathrm{ch}} = 0.150$ GeV
 ./predict_light_spectra --thermal-json ../../thermal_yields/out/yields-pO-NeNe-OO-vanilla_dVscan.json --systems "pO:33.3899,25.5256,20.5644,16.2348,13.0413,10.3316,8.0894,4.7780;OO:129.6660,106.8340,87.2877,67.1562,51.1201,37.8919,26.9060,11.6993;NeNe:158.4020,131.3850,107.4230,82.2728,62.1508,45.8975,32.4722,13.5333" --mode vanilla --species 211,321,2212,3122,3312,3334,1000010020 --timesPt --pt 0,10,400 --out prediction_PbPb2.76_1907.11059_CEvanilla_TchemFIXED.root --pdf prediction_PbPb2.76_1907.11059_CEvanilla_TchemFIXED.pdf --bw-csv bw_data_1907.11059.csv --fit-T "[0]" --fit-T-pars 0.150 --fit-n-pars 0.23,3.55,70
 ```
 
-### 9.4 Docker equivalent workflow
+### 8.4 Docker equivalent workflow
 
 The same three workflows above, but executed inside the container. The output filenames still encode the dataset provenance; all outputs are written to a single host-mounted directory for reproducibility.
 
@@ -245,7 +245,7 @@ sudo docker run --rm -it -v "$PWD/out:/data/out" tfhic:latest   /opt/tfhic/insta
 
 ---
 
-## 10. References
+## 9. References
 
 [1] V. Vovchenko and H. Stoecker, Thermal-FIST: A package for heavy-ion collisions and hadronic equation of state, Comput. Phys. Commun. 244, 295 (2019), arXiv:1901.05249.
 

@@ -274,7 +274,7 @@ root [0] .L libTFHIC.so
 See `docs/plots/blastwave_exp` plots for some sample outputs.
 
 ### **Spectra extrapolation:**
-See `docs/physics.md` section 9: Sample analysis.
+See `docs/physics.md` section 8 "Sample analysis" and `docs/plots/predictions` for the corresponding outputs.
 
 ---
 
@@ -284,9 +284,9 @@ See `docs/physics.md` section 9: Sample analysis.
 
 - Systematics not propagated to final spectra.
 
-- Lacking ease-of-use and many QOL improvements.
+- Lacking ease-of-use and QOL improvements.
 
-- Physics documentation to be expanded.
+- Physics documentation yet to be expanded with thesis work.
 
 
 ## License
