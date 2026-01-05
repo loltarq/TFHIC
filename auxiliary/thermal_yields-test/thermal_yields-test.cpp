@@ -49,7 +49,7 @@ static bool load_tfhic_library(const fs::path& repo_root) {
     } 
     if (gSystem->Load(lib.string().c_str()) >= 0)
     {
-      std::cout << "found!" << "\n";
+      std::cout << "libTFHIC.so loaded succesfully" << "\n";
       return true;
     } 
   }

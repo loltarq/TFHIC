@@ -262,7 +262,7 @@ root [0] .L libTFHIC.so
     ```
 2. Load ROOT macro to generate comparison of spectra from blastwave model against exp. data:
    ```
-   root [0] .L thermalyields_test.cpp
+   root [0] .L thermalyields_test.cpp+
    root [1] compareHepData_asTGraphs()
    ```
 3. Spectra comparison results stored as .root files under `/out`; can be explored with a TBrowser instance:
