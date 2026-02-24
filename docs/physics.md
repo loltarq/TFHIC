@@ -1,6 +1,6 @@
 # Physics background
 
-TFHIC predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields (using the Thermal-FIST library [1]) with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to centrality bins corresponding to collision systems that are going to be investigated in future ALICE runs, using published blast-wave fits and consistent thermal assumptions.
+ThermoWave predicts identified-hadron $p_T$ spectra by combining a thermal (statistical hadronization) description of yields (using the Thermal-FIST library [1]) with a blast-wave description of spectral shapes. The goal is to extrapolate spectra to centrality bins corresponding to collision systems that are going to be investigated in future ALICE runs, using published blast-wave fits and consistent thermal assumptions.
 
 This document summarizes the physics motivation, modeling assumptions, and how the workflow maps to the code. It is not meant to be a deep-dive in the underlying physics, which will instead be exhaustively addressed in the (upcoming) thesis. 
 
@@ -15,9 +15,9 @@ Heavy-ion collisions produce a strongly interacting medium that expands and cool
 
 At earlier times the system is expected to form a deconfined quark-gluon plasma (QGP). Thermal models treat the hadronization stage as an equilibrated hadron resonance gas, capturing the bulk chemistry of the QGP-to-hadron transition through a small set of freeze-out parameters. Blast-wave parametrizations then encode the collective expansion of the medium at kinetic decoupling, translating the macroscopic flow field into species-dependent $p_T$ spectra.
 
-A key motivation for TFHIC is to extrapolate from well-constrained Pb--Pb measurements to lfuture collision systems (Ne--Ne, O--O, p--O) that will be explored in upcoming ALICE runs. The workflow provides predictions in regimes where direct data are limited, while keeping consistency with the physics assumptions used in the reference Pb--Pb analyses.
+A key motivation for ThermoWave is to extrapolate from well-constrained Pb--Pb measurements to lfuture collision systems (Ne--Ne, O--O, p--O) that will be explored in upcoming ALICE runs. The workflow provides predictions in regimes where direct data are limited, while keeping consistency with the physics assumptions used in the reference Pb--Pb analyses.
 
-TFHIC uses:
+ThermoWave uses:
 - **Thermal yields** at chemical freeze-out.
 - **Blast-wave spectra** at kinetic freeze-out.
 - **Data-driven parameterizations** of blast-wave parameters vs centrality or $dN_{\mathrm{ch}}/d\eta$.
@@ -39,7 +39,7 @@ Outputs are written to ROOT files (graphs and spectra) plus optional PDF quick l
 
 ## 3. Thermal model (statistical hadronization)
 
-The thermal model treats hadronization as a near-equilibrium conversion of the QGP into a hadron resonance gas. Instead of tracking microscopic hadron formation, it assumes that the system can be characterized by a small set of thermodynamic parameters (temperature, chemical potentials, and volume), and that hadron yields follow from the corresponding partition function. This is motivated by the empirical success of statistical hadronization in describing integrated particle yields across energies and system sizes, suggesting that the chemistry of the hadronizing medium is close to equilibrium. In TFHIC, this model provides the baseline $dN/dy$ for each species at chemical freeze-out.
+The thermal model treats hadronization as a near-equilibrium conversion of the QGP into a hadron resonance gas. Instead of tracking microscopic hadron formation, it assumes that the system can be characterized by a small set of thermodynamic parameters (temperature, chemical potentials, and volume), and that hadron yields follow from the corresponding partition function. This is motivated by the empirical success of statistical hadronization in describing integrated particle yields across energies and system sizes, suggesting that the chemistry of the hadronizing medium is close to equilibrium. In ThermoWave, this model provides the baseline $dN/dy$ for each species at chemical freeze-out.
 
 ### 3.1 Ensembles
 
@@ -48,7 +48,7 @@ Conserved charges (B, S, Q) can be treated in different ensembles:
 - **Strangeness-canonical ensemble (SCE)**: strangeness canonical (exact conservation), B and Q grand-canonical.
 - **Canonical ensemble**: all charges canonical.
 
-Exact conservation becomes important when the system is small or dilute, or when the relevant conserved charge is carried by rare species. In peripheral centrality classes and in small systems (p--A, p--O, O--O, Ne--Ne), particle yields can deviate from grand-canonical expectations because the total available charge in the correlation volume is limited. Canonical treatments enforce this exactly and therefore suppress the production of strange and baryonic species relative to GCE. This is why TFHIC retains SCE/CE options for peripheral and small-system analyses, while GCE can be adequate for the most central heavy-ion collisions.
+Exact conservation becomes important when the system is small or dilute, or when the relevant conserved charge is carried by rare species. In peripheral centrality classes and in small systems (p--A, p--O, O--O, Ne--Ne), particle yields can deviate from grand-canonical expectations because the total available charge in the correlation volume is limited. Canonical treatments enforce this exactly and therefore suppress the production of strange and baryonic species relative to GCE. This is why ThermoWave retains SCE/CE options for peripheral and small-system analyses, while GCE can be adequate for the most central heavy-ion collisions.
 
 ### 3.2 Canonical suppression and correlation volume
 
@@ -70,7 +70,7 @@ $$
 N_i \propto \gamma_S^{s_i}
 $$
 
-with $s_i$ the number of valence strange + anti-strange quarks. The idea is that strangeness production can lag behind light-quark equilibration in smaller or shorter-lived systems, leading to yields below the fully equilibrated HRG expectation. A value $\gamma_S < 1$ therefore reduces strange-hadron yields (more strongly for multi-strange species), while $\gamma_S \to 1$ recovers full equilibrium. In TFHIC, the $\gamma_S$ workflow uses this parameter to model the observed multiplicity dependence of strangeness production, with $T_{\mathrm{ch}}$ and $dV/dy$ parameterized as functions of $dN_{\mathrm{ch}}/d\eta$. This also allows $T_{\mathrm{ch}}$ to increase at low multiplicity, reflecting earlier chemical decoupling in small systems as discussed in literature on canonical statistical modelizations [2].
+with $s_i$ the number of valence strange + anti-strange quarks. The idea is that strangeness production can lag behind light-quark equilibration in smaller or shorter-lived systems, leading to yields below the fully equilibrated HRG expectation. A value $\gamma_S < 1$ therefore reduces strange-hadron yields (more strongly for multi-strange species), while $\gamma_S \to 1$ recovers full equilibrium. In ThermoWave, the $\gamma_S$ workflow uses this parameter to model the observed multiplicity dependence of strangeness production, with $T_{\mathrm{ch}}$ and $dV/dy$ parameterized as functions of $dN_{\mathrm{ch}}/d\eta$. This also allows $T_{\mathrm{ch}}$ to increase at low multiplicity, reflecting earlier chemical decoupling in small systems as discussed in literature on canonical statistical modelizations [2].
 
 ### 3.4 Primary vs total yields
 
@@ -78,7 +78,7 @@ Thermal-FIST [1] provides:
 - **Primary yields** (before resonance decays).
 - **Total yields** (after decays, per chosen feeddown).
 
-TFHIC output both yields in the JSON yield tables from the export_dNdy_json app.
+ThermoWave output both yields in the JSON yield tables from the export_dNdy_json app.
 
 ### 3.5 Thermal CLI parameterization
 
@@ -122,7 +122,7 @@ Parameters:
 - $\langle \beta_T \rangle$ (mean transverse flow)
 - $n$ (profile exponent)
 
-TFHIC fits these parameters vs multiplicity from reference experimental data ([2],[3],[4]) and applies them to target systems for tailored pT spectra predictions.
+ThermoWave fits these parameters vs multiplicity from reference experimental data ([2],[3],[4]) and applies them to target systems for tailored pT spectra predictions.
 
 ---
 
@@ -144,7 +144,7 @@ The spectra prediction step (predict_light_spectra app) is controlled by the bla
 
 ---
 
-## 5. Freeze-out scenarios used in TFHIC
+## 5. Freeze-out scenarios used in ThermoWave
 
 ### Two-step freeze-out (gammaS workflow)
 
@@ -170,7 +170,7 @@ Piecewise linear interpolation provides $dV/dy(N_{\mathrm{ch}})$ for target syst
 
 ## 6. Centrality, multiplicity, and mapping
 
-TFHIC assumes a monotonic relation between:
+ThermoWave assumes a monotonic relation between:
 - Centrality class <-> $dN_{\mathrm{ch}}/d\eta$ <-> $dV/dy$.
 
 Key points:
