@@ -1,6 +1,6 @@
-# TFHIC
+# ThermoWave (previously TFHIC)
 
-Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake build).  
+Thermal + blast-wave pipeline for multiplicity-resolved identified-hadron pT spectra in ion collisions. 
 *Thesis project for master's degree in Nuclear & Subnuclear Physics.*
 
 ---
@@ -66,13 +66,13 @@ Toolkit for thermal/femtoscopic heavy-ion calculations in modern C++ (CMake buil
 
 ### 0) Clone (include submodules)
 ```bash
-git clone --recurse-submodules https://github.com/loltarq/TFHIC.git
+git clone --recurse-submodules https://github.com/loltarq/ThermoWave.git
 # if you already cloned without submodules:
-#   cd TFHIC && git submodule update --init --recursive
-cd TFHIC
+#   cd ThermoWave && git submodule update --init --recursive
+cd ThermoWave
 ```
 
-There are 2 main options to build & run TFHIC: dev build (A), and docker (B).
+There are 2 main options to build & run ThermoWave: dev build (A), and docker (B).
 A third one - installation - is also available, but has not yet been extensively tested and may be not working correctly.
 
 ### A) Dev-build: unified CMake
