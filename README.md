@@ -1,6 +1,7 @@
 # ThermoWave (previously TFHIC)
 
-Thermal + blast-wave pipeline for multiplicity-resolved identified-hadron pT spectra in ion collisions. 
+Thermal + blast-wave pipeline for multiplicity-resolved identified-hadron pT spectra in ion collisions.
+
 *Thesis project for master's degree in Nuclear & Subnuclear Physics.*
 
 ---
